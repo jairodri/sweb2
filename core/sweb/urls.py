@@ -1,8 +1,8 @@
 from django.urls import path
-from core.sweb.views import vistaprueba
+from core.sweb.views.formasdepago.views import formasdepago_list
 
 app_name = 'sweb'
 
 urlpatterns = [
-    path('prueba1/', vistaprueba, name='vistap1'),
+    path('formasdepago/list/', formasdepago_list, name='formasdepago_list'),
 ]

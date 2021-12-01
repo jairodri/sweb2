@@ -1,0 +1,31 @@
+{% extends 'list.html' %}
+
+{% block columns %}
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Código</th>
+        <th scope="col">Descripción</th>
+        <th scope="col">Recibos</th>
+        <th scope="col">Días de Vencimiento</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+    {% for fp in formasdepago %}
+        <tr>
+            <td>{{ fp.id }}</td>
+            <td>{{ fp.codigo }}</td>
+            <td>{{ fp.descripcion }}</td>
+            <td>{{ fp.recibos }}</td>
+            <td>{{ fp.diasvto }}</td>
+            <td>
+                <button type="button" class="btn btn-warning btn-xs">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button type="button" class="btn btn-danger btn-xs">
+                    <i class="far fa-trash-alt"></i>
+                </button>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}

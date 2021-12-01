@@ -16,9 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from core.sweb.views import vistaprueba
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('prueba/', include('core.sweb.urls'))
+    path('sweb/', include('core.sweb.urls'))
 ]
