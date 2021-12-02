@@ -24,8 +24,6 @@
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
             </div>
-            <!-- /.content-header -->
-
             <!-- Main content -->
             <div class="content">
                 <div class="container">
@@ -39,8 +37,8 @@
         <!-- Footer -->
         {% include 'footer.html' %}
     </div>
-    <!-- ./wrapper -->
+    {% block javascript %}
 
-
+    {% endblock %}
     </body>
 {% endblock %}
