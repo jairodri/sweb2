@@ -7,7 +7,7 @@
         <th scope="col" style="width: 10%;">Código</th>
         <th scope="col" style="width: 50%;">Descripción</th>
         <th scope="col" style="width: 15%;">Recibos</th>
-        <th scope="col" style="width: 15%;">Días de Vencimiento</th>
+        <th scope="col" style="width: 15%;">Vencimiento Factura</th>
 
     </tr>
 {% endblock %}
@@ -16,9 +16,9 @@
     {% for fp in object_list %}
         <tr>
             <td>
-                <button type="button" class="btn btn-light btn-xs">
+                <a href="{% url 'sweb:formasdepago_edit' fp.id %}" type="button" class="btn btn-light btn-xs">
                     <i class="far fa-edit" title="Editar"></i>
-                </button>
+                </a>
                 <button type="button" class="btn btn-light btn-xs">
                     <i class="far fa-trash-alt" title="Borrar"></i>
                 </button>

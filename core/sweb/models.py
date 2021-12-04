@@ -50,11 +50,11 @@ class DescuentoMO(models.Model):
 
 
 class FormaDePago(models.Model):
-    codigo = models.CharField(max_length=2, verbose_name='código', db_column='fpg_codigo', unique=True)
-    descripcion = models.CharField(max_length=100, verbose_name='descripción', db_column='fpg_descrip',
+    codigo = models.CharField(max_length=2, verbose_name='Código', db_column='fpg_codigo', unique=True)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='fpg_descrip',
                                    null=False, blank=False)
-    recibos = models.IntegerField(verbose_name='recibos', db_column='fpg_recibos', default=0)
-    diasvto = models.IntegerField(verbose_name='días vencimiento factura', db_column='fpg_diasvto', default=0)
+    recibos = models.IntegerField(verbose_name='Recibos', db_column='fpg_recibos', default=0, null=True)
+    diasvto = models.IntegerField(verbose_name='Días vencimiento factura', db_column='fpg_diasvto', default=0, null=True)
 
     def __str__(self):
         return f'{self.codigo} {self.descripcion}'

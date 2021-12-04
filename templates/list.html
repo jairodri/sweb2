@@ -37,12 +37,12 @@
         </div>
 
         <div class="card-footer">
-            <button class="btn btn-primary btn-flat">
+            <a href="{{ add_url }}" class="btn btn-primary btn-flat">
                 <i class="fas fa-plus"></i>
                 {% block data %}
 
                 {% endblock %}
-            </button>
+            </a>
         </div>
     </div>
 {% endblock %}
@@ -63,6 +63,9 @@
                 ],
                 order: [[1, 'asc']]
             });
+            {#$('.btnTest').on('click', function () {#}
+            {#    alert('test');#}
+            {#});#}
         });
     </script>
 {% endblock %}
