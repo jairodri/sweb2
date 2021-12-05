@@ -13,11 +13,7 @@
 
             <div class="card-header">
                 <h3 class="card-title">
-                    {% if action == 'add' %}
-                        <i class="fas fa-plus"></i>
-                    {% else %}
-                        <i class="fas fa-edit"></i>
-                    {% endif %}
+                    <i class="fas fa-trash-alt"></i>
                     {{ title }}
                 </h3>
             </div>
@@ -40,21 +36,15 @@
                         </ul>
                     </div>
                 {% endif %}
-
-                {% for field in form.visible_fields %}
-                    <div class="form-group">
-                        <label for="{{ field.label }}">{{ field.label }}:</label>
-                        {{ field | add_class:'form-control' }}
-                    </div>
-                {% endfor %}
+                <div class="alert alert-danger alert-dismissible">
+                    <h6><i class="icon fas fa-ban"></i></h6>
+                    <p>¿Estás seguro de borrar "{{ object }}"?</p>
+                </div>
             </div>
 
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary btn-flat">
-                    <i class="fas fa-save"></i> Guardar
-                    {% block data %}
-
-                    {% endblock %}
+                    <i class="fas fa-trash-alt"></i> Borrar
                 </button>
                 <a href="{{ list_url }}" class="btn btn-info btn-flat">
                     <i class="fas fa-times"></i> Cancelar

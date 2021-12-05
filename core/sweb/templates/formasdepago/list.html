@@ -16,12 +16,12 @@
     {% for fp in object_list %}
         <tr>
             <td>
-                <a href="{% url 'sweb:formasdepago_edit' fp.id %}" type="button" class="btn btn-light btn-xs">
+                <a href="{% url 'sweb:formasdepago_edit' fp.id %}" class="btn btn-light btn-xs">
                     <i class="far fa-edit" title="Editar"></i>
                 </a>
-                <button type="button" class="btn btn-light btn-xs">
+                <a href="{% url 'sweb:formasdepago_delete' fp.id %}" class="btn btn-light btn-xs">
                     <i class="far fa-trash-alt" title="Borrar"></i>
-                </button>
+                </a>
             </td>
 {#            <td>{{ fp.id }}</td>#}
             <td>{{ fp.codigo }}</td>

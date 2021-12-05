@@ -57,7 +57,7 @@ class FormaDePago(models.Model):
     diasvto = models.IntegerField(verbose_name='Días vencimiento factura', db_column='fpg_diasvto', default=0, null=True)
 
     def __str__(self):
-        return f'{self.codigo} {self.descripcion}'
+        return f'{self.codigo} - {self.descripcion}'
 
     class Meta:
         db_table = 'sirtbfpg'
