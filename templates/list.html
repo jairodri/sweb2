@@ -1,8 +1,7 @@
-{% extends 'body.html' %}
+{% extends 'layout.html' %}
 {% load static %}
 
 {% block head %}
-    {#    <link rel="stylesheet" type="text/css" href="{% static 'lib/ajax/twitter-bootstrap/4.5.2/css/bootstrap.min.css' %}"/>#}
     <link rel="stylesheet" type="text/css"
           href="{% static 'lib/DataTables/DataTables-1.11.3/css/dataTables.bootstrap4.min.css' %}"/>
     <link rel="stylesheet" type="text/css"
@@ -18,7 +17,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="card card-default">
+    <div class="card card-primary">
 
         <div class="card-header">
             <h3 class="card-title">

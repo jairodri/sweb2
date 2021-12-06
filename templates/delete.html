@@ -1,4 +1,4 @@
-{% extends 'body.html' %}
+{% extends 'layout.html' %}
 {% load static %}
 {% load widget_tweaks %}
 
@@ -9,7 +9,7 @@
 
 {% block content %}
     <form method="post" action="." id="idform">
-        <div class="card card-default">
+        <div class="card card-primary">
 
             <div class="card-header">
                 <h3 class="card-title">
@@ -46,7 +46,7 @@
                 <button type="submit" class="btn btn-primary btn-flat">
                     <i class="fas fa-trash-alt"></i> Borrar
                 </button>
-                <a href="{{ list_url }}" class="btn btn-info btn-flat">
+                <a href="{{ list_url }}" class="btn btn-secondary btn-flat">
                     <i class="fas fa-times"></i> Cancelar
                 </a>
             </div>

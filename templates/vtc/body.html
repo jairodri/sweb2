@@ -1,42 +1,40 @@
 {% extends 'home.html' %}
-
 {% block body %}
-    <body class="hold-transition layout-top-nav">
+    <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <!-- Header -->
-        {% include 'header.html' %}
-
-        <!-- Content Wrapper. Contains page content -->
+        {% include 'vtc/header.html' %}
+        <!-- Sidebar -->
+        {% include 'vtc/sidebar.html' %}
+        <!-- Content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
             <div class="content-header">
-                <div class="container">
-                    <div class="row mb-2">
+                <div class="container-fluid">
+                    <div class="row">
                         <div class="col-sm-6">
-                            <h1 class="m-0"> SirioWeb <small>Versión 1.0</small></h1>
-                        </div><!-- /.col -->
+                            <h1 class="m-0 text-dark"> SirioWeb <small>1.0</small></h1>
+                        </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="#">Inicio</a></li>
                                 <li class="breadcrumb-item"><a href="{{ list_url }}">{{ entity }}</a></li>
                             </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- Main content -->
             <div class="content">
-                <div class="container">
+                <div class="container-fluid">
                     {% block content %}
 
                     {% endblock %}
                 </div>
             </div>
-
         </div>
         <!-- Footer -->
         {% include 'footer.html' %}
     </div>
+    <!-- Block javascript -->
     {% block javascript %}
 
     {% endblock %}
