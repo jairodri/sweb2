@@ -4,6 +4,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from core.sweb.forms import FormaDePagoForm
 from core.sweb.models import FormaDePago
 from django.utils.decorators import method_decorator
+from django.contrib import messages
 
 
 class FormaDePagoListView(ListView):
@@ -40,6 +41,10 @@ class FormaDePagoCreateView(CreateView):
         context['list_url'] = reverse_lazy('sweb:formasdepago_list')
         return context
 
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Forma de Pago añadida')
+        return super().form_valid(form)
+
 
 class FormaDePagoUpdateView(UpdateView):
     model = FormaDePago
@@ -56,6 +61,10 @@ class FormaDePagoUpdateView(UpdateView):
         context['list_url'] = reverse_lazy('sweb:formasdepago_list')
         return context
 
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Forma de Pago modificada')
+        return super().form_valid(form)
+
 
 class FormaDePagoDeleteView(DeleteView):
     model = FormaDePago
@@ -70,3 +79,11 @@ class FormaDePagoDeleteView(DeleteView):
         context['list_url'] = reverse_lazy('sweb:formasdepago_list')
         return context
 
+    # No funciona el envío de mensajes de este modo con DeleteView
+    # def form_valid(self, form):
+    #     messages.add_message(self.request, messages.SUCCESS, 'Forma de Pago eliminada')
+    #     return super().form_valid(form)
+
+    def delete(self, request, *args, **kwargs):
+        messages.add_message(self.request, messages.SUCCESS, 'Forma de Pago eliminada')
+        return super(FormaDePagoDeleteView, self).delete(request, *args, **kwargs)
