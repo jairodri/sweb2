@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 from core.sweb.forms import FormaDePagoForm
 from core.sweb.models import FormaDePago
 from django.utils.decorators import method_decorator
@@ -87,3 +87,4 @@ class FormaDePagoDeleteView(DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.add_message(self.request, messages.SUCCESS, 'Forma de Pago eliminada')
         return super(FormaDePagoDeleteView, self).delete(request, *args, **kwargs)
+

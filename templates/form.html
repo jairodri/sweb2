@@ -3,6 +3,7 @@
 {% load widget_tweaks %}
 
 {% block head %}
+    <!-- jquery-validation -->
     <script type="text/javascript" src="{% static 'lib/jquery-validation-1.19.3/jquery.validate.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'lib/jquery-validation-1.19.3/additional-methods.min.js' %}"></script>
 {% endblock %}
@@ -34,6 +35,9 @@
                                 {% for error in field.errors %}
                                     <li>{{ error }}</li>
                                 {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
                             {% endfor %}
                         </ul>
                     </div>
