@@ -6,70 +6,102 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ title }}</title>
-
+    <!-- favicon -->
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{% static 'lib/adminlte-3.1.0/plugins/fontawesome-free/css/all.min.css' %}">
+     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link href="{% static 'lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/bootstrap_icons-1.7.2/bootstrap-icons.css' %}" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'lib/adminlte-3.1.0/css/adminlte.min.css' %}">
-</head>
-<body class="hold-transition login-page">
-<div class="login-box">
-    <div class="login-logo">
-        <a href="{% url 'index' %}"><b>Sirio</b>Web</a>
-    </div>
-    <!-- /.login-logo -->
-    <div class="card">
-        <div class="card-body login-card-body">
-            <p class="login-box-msg">Introduzca sus datos para iniciar sesión</p>
 
-            <form action="." method="post" id="idlogin">
-                {% csrf_token %}
-                {% if form.errors %}
-                    <div class="alert alert-danger alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <h6><i class="icon fas fa-ban"></i></h6>
-                        <ul>
-                            {% for field in form %}
-                                {% for error in field.errors %}
+</head>
+<body>
+<section id="topbar" class="d-flex align-items-center">
+    <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="contact-info d-flex align-items-center row">
+            <i class="bi bi-envelope d-flex align-items-center col-sm-6"><a
+                    href="mailto:admin@esirag.com"> admin@esirag.com</a></i>
+            <i class="bi-telephone d-flex align-items-center col-sm-6"><span> +34 915 339 154</span></i>
+        </div>
+        <div class="social-links d-none d-md-flex align-items-center">
+            <a href="https://twitter.com/siraginf" class="twitter"><i class="bi bi-twitter"></i></a>
+            <a href="https://es-es.facebook.com/SiragInformatica/" class="facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://es.linkedin.com/company/sirag-inform-tica" class="linkedin"><i class="bi bi-linkedin"></i></a>
+        </div>
+    </div>
+</section>
+<div class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="{% url 'index' %}"><b>Sirio</b>Web</a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">Regístrese para iniciar sesión</p>
+
+                <form action="." method="post" id="idlogin">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                        <div class="callout callout-danger">
+{#                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>#}
+{#                            <h6><i class="icon fas fa-ban"></i></h6>#}
+                            <ul class="text-danger">
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
                                     <li>{{ error }}</li>
                                 {% endfor %}
-                            {% endfor %}
-                            {% for error in form.non_field_errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-                <div class="input-group mb-3 form-group">
-                    {{ form.username | add_class:'form-control' | attr:'placeholder:Usuario' | attr:'autocomplete:off' }}
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fas fa-envelope"></span>
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <div class="input-group mb-3 form-group">
+                        {{ form.username | add_class:'form-control' | attr:'placeholder:Usuario' | attr:'autocomplete:off' }}
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="bi bi-person-fill"></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="input-group mb-3 form-group">
-                    {{ form.password | add_class:'form-control' | attr:'placeholder:Contraseña' | attr:'id:current-password' }}
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fas fa-lock"></span>
+                    <div class="input-group mb-3 form-group">
+                        {{ form.password | add_class:'form-control' | attr:'placeholder:Contraseña' | attr:'id:current-password' }}
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="bi bi-lock-fill"></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <button type="submit" class="btn btn-primary btn-block">
-                            <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
-                        </button>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+<footer class="main-footer ">
+    <strong>Copyright © 2021-2022 <a href="http://http:/esirag.com/index.html">Sirag Informática</a>.</strong>
+    Todos los derechos reservados.
+    <div class="float-right d-none d-sm-inline-block">
+        <b>SirioWeb</b> 1.0
+    </div>
+</footer>
+
 <!-- jQuery -->
 <script src="{% static 'lib/adminlte-3.1.0/plugins/jquery/jquery.min.js' %}"></script>
 <!-- Bootstrap 4 -->

@@ -5,7 +5,7 @@ from django.utils.translation import gettext, gettext_lazy as _
 
 class CustomAuthenticationForm(AuthenticationForm):
     error_messages = {
-        'invalid_login': "El usuario y/o la contraseña no son correctos",
+        'invalid_login': "Las credenciales no son correctas",
         'inactive': "Esta cuenta está inactiva",
     }
 
