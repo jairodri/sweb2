@@ -47,7 +47,7 @@
 
                 <form action="." method="post" id="idlogin">
                     {% csrf_token %}
-
+                    <input type="hidden" name="next" value="{{ next }}">
                     {% if form.errors %}
                         <div class="callout callout-danger">
 {#                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>#}

@@ -12,7 +12,7 @@ class FormaDePagoListView(ListView):
     template_name = 'formasdepago/list.html'
 
     # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
-    # @method_decorator(login_required)
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -31,6 +31,11 @@ class FormaDePagoCreateView(CreateView):
     form_class = FormaDePagoForm
     template_name = 'formasdepago/create.html'
     success_url = reverse_lazy('sweb:formasdepago_list')
+
+    # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):
@@ -52,6 +57,11 @@ class FormaDePagoUpdateView(UpdateView):
     template_name = 'formasdepago/create.html'
     success_url = reverse_lazy('sweb:formasdepago_list')
 
+    # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -70,6 +80,11 @@ class FormaDePagoDeleteView(DeleteView):
     model = FormaDePago
     template_name = 'formasdepago/delete.html'
     success_url = reverse_lazy('sweb:formasdepago_list')
+
+    # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):
