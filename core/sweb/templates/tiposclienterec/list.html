@@ -5,32 +5,29 @@
         <th scope="col" style="width: 10%;"></th>
         <th scope="col" style="width: 10%;">Código</th>
         <th scope="col" style="width: 50%;">Descripción</th>
-        <th scope="col" style="width: 15%;">Recibos</th>
-        <th scope="col" style="width: 15%;">Vencimiento Factura</th>
-
+        <th scope="col" style="width: 15%;">Dato Contable</th>
     </tr>
 {% endblock %}
 
 {% block rows %}
-    {% for fp in object_list %}
+    {% for tcr in object_list %}
         <tr>
             <td>
-                <a href="{% url 'sweb:formasdepago_edit' fp.id %}" class="btn btn-light btn-xs">
+                <a href="{% url 'sweb:formasdepago_edit' tcr.id %}" class="btn btn-light btn-xs">
                     <i class="far fa-edit" title="Editar"></i>
                 </a>
-                <a href="{% url 'sweb:formasdepago_delete' fp.id %}" class="btn btn-light btn-xs">
+                <a href="{% url 'sweb:formasdepago_delete' tcr.id %}" class="btn btn-light btn-xs">
                     <i class="far fa-trash-alt" title="Borrar"></i>
                 </a>
             </td>
-            <td>{{ fp.codigo }}</td>
-            <td>{{ fp.descripcion }}</td>
-            <td>{{ fp.recibos }}</td>
-            <td>{{ fp.diasvto }}</td>
+            <td>{{ tcr.codigo }}</td>
+            <td>{{ tcr.descripcion }}</td>
+            <td>{{ tcr.datocontable }}</td>
         </tr>
     {% endfor %}
 {% endblock %}
 
 <!-- Literal del botón para añdir registro
 {% block masdatos %}
-Añadir Forma de Pago
+Añadir Tipo Cliente
 {% endblock %}

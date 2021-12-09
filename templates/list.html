@@ -55,9 +55,12 @@
         <div class="card-footer">
             <a href="{{ add_url }}" class="btn btn-primary btn-flat">
                 <i class="fas fa-plus"></i>
-                {% block data %}
+                {% block masdatos %}
 
                 {% endblock %}
+            </a>
+            <a href="{{ list_url }}" class="btn btn-success btn-flat">
+                <i class="fas fa-sync"></i> Actualizar
             </a>
         </div>
     </div>
@@ -67,10 +70,29 @@
     {% if messages %}
         {% for msg in messages %}
             <script>
-                Swal.fire({
-                    icon: 'success',
-                    text: '{{ msg }}'
-                })
+                {#Swal.fire({#}
+                {#    icon: 'success',#}
+                {#    text: '{{ msg }}'#}
+                {#})#}
+                    $.alert({
+                        theme: 'bootstrap',
+                        title: 'Confirmación',
+                        icon: 'fa fa-info',
+                        content: '{{ msg }}',
+                        columnClass: 'small',
+                        typeAnimated: true,
+                        draggable: true,
+                        dragWindowBorder: false,
+                        buttons: {
+                            info: {
+                                text: "OK",
+                                btnClass: 'btn-primary',
+                                action: function () {
+
+                                }
+                            }
+                        }
+                    });
             </script>
         {% endfor %}
     {% endif %}

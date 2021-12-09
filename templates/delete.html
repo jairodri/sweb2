@@ -22,12 +22,12 @@
                 {% csrf_token %}
 
                 {% if form.errors %}
-                    <div class="alert alert-danger alert-dismissible">
-                        {#                    <div class="callout callout-danger">#}
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+{#                    <div class="alert alert-danger alert-dismissible">#}
+                    <div class="callout callout-danger">
+{#                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>#}
                         {#                        <h6><i class="icon fas fa-ban"></i> Error!</h6>#}
-                        <h6><i class="icon fas fa-ban"></i></h6>
-                        <ul>
+{#                        <h6><i class="icon fas fa-ban"></i></h6>#}
+                        <ul class="text-danger">
                             {% for field in form %}
                                 {% for error in field.errors %}
                                     <li>{{ error }}</li>
@@ -36,9 +36,11 @@
                         </ul>
                     </div>
                 {% endif %}
-                <div class="alert alert-danger alert-dismissible">
+                <div class="callout callout-danger text-danger">
+{#                <div class="alert alert-danger alert-dismissible">#}
                     <h6><i class="icon fas fa-ban"></i></h6>
-                    <p>¿Estás seguro de borrar "{{ object }}"?</p>
+                    <p>Se va a borrar el registro: "{{ object }}"</p>
+                    <p>¿Estás seguro?</p>
                 </div>
             </div>
 

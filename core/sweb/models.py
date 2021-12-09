@@ -63,18 +63,28 @@ class FormaDePago(models.Model):
         db_table = 'sirtbfpg'
         verbose_name = 'Forma de Pago'
         verbose_name_plural = 'Formas de Pago'
+        ordering = ['codigo']
+
+    def clean(self):
+        super(FormaDePago, self).clean()
+        self.codigo = self.codigo.upper()
 
 
 class TipoClienteRecambios(models.Model):
-    codigo = models.CharField(max_length=2, verbose_name='código', db_column='tcr_codigo', unique=True)
-    descripcion = models.CharField(max_length=100, verbose_name='descripción', db_column='tcr_descrip',
+    codigo = models.CharField(max_length=2, verbose_name='Código', db_column='tcr_codigo', unique=True)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='tcr_descrip',
                                    null=False, blank=False)
-    datocon = models.CharField(max_length=1, verbose_name='datocon', db_column='tcr_datocon')
+    datocontable = models.CharField(max_length=1, verbose_name='Dato contable', db_column='tcr_datocon', null=True)
 
     def __str__(self):
-        return f'{self.codigo} {self.descripcion}'
+        return f'{self.codigo} - {self.descripcion}'
 
     class Meta:
         db_table = 'sirtbtcr'
         verbose_name = 'Tipo de Cliente Recambios'
         verbose_name_plural = 'Tipos de Cliente Recambios'
+        ordering = ['codigo']
+
+    def clean(self):
+        super(TipoClienteRecambios, self).clean()
+        self.codigo = self.codigo.upper()
