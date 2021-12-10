@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'core.sweb',
     'core.homepage',
     'core.login',
+    'core.user',
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,8 @@ LOGIN_REDIRECT_URL = '/sweb/dashboard'
 LOGOUT_REDIRECT_URL = '/login/'
 LOGIN_URL = '/login/'
 
+MEDIA_ROOT = BASE_DIR / 'media/'
+MEDIA_URL = '/media/'
+
+# Indicamos la clase usuario personalizada
+AUTH_USER_MODEL = 'user.User'

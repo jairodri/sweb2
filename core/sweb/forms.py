@@ -20,12 +20,6 @@ class FormaDePagoForm(ModelForm):
             'recibos': 'Recibos',
             'diasvto': 'Vencimiento Factura'
         }
-        # widgets = {
-        #     'codigo': TextInput(),
-        #     'descripcion': TextInput(),
-        #     'recibos': NumberInput(),
-        #     'diasvto': NumberInput()
-        # }
 
 
 class TipoClienteRecambiosForm(ModelForm):

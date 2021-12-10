@@ -13,7 +13,7 @@ def formasdepagoimport():
     dtFormasPago = pd.read_csv(IMPORT_FOLDER + 'rtablas007.csv', sep='|', dtype=str)
     dtFormasPago['t_elemn'] = dtFormasPago['t_elemn'].astype(int)
     dtFormasPago['t_elemn2'] = dtFormasPago['t_elemn2'].astype(int)
-    print(dtFormasPago)
+    # print(dtFormasPago)
 
     # Eliminamos las columnas que no necesitamos
     dtFormasPago.drop(['Unnamed: 0'], axis=1, inplace=True)
@@ -43,7 +43,7 @@ def formasdepagoimport():
 def tiposclienterecambiosimport():
     #  Tipos Cliente Recambios- tabla 003
     dttiposclienterecambios = pd.read_csv(IMPORT_FOLDER + 'rtablas003.csv', sep='|', dtype=str)
-    print(dttiposclienterecambios)
+    # print(dttiposclienterecambios)
 
     # Eliminamos las columnas que no necesitamos
     dttiposclienterecambios.drop(['Unnamed: 0'], axis=1, inplace=True)
@@ -69,6 +69,6 @@ def tiposclienterecambiosimport():
     print(pd.read_sql_query('select * from sirtbtcr', engine))
 
 
-# formasdepagoimport()
+formasdepagoimport()
 tiposclienterecambiosimport()
 
