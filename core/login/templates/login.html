@@ -9,32 +9,31 @@
     <!-- favicon -->
     <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
     <!-- Google Font: Source Sans Pro -->
-     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Bootstrap -->
     <link href="{% static 'lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'lib/bootstrap_icons-1.7.2/bootstrap-icons.css' %}" rel="stylesheet">
-    <!-- Template Main CSS File -->
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'lib/adminlte-3.1.0/css/adminlte.min.css' %}">
 
 </head>
 <body>
-<section id="topbar" class="d-flex align-items-center">
-    <div class="container d-flex justify-content-center justify-content-md-between">
-        <div class="contact-info d-flex align-items-center row">
-            <i class="bi bi-envelope d-flex align-items-center col-sm-6"><a
-                    href="mailto:admin@esirag.com"> admin@esirag.com</a></i>
-            <i class="bi-telephone d-flex align-items-center col-sm-6"><span> +34 915 339 154</span></i>
-        </div>
-        <div class="social-links d-none d-md-flex align-items-center">
-            <a href="https://twitter.com/siraginf" class="twitter"><i class="bi bi-twitter"></i></a>
-            <a href="https://es-es.facebook.com/SiragInformatica/" class="facebook"><i class="bi bi-facebook"></i></a>
-            <a href="https://es.linkedin.com/company/sirag-inform-tica" class="linkedin"><i class="bi bi-linkedin"></i></a>
-        </div>
+<div class="container-fluid bg-primary text-white row">
+    <div class="col-md-2 ">
+        <i class="bi bi-envelope"><a href="mailto:admin@esirag.com" class="link-light"> admin@esirag.com</a></i>
     </div>
-</section>
+    <div class="col-md-2 ">
+        <i class="bi-telephone "><span> +34 915 339 154</span></i>
+    </div>
+    <div class="col-md-7 "></div>
+    <div class="col-md-1 ">
+        <a href="https://twitter.com/siraginf" class="link-light p-1"><i class="bi bi-twitter"></i></a>
+        <a href="https://es-es.facebook.com/SiragInformatica/" class="link-light p-1"><i class="bi bi-facebook"></i></a>
+        <a href="https://es.linkedin.com/company/sirag-inform-tica" class="link-light p-1"><i
+                class="bi bi-linkedin"></i></a>
+    </div>
+</div>
 <div class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
@@ -50,8 +49,8 @@
                     <input type="hidden" name="next" value="{{ next }}">
                     {% if form.errors %}
                         <div class="callout callout-danger">
-{#                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>#}
-{#                            <h6><i class="icon fas fa-ban"></i></h6>#}
+                            {#                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>#}
+                            {#                            <h6><i class="icon fas fa-ban"></i></h6>#}
                             <ul class="text-danger">
                                 {% for field in form %}
                                     {% for error in field.errors %}
@@ -93,14 +92,8 @@
         </div>
     </div>
 </div>
-
-<footer class="main-footer ">
-    <strong>Copyright © 2021-2022 <a href="http://http:/esirag.com/index.html">Sirag Informática</a>.</strong>
-    Todos los derechos reservados.
-    <div class="float-right d-none d-sm-inline-block">
-        <b>SirioWeb</b> 1.0
-    </div>
-</footer>
+<!-- Footer -->
+{% include 'footer.html' %}
 
 <!-- jQuery -->
 <script src="{% static 'lib/adminlte-3.1.0/plugins/jquery/jquery.min.js' %}"></script>

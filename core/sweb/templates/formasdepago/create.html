@@ -1,34 +1,20 @@
 {% extends 'form.html' %}
 
 {% block javascript %}
-    <script type="application/javascript">
-        $(function () {
-            $('#idform').validate({
-                rules: {
-                    codigo: {required: true},
-                    descripcion: {required: true},
-                    recibos: {required: true},
-                    diasvto: {required: true},
-                },
-                messages: {
-                    codigo: {required: "Introduzca un código"},
-                    descripcion: {required: "Introduzca una descripción"},
-                    recibos: {required: "Introduzca un valor"},
-                    diasvto: {required: "Introduzca un valor"},
-                },
-                errorElement: 'span',
-                errorPlacement: function (error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.form-group').append(error);
-                },
-                highlight: function (element, errorClass, validClass) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid');
-                }
-            });
-        });
-
+    <script>
+        validar({
+                codigo: {required: true},
+                descripcion: {required: true},
+                recibos: {required: true},
+                diasvto: {required: true},
+            },
+            {
+                codigo: {required: "Introduzca un código"},
+                descripcion: {required: "Introduzca una descripción"},
+                recibos: {required: "Introduzca un valor"},
+                diasvto: {required: "Introduzca un valor"},
+            }
+        );
     </script>
+
 {% endblock %}

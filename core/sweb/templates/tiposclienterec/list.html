@@ -13,10 +13,10 @@
     {% for tcr in object_list %}
         <tr>
             <td>
-                <a href="{% url 'sweb:formasdepago_edit' tcr.id %}" class="btn btn-light btn-xs">
+                <a href="{% url 'sweb:tiposclienterec_edit' tcr.id %}" class="btn btn-light btn-xs">
                     <i class="far fa-edit" title="Editar"></i>
                 </a>
-                <a href="{% url 'sweb:formasdepago_delete' tcr.id %}" class="btn btn-light btn-xs">
+                <a href="{% url 'sweb:tiposclienterec_delete' tcr.id %}" class="btn btn-light btn-xs">
                     <i class="far fa-trash-alt" title="Borrar"></i>
                 </a>
             </td>

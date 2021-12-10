@@ -18,4 +18,6 @@ urlpatterns = [
     # Tipos de Cliente de Recambios
     path('tiposclienterec/list/', TipoClienteRecambiosListView.as_view(), name='tiposclienterec_list'),
     path('tiposclienterec/add/', TipoClienteRecambiosCreateView.as_view(), name='tiposclienterec_add'),
+    path('tiposclienterec/edit/<int:pk>/', TipoClienteRecambiosUpdateView.as_view(), name='tiposclienterec_edit'),
+    path('tiposclienterec/delete/<int:pk>/', TipoClienteRecambiosDeleteView.as_view(), name='tiposclienterec_delete'),
 ]
