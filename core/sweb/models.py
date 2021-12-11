@@ -1,7 +1,9 @@
 from django.db import models
+from core.models import BaseModel
+from crum import get_current_user
 
 
-class Banco(models.Model):
+class Banco(BaseModel):
     codigo = models.CharField(max_length=4, verbose_name='código banco', db_column='ban_codcsp', null=False)
     sucursal = models.CharField(max_length=4, verbose_name='sucursal', db_column='ban_sucursal', null=False)
     cuenta = models.CharField(max_length=15, verbose_name='número cuenta', db_column='ban_cuenta',null=True)
@@ -32,8 +34,20 @@ class Banco(models.Model):
         # constraint para que la combinación de código y sucursal no pueda repetirse
         unique_together = ['codigo', 'sucursal']
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        # Incluimos el código para la auditoría
+        user = get_current_user()
+        if user and not user.pk:
+            user = None
+        if not self.pk:
+            self.user_creation = user
+        else:
+            self.user_updated = user
+        super(Banco, self).save()
 
-class DescuentoMO(models.Model):
+
+class DescuentoMO(BaseModel):
     codigo = models.CharField(max_length=1, verbose_name='Código', db_column='dmo_codigo', unique=True,
                               null=False, blank=False)
     descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='dmo_descrip',
@@ -54,8 +68,20 @@ class DescuentoMO(models.Model):
         super(DescuentoMO, self).clean()
         self.codigo = self.codigo.upper()
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        # Incluimos el código para la auditoría
+        user = get_current_user()
+        if user and not user.pk:
+            user = None
+        if not self.pk:
+            self.user_creation = user
+        else:
+            self.user_updated = user
+        super(DescuentoMO, self).save()
 
-class FormaDePago(models.Model):
+
+class FormaDePago(BaseModel):
     codigo = models.CharField(max_length=2, verbose_name='Código', db_column='fpg_codigo', unique=True)
     descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='fpg_descrip',
                                    null=False, blank=False)
@@ -75,8 +101,20 @@ class FormaDePago(models.Model):
         super(FormaDePago, self).clean()
         self.codigo = self.codigo.upper()
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        # Incluimos el código para la auditoría
+        user = get_current_user()
+        if user and not user.pk:
+            user = None
+        if not self.pk:
+            self.user_creation = user
+        else:
+            self.user_updated = user
+        super(FormaDePago, self).save()
 
-class TipoClienteRecambios(models.Model):
+
+class TipoClienteRecambios(BaseModel):
     codigo = models.CharField(max_length=2, verbose_name='Código', db_column='tcr_codigo', unique=True)
     descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='tcr_descrip',
                                    null=False, blank=False)
@@ -94,3 +132,15 @@ class TipoClienteRecambios(models.Model):
     def clean(self):
         super(TipoClienteRecambios, self).clean()
         self.codigo = self.codigo.upper()
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        # Incluimos el código para la auditoría
+        user = get_current_user()
+        if user and not user.pk:
+            user = None
+        if not self.pk:
+            self.user_creation = user
+        else:
+            self.user_updated = user
+        super(TipoClienteRecambios, self).save()

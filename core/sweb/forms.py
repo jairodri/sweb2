@@ -19,7 +19,8 @@ class FormaDePagoForm(ModelForm):
         model = FormaDePago
         fields = '__all__'
         # se excluye el id por defecto
-        # exclude = ['id']
+        # excluimos los campos de auditoría
+        exclude = ['user_creation', 'user_updated']
         labels = {
             'codigo': 'Código',
             'descripcion': 'Descripción',
@@ -42,6 +43,7 @@ class TipoClienteRecambiosForm(ModelForm):
     class Meta:
         model = TipoClienteRecambios
         fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
         labels = {
             'codigo': 'Código',
             'descripcion': 'Descripción',
@@ -63,6 +65,7 @@ class DescuentoMOForm(ModelForm):
     class Meta:
         model = DescuentoMO
         fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
         labels = {
             'codigo': 'Código',
             'descripcion': 'Descripción',

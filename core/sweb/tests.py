@@ -1,11 +1,18 @@
-from django.test import TestCase
 from config.wsgi import *
 from core.sweb.models import *
+from core.user.models import User
 import pandas as pd
 from sqlalchemy import create_engine
+from datetime import datetime
 
 IMPORT_FOLDER = 'C:/Users/jairodri/Util/Python/Projects/testpyodbc/export/'
 DATABASE_SQLITE = 'C:\\Users\\jairodri\\Util\\Python\\Projects\\sweb2\\dbsweb.sqlite3'
+USER_CREATION_ID = User.objects.get(username='system')
+
+# Conexión para sqlite con 3 /// para indicar dirección absoluta
+conn = 'sqlite:///' + DATABASE_SQLITE
+print(conn)
+engine = create_engine(conn, echo=True)
 
 
 def formasdepagoimport():
@@ -27,17 +34,16 @@ def formasdepagoimport():
 
     # Borramos el contenido de la tabla antes de insertar
     FormaDePago.objects.all().delete()
-    print(FormaDePago.objects.all())
-
-    # Conexión para sqlite con 3 /// para indicar dirección absoluta
-    conn = 'sqlite:///' + DATABASE_SQLITE
-    print(conn)
-    engine = create_engine(conn, echo=True)
+    # print(FormaDePago.objects.all())
 
     # Insertamos todos los datos del dataframe en la tabla
     dtFormasPago.to_sql('sirtbfpg', engine, if_exists='append', index=False)
 
-    print(pd.read_sql_query('select * from sirtbfpg', engine))
+    # Actualizamos campos de auditoría
+    FormaDePago.objects.all().update(user_creation=USER_CREATION_ID)
+    FormaDePago.objects.all().update(date_creation=datetime.now())
+
+    # print(pd.read_sql_query('select * from sirtbfpg', engine))
 
 
 def tiposclienterecambiosimport():
@@ -58,15 +64,14 @@ def tiposclienterecambiosimport():
     TipoClienteRecambios.objects.all().delete()
     print(TipoClienteRecambios.objects.all())
 
-    # Conexión para sqlite con 3 /// para indicar dirección absoluta
-    conn = 'sqlite:///' + DATABASE_SQLITE
-    print(conn)
-    engine = create_engine(conn, echo=True)
-
     # Insertamos todos los datos del dataframe en la tabla
     dttiposclienterecambios.to_sql('sirtbtcr', engine, if_exists='append', index=False)
 
-    print(pd.read_sql_query('select * from sirtbtcr', engine))
+    # Actualizamos campos de auditoría
+    TipoClienteRecambios.objects.all().update(user_creation=USER_CREATION_ID)
+    TipoClienteRecambios.objects.all().update(date_creation=datetime.now())
+
+    # print(pd.read_sql_query('select * from sirtbtcr', engine))
 
 
 def descuentosmoimport():
@@ -88,18 +93,18 @@ def descuentosmoimport():
     DescuentoMO.objects.all().delete()
     print(DescuentoMO.objects.all())
 
-    # Conexión para sqlite con 3 /// para indicar dirección absoluta
-    conn = 'sqlite:///' + DATABASE_SQLITE
-    print(conn)
-    engine = create_engine(conn, echo=True)
-
     # Insertamos todos los datos del dataframe en la tabla
     dtDescuentosMo.to_sql('sirtbdmo', engine, if_exists='append', index=False)
 
+    # Actualizamos campos de auditoría
+    DescuentoMO.objects.all().update(user_creation=USER_CREATION_ID)
+    DescuentoMO.objects.all().update(date_creation=datetime.now())
+
     print(pd.read_sql_query('select * from sirtbdmo', engine))
 
-# formasdepagoimport()
-# tiposclienterecambiosimport()
+
+formasdepagoimport()
+tiposclienterecambiosimport()
 descuentosmoimport()
 
 
