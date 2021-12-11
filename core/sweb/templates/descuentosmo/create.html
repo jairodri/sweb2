@@ -1,0 +1,17 @@
+{% extends 'form.html' %}
+
+{% block javascript %}
+    <script type="application/javascript">
+        validar({
+                codigo: {required: true},
+                descripcion: {required: true},
+                descuento: {required: true},
+            },
+            {
+                codigo: {required: "Introduzca un código"},
+                descripcion: {required: "Introduzca una descripción"},
+                descuento: {required: "Introduzca un valor"},
+            }
+        );
+    </script>
+{% endblock %}

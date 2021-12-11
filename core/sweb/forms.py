@@ -1,5 +1,5 @@
 from django.forms import *
-from core.sweb.models import FormaDePago, TipoClienteRecambios
+from core.sweb.models import FormaDePago, TipoClienteRecambios, DescuentoMO
 
 
 class FormaDePagoForm(ModelForm):
@@ -7,7 +7,13 @@ class FormaDePagoForm(ModelForm):
         super().__init__(*args, **kwargs)
         # for f in self.visible_fields():
         #     f.field.widget.attrs['class'] = 'form-control'
-        self.fields['codigo'].widget.attrs['autofocus'] = True
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:  # diferenciamos add/edit
+            self.fields['codigo'].disabled = True
+            self.fields['descripcion'].widget.attrs['autofocus'] = True
+        else:
+            self.fields['codigo'].widget.attrs['autofocus'] = True
 
     class Meta:
         model = FormaDePago
@@ -25,17 +31,40 @@ class FormaDePagoForm(ModelForm):
 class TipoClienteRecambiosForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # for f in self.visible_fields():
-        #     f.field.widget.attrs['class'] = 'form-control'
-        self.fields['codigo'].widget.attrs['autofocus'] = True
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:  # diferenciamos add/edit
+            self.fields['codigo'].disabled = True
+            self.fields['descripcion'].widget.attrs['autofocus'] = True
+        else:
+            self.fields['codigo'].widget.attrs['autofocus'] = True
 
     class Meta:
         model = TipoClienteRecambios
         fields = '__all__'
-        # se excluye el id por defecto
-        # exclude = ['id']
         labels = {
             'codigo': 'Código',
             'descripcion': 'Descripción',
             'datocontable': 'Dato Contable'
+        }
+
+
+class DescuentoMOForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:  # diferenciamos add/edit
+            self.fields['codigo'].disabled = True
+            self.fields['descripcion'].widget.attrs['autofocus'] = True
+        else:
+            self.fields['codigo'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = DescuentoMO
+        fields = '__all__'
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+            'descuento': 'Descuento'
         }

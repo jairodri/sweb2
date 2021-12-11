@@ -37,7 +37,7 @@ def formasdepagoimport():
     # Insertamos todos los datos del dataframe en la tabla
     dtFormasPago.to_sql('sirtbfpg', engine, if_exists='append', index=False)
 
-    print(pd.read_sql_query('select * from sirtbfpg',engine))
+    print(pd.read_sql_query('select * from sirtbfpg', engine))
 
 
 def tiposclienterecambiosimport():
@@ -50,9 +50,9 @@ def tiposclienterecambiosimport():
 
     # Renombramos las columnas
     dttiposclienterecambios.rename(columns={'t_clavec': 'tcr_codigo',
-                                 't_elemc': 'tcr_descrip',
-                                 't_elemc2': 'tcr_datocon'},
-                        inplace=True)
+                                            't_elemc': 'tcr_descrip',
+                                            't_elemc2': 'tcr_datocon'},
+                                   inplace=True)
 
     # Borramos el contenido de la tabla antes de insertar
     TipoClienteRecambios.objects.all().delete()
@@ -69,6 +69,37 @@ def tiposclienterecambiosimport():
     print(pd.read_sql_query('select * from sirtbtcr', engine))
 
 
-formasdepagoimport()
-tiposclienterecambiosimport()
+def descuentosmoimport():
+    # Descuentos MO - tabla 002
+    dtDescuentosMo = pd.read_csv(IMPORT_FOLDER + 'rtablas002.csv', sep='|', dtype=str)
+    dtDescuentosMo['t_elemn'] = dtDescuentosMo['t_elemn'].astype(float)
+    print(dtDescuentosMo)
+
+    # Eliminamos las columnas que no necesitamos
+    dtDescuentosMo.drop(['Unnamed: 0'], axis=1, inplace=True)
+
+    # Renombramos las columnas con los nombres de las columnas en rarticul
+    dtDescuentosMo.rename(columns={'t_clavec': 'dmo_codigo',
+                                   't_elemc': 'dmo_descrip',
+                                   't_elemn': 'dmo_descuento'},
+                          inplace=True)
+
+    # Borramos el contenido de la tabla antes de insertar
+    DescuentoMO.objects.all().delete()
+    print(DescuentoMO.objects.all())
+
+    # Conexión para sqlite con 3 /// para indicar dirección absoluta
+    conn = 'sqlite:///' + DATABASE_SQLITE
+    print(conn)
+    engine = create_engine(conn, echo=True)
+
+    # Insertamos todos los datos del dataframe en la tabla
+    dtDescuentosMo.to_sql('sirtbdmo', engine, if_exists='append', index=False)
+
+    print(pd.read_sql_query('select * from sirtbdmo', engine))
+
+# formasdepagoimport()
+# tiposclienterecambiosimport()
+descuentosmoimport()
+
 

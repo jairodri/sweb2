@@ -34,19 +34,25 @@ class Banco(models.Model):
 
 
 class DescuentoMO(models.Model):
-    codigo = models.CharField(max_length=1, verbose_name='código MO', db_column='dmo_codigo', unique=True,
+    codigo = models.CharField(max_length=1, verbose_name='Código', db_column='dmo_codigo', unique=True,
                               null=False, blank=False)
-    descripcion = models.CharField(max_length=100, verbose_name='descripción', db_column='dmo_descrip',
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='dmo_descrip',
                                    null=False, blank=False)
-    descuento = models.DecimalField(verbose_name='descuento MO', max_digits=5, decimal_places=2, null=False)
+    descuento = models.DecimalField(verbose_name='Descuento', db_column='dmo_descuento', default=0.0,
+                                    max_digits=5, decimal_places=2, null=False)
 
     def __str__(self):
-        return f'{self.codigo} {self.descripcion}'
+        return f'{self.codigo} - {self.descripcion} - {self.descuento}'
 
     class Meta:
         db_table = 'sirtbdmo'
         verbose_name = 'Descuento MO'
         verbose_name_plural = 'Descuentos MO'
+        ordering = ['codigo']
+
+    def clean(self):
+        super(DescuentoMO, self).clean()
+        self.codigo = self.codigo.upper()
 
 
 class FormaDePago(models.Model):

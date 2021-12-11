@@ -1,0 +1,33 @@
+{% extends 'list.html' %}
+
+{% block columns %}
+    <tr>
+        <th scope="col" style="width: 10%;"></th>
+        <th scope="col" style="width: 10%;">Código</th>
+        <th scope="col" style="width: 70%;">Descripción</th>
+        <th scope="col" style="width: 10%;">Descuento</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+    {% for dmo in object_list %}
+        <tr>
+            <td>
+                <a href="{% url 'sweb:descuentosmo_edit' dmo.id %}" class="btn btn-light btn-xs">
+                    <i class="far fa-edit" title="Editar"></i>
+                </a>
+                <a href="{% url 'sweb:descuentosmo_delete' dmo.id %}" class="btn btn-light btn-xs">
+                    <i class="far fa-trash-alt" title="Borrar"></i>
+                </a>
+            </td>
+            <td>{{ dmo.codigo }}</td>
+            <td>{{ dmo.descripcion }}</td>
+            <td>{{ dmo.descuento }}</td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+
+<!-- Literal del botón para añdir registro
+{% block masdatos %}
+Añadir Descuento MO
+{% endblock %}

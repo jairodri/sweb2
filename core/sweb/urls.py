@@ -2,6 +2,7 @@ from django.urls import path
 from core.sweb.views.formasdepago.views import *
 from core.sweb.views.dashboard.views import *
 from core.sweb.views.tiposclienterec.views import *
+from core.sweb.views.descuentosmo.views import *
 
 app_name = 'sweb'
 
@@ -20,4 +21,11 @@ urlpatterns = [
     path('tiposclienterec/add/', TipoClienteRecambiosCreateView.as_view(), name='tiposclienterec_add'),
     path('tiposclienterec/edit/<int:pk>/', TipoClienteRecambiosUpdateView.as_view(), name='tiposclienterec_edit'),
     path('tiposclienterec/delete/<int:pk>/', TipoClienteRecambiosDeleteView.as_view(), name='tiposclienterec_delete'),
+
+    # Descuentos MO
+    path('descuentosmo/list/', DescuentoMOListView.as_view(), name='descuentosmo_list'),
+    path('descuentosmo/add/', DescuentoMOCreateView.as_view(), name='descuentosmo_add'),
+    path('descuentosmo/edit/<int:pk>/', DescuentoMOUpdateView.as_view(), name='descuentosmo_edit'),
+    path('descuentosmo/delete/<int:pk>/', DescuentoMODeleteView.as_view(), name='descuentosmo_delete'),
+
 ]
