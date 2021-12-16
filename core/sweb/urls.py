@@ -3,6 +3,7 @@ from core.sweb.views.formasdepago.views import *
 from core.sweb.views.dashboard.views import *
 from core.sweb.views.tiposclienterec.views import *
 from core.sweb.views.descuentosmo.views import *
+from core.sweb.views.bancos.views import *
 
 app_name = 'sweb'
 
@@ -28,4 +29,8 @@ urlpatterns = [
     path('descuentosmo/edit/<int:pk>/', DescuentoMOUpdateView.as_view(), name='descuentosmo_edit'),
     path('descuentosmo/delete/<int:pk>/', DescuentoMODeleteView.as_view(), name='descuentosmo_delete'),
 
+    # Bancos
+    path('bancos/list/', BancoListView.as_view(), name='bancos_list'),
+    path('bancos/add/', BancoCreateView.as_view(), name='bancos_add'),
+    path('bancos/edit/<int:pk>/', BancoUpdateView.as_view(), name='bancos_edit'),
 ]

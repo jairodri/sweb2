@@ -62,7 +62,7 @@ def tiposclienterecambiosimport():
 
     # Borramos el contenido de la tabla antes de insertar
     TipoClienteRecambios.objects.all().delete()
-    print(TipoClienteRecambios.objects.all())
+    # print(TipoClienteRecambios.objects.all())
 
     # Insertamos todos los datos del dataframe en la tabla
     dttiposclienterecambios.to_sql('sirtbtcr', engine, if_exists='append', index=False)
@@ -91,7 +91,7 @@ def descuentosmoimport():
 
     # Borramos el contenido de la tabla antes de insertar
     DescuentoMO.objects.all().delete()
-    print(DescuentoMO.objects.all())
+    # print(DescuentoMO.objects.all())
 
     # Insertamos todos los datos del dataframe en la tabla
     dtDescuentosMo.to_sql('sirtbdmo', engine, if_exists='append', index=False)
@@ -103,8 +103,53 @@ def descuentosmoimport():
     print(pd.read_sql_query('select * from sirtbdmo', engine))
 
 
-formasdepagoimport()
-tiposclienterecambiosimport()
-descuentosmoimport()
+def bancosimport():
+    # Banco
+    dtbanco = pd.read_csv(IMPORT_FOLDER + 'bdbancos.csv', sep='|', dtype=str)
+    # dtbanco['B_PREF_TEL'] = dtbanco['B_PREF_TEL'].astype(int)
+    print(dtbanco)
+
+    # Eliminamos las columnas que no necesitamos
+    dtbanco.drop(['Unnamed: 0'], axis=1, inplace=True)
+
+    # Renombramos las columnas con los nombres de las columnas en rarticul
+    dtbanco.rename(columns={'B_COD_CSP': 'ban_codcsp',
+                            'B_SUCURSAL': 'ban_sucursal',
+                            'B_CUENTA': 'ban_cuenta',
+                            'B_DGC': 'ban_dgc',
+                            'B_DGC2': 'ban_dgc2',
+                            'B_COD_BCOE': 'ban_codbcoe',
+                            'B_RAZON': 'ban_rsocial',
+                            'B_VIA_PUBL': 'ban_tipovia',
+                            'B_NOMBREVP': 'ban_nomvia',
+                            'B_NUM_VP': 'ban_numvia',
+                            'B_CPOSTAL': 'ban_cpostal',
+                            'B_MUNICIPI': 'ban_mncipio',
+                            'B_PROVINCI': 'ban_provin',
+                            'B_TELEX': 'ban_telex',
+                            'B_PREF_TEL': 'ban_preftel',
+                            'B_NUM_TELF': 'ban_telef',
+                            'B_TELF_PER': 'ban_telper',
+                            'B_EXT_TEL': 'ban_extelf',
+                            'B_NOM_CONT': 'ban_contac'
+                            },
+                   inplace=True)
+
+    # Borramos el contenido de la tabla antes de insertar
+    Banco.objects.all().delete()
+    # print(Banco.objects.all())
+    #
+    # Insertamos todos los datos del dataframe en la tabla
+    dtbanco.to_sql('sirtbban', engine, if_exists='append', index=False)
+
+    # Actualizamos campos de auditoría
+    Banco.objects.all().update(user_creation=USER_CREATION_ID)
+    Banco.objects.all().update(date_creation=datetime.now())
+
+    print(pd.read_sql_query('select * from sirtbban', engine))
 
 
+# formasdepagoimport()
+# tiposclienterecambiosimport()
+# descuentosmoimport()
+bancosimport()

@@ -21,10 +21,10 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('sweb/', include('core.sweb.urls')),
     path('', IndexView.as_view(), name='index'),
+    path('admin/', admin.site.urls),
     path('login/', include('core.login.urls')),
+    path('sweb/', include('core.sweb.urls')),
 ]
 
 # configuración necesaria para servir archivos media durante desarrollo

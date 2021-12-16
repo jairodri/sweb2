@@ -1,0 +1,163 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+    <!-- jquery-validation -->
+    <script type="text/javascript" src="{% static 'lib/jquery-validation-1.19.3/jquery.validate.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/jquery-validation-1.19.3/additional-methods.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <form method="post" action="." id="idform" enctype="multipart/form-data">
+        <!-- enctype="multipart/form-data" es necesario para gestionar campos tipo fichero -->
+        <div class="card card-primary">
+
+            <div class="card-header">
+                <h3 class="card-title">
+                    {% if action == 'add' %}
+                        <i class="fas fa-plus"></i>
+                    {% else %}
+                        <i class="fas fa-edit"></i>
+                    {% endif %}
+                    {{ title }}
+                </h3>
+            </div>
+
+            <div class="card-body">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h6><i class="icon fas fa-ban"></i></h6>
+                        <ul>
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    <div class="form-row p-2 justify-content-between text-left">
+                        <div class="col-sm-6 flex-column d-flex">
+                            <label class="px-3" for="{{ form.codigo.name }}">{{ form.codigo.label }}<span
+                                    class="text-danger"> *</span></label>
+                            <input type="text" class="form-control" value="{{ form.codigo.value }}">
+                        </div>
+                        <div class="col-sm-6 flex-column d-flex">
+                            <label class="px-3" for="{{ form.sucursal.name }}">{{ form.sucursal.label }}<span
+                                    class="text-danger"> *</span></label>
+                            <input type="text" class="form-control" value="{{ form.sucursal.value }}">
+                        </div>
+                    </div>
+                    <div class="form-row col-sm-12 p-2 flex-column d-flex">
+                        <label class="px-3" for="{{ form.razonsocial.name }}">{{ form.razonsocial.label }}<span
+                                class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" value="{{ form.razonsocial.value }}">
+                    </div>
+                    <div class="p-2"></div>
+                    <div class="card p-2">
+                        <h6 class="text-left px-3 mb-2 text-dark text-bold">Dirección</h6>
+                        <div class="form-row p-2 justify-content-between text-left">
+                            <div class="col-sm-2 flex-column d-flex">
+                                <label class="px-3" for="{{ form.tipovia.name }}">{{ form.tipovia.label }}<span
+                                        class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" value="{{ form.tipovia.value }}">
+                            </div>
+                            <div class="col-sm-8 flex-column d-flex">
+                                <label class="px-3" for="{{ form.nomvia.name }}">{{ form.nomvia.label }}<span
+                                        class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" value="{{ form.nomvia.value }}">
+                            </div>
+                            <div class="col-sm-2 flex-column d-flex">
+                                <label class="px-3" for="{{ form.numvia.name }}">{{ form.numvia.label }}<span
+                                        class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" value="{{ form.numvia.value }}">
+                            </div>
+                        </div>
+                        <div class="form-row p-2 justify-content-between text-left">
+                            <div class="col-sm-4 flex-column d-flex">
+                                <label class="px-3" for="{{ form.codpostal.name }}">{{ form.codpostal.label }}<span
+                                        class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" value="{{ form.codpostal.value }}">
+                            </div>
+                            <div class="col-sm-8 flex-column d-flex">
+                                <label class="px-3" for="{{ form.municipio.name }}">{{ form.municipio.label }}<span
+                                        class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" value="{{ form.municipio.value }}">
+                            </div>
+                        </div>
+                        <div class="form-row p-2 justify-content-between text-left">
+                            <div class="col-sm-12 flex-column d-flex">
+                                <label class="px-3" for="{{ form.provincia.name }}">{{ form.provincia.label }}<span
+                                        class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" value="{{ form.provincia.value }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row p-2 justify-content-between text-left">
+                        <div class="col-sm-6 flex-column d-flex">
+                            <label class="px-3" for="{{ form.telefono.name }}">{{ form.telefono.label }}</label>
+                            <input type="text" class="form-control" value="{{ form.telefono.value | default_if_none:'' }}">
+                        </div>
+                        <div class="col-sm-6 flex-column d-flex">
+                            <label class="px-3" for="{{ form.telex.name }}">{{ form.telex.label }}</label>
+                            <input type="text" class="form-control" value="{{ form.telex.value | default_if_none:'' }}">
+                        </div>
+                    </div>
+
+                    <div class="form-row p-2 justify-content-between text-left">
+                        <div class="col-sm-6 flex-column d-flex">
+                            <label class="px-3" for="{{ form.extension.name }}">{{ form.extension.label }}</label>
+                            <input type="text" class="form-control" value="{{ form.extension.value | default_if_none:'' }}">
+                        </div>
+                        <div class="col-sm-6 flex-column d-flex">
+                            <label class="px-3" for="{{ form.telperso.name }}">{{ form.telperso.label }}</label>
+                            <input type="text" class="form-control" value="{{ form.telperso.value | default_if_none:'' }}">
+                        </div>
+                    </div>
+
+                    <div class="form-row p-2 justify-content-between text-left">
+                        <div class="col-sm-12 flex-column d-flex">
+                            <label class="px-3" for="{{ form.contacto.name }}">{{ form.contacto.label }}</label>
+                            <input type="text" class="form-control" value="{{ form.contacto.value | default_if_none:'' }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-flat">
+                    <i class="fas fa-save"></i> Guardar
+                    {% block data %}
+
+                    {% endblock %}
+                </button>
+                <a href="{{ list_url }}" class="btn btn-secondary btn-flat">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascript %}
+    <script type="application/javascript">
+        validar({
+                codigo: {required: true},
+                sucursal: {required: true},
+            },
+            {
+                codigo: {required: "Introduzca código de banco"},
+                descripcion: {required: "Introduzca código de sucursal"},
+            }
+        );
+    </script>
+{% endblock %}

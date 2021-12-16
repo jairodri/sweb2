@@ -44,13 +44,11 @@
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Regístrese para iniciar sesión</p>
 
-                <form action="." method="post" id="idlogin">
+                <form action="." method="post" id="idform">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ next }}">
                     {% if form.errors %}
                         <div class="callout callout-danger">
-                            {#                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>#}
-                            {#                            <h6><i class="icon fas fa-ban"></i></h6>#}
                             <ul class="text-danger">
                                 {% for field in form %}
                                     {% for error in field.errors %}
@@ -108,31 +106,18 @@
 <!-- jquery-validation -->
 <script type="text/javascript" src="{% static 'lib/jquery-validation-1.19.3/jquery.validate.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'lib/jquery-validation-1.19.3/additional-methods.min.js' %}"></script>
-
+<!-- Functions -->
+<script src="{% static 'js/functions.js' %}"></script>
 <script type="application/javascript">
-    $(function () {
-        $('#idlogin').validate({
-            rules: {
-                username: {required: true},
-                password: {required: true},
-            },
-            messages: {
-                username: {required: "Introduzca su código de usuario"},
-                password: {required: "Introduzca su contraseña"},
-            },
-            errorElement: 'span',
-            errorPlacement: function (error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function (element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function (element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
-            }
-        });
-    });
+    validar({
+            username: {required: true},
+            password: {required: true},
+        },
+        {
+            username: {required: "Introduzca su código de usuario"},
+            password: {required: "Introduzca su contraseña"},
+        }
+    );
 </script>
 
 </body>

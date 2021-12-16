@@ -1,0 +1,35 @@
+{% extends 'list.html' %}
+
+{% block columns %}
+    <tr>
+        <th scope="col" style="width: 10%;"></th>
+        <th scope="col" style="width: 10%;">Banco</th>
+        <th scope="col" style="width: 10%;">Sucursal</th>
+        <th scope="col" style="width: 58%;">Razón Social</th>
+        <th scope="col" style="width: 12%;">Teléfono</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+    {% for ban in object_list %}
+        <tr>
+            <td>
+                <a href="{% url 'sweb:bancos_edit' ban.id %}" class="btn btn-light btn-xs">
+                    <i class="far fa-edit" title="Editar"></i>
+                </a>
+                <a href="{% url 'sweb:tiposclienterec_delete' ban.id %}" class="btn btn-light btn-xs">
+                    <i class="far fa-trash-alt" title="Borrar"></i>
+                </a>
+            </td>
+            <td>{{ ban.codigo }}</td>
+            <td>{{ ban.sucursal }}</td>
+            <td>{{ ban.razonsocial }}</td>
+            <td>{{ ban.telefono | default_if_none:'' }}</td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+
+<!-- Literal del botón para añdir registro
+{% block masdatos %}
+Añadir Banco
+{% endblock %}
