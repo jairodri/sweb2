@@ -19,7 +19,6 @@ from core.homepage.views import IndexView
 from django.conf import settings
 from django.conf.urls.static import static
 
-
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('admin/', admin.site.urls),
@@ -28,4 +27,6 @@ urlpatterns = [
 ]
 
 # configuración necesaria para servir archivos media durante desarrollo
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

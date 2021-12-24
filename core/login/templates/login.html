@@ -13,28 +13,37 @@
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Bootstrap -->
     <link href="{% static 'lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'lib/bootstrap_icons-1.7.2/bootstrap-icons.css' %}" rel="stylesheet">
+        <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="{% static 'lib/adminlte-3.1.0/plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Sirioweb style -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'lib/adminlte-3.1.0/css/adminlte.min.css' %}">
 
 </head>
 <body>
-<div class="container-fluid bg-primary text-white row">
-    <div class="col-md-2 ">
-        <i class="bi bi-envelope"><a href="mailto:admin@esirag.com" class="link-light"> admin@esirag.com</a></i>
+<!-- Header -->
+<nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+    <div class="collapse navbar-collapse">
+        <a class="navbar-brand" href="#">SirioWeb</a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="mailto:admin@esirag.com" data-toggle="collapse">
+                    <i class="fas fa-envelope"></i> Contactar
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-toggle="collapse">
+                    <i class="fas fa-phone-alt"></i>  (+34) 915 339 154
+                </a>
+            </li>
+        </ul>
+
     </div>
-    <div class="col-md-2 ">
-        <i class="bi-telephone "><span> +34 915 339 154</span></i>
-    </div>
-    <div class="col-md-7 "></div>
-    <div class="col-md-1 ">
-        <a href="https://twitter.com/siraginf" class="link-light p-1"><i class="bi bi-twitter"></i></a>
-        <a href="https://es-es.facebook.com/SiragInformatica/" class="link-light p-1"><i class="bi bi-facebook"></i></a>
-        <a href="https://es.linkedin.com/company/sirag-inform-tica" class="link-light p-1"><i
-                class="bi bi-linkedin"></i></a>
-    </div>
-</div>
-<div class="hold-transition login-page">
+</nav>
+
+<div class="container-fluid">
+<div class="hold-transition login-pag">
     <div class="login-box">
         <div class="login-logo">
             <a href="{% url 'index' %}"><b>Sirio</b>Web</a>
@@ -66,7 +75,7 @@
                         {{ form.username | add_class:'form-control' | attr:'placeholder:Usuario' | attr:'autocomplete:off' }}
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <span class="bi bi-person-fill"></span>
+                                <span class="fas fa-user"></span>
                             </div>
                         </div>
                     </div>
@@ -74,14 +83,14 @@
                         {{ form.password | add_class:'form-control' | attr:'placeholder:Contraseña' | attr:'id:current-password' }}
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <span class="bi bi-lock-fill"></span>
+                                <span class="fas fa-lock"></span>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
                             <button type="submit" class="btn btn-primary btn-block">
-                                <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
                             </button>
                         </div>
                     </div>
@@ -90,12 +99,28 @@
         </div>
     </div>
 </div>
-
-<!-- Footer : no incluimos la clase main-footer porque nos descuadra el centrado en esta página-->
-<footer class="text-center">
-    <strong>Copyright © 2021-2022 <a href="http://http:/esirag.com/index.html">Sirag Informática</a>.</strong><br>
-    Todos los derechos reservados.
-</footer>
+</div>
+<!-- Footer -->
+<nav class="navbar navbar-expand-md navbar-dark fixed-bottom">
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="http://http:/esirag.com/index.html" data-toggle="collapse">© 2021-2022 Sirag Informática.</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="https://twitter.com/siraginf"><i class="fab fa-twitter"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://es-es.facebook.com/SiragInformatica/"><i class="fab fa-facebook"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://es.linkedin.com/company/sirag-inform-tica"><i class="fab fa-linkedin"></i></a>
+            </li>
+        </ul>
+    </div>
+</nav>
 
 <!-- jQuery -->
 <script src="{% static 'lib/adminlte-3.1.0/plugins/jquery/jquery.min.js' %}"></script>

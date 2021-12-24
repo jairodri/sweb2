@@ -1,4 +1,5 @@
 from pathlib import Path
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -12,10 +13,10 @@ SQLITE = {
 POSTGRESQL = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dbsweb',
-        'USER': 'postgres',
-        'PASSWORD': 'siriot',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'NAME': config('POSTGRE_NAME'),
+        'USER': config('POSTGRE_USER'),
+        'PASSWORD': config('POSTGRE_PSWD'),
+        'HOST': config('POSTGRE_HOST'),
+        'PORT': config('POSTGRE_PORT')
     }
 }

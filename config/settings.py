@@ -9,9 +9,11 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os.path
 from pathlib import Path
 import config.db as db
+# from decouple import config
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(0hb)3s_!vtyqsoiw_ik$!b(cz=%+noffonm39n_i2+6wmec)+'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -126,11 +128,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
+    BASE_DIR / "media",
     "c:/Users/jairodri/Util/Python/Projects/sweb2/static",  # para que static funcione bien
 ]
+
+STATIC_ROOT = BASE_DIR / 'static_cdn/'
+MEDIA_ROOT = BASE_DIR / 'media_cdn/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -141,8 +150,6 @@ LOGIN_REDIRECT_URL = '/sweb/dashboard'
 LOGOUT_REDIRECT_URL = '/login/'
 LOGIN_URL = '/login/'
 
-MEDIA_ROOT = BASE_DIR / 'media/'
-MEDIA_URL = '/media/'
 
 # Indicamos la clase usuario personalizada
 AUTH_USER_MODEL = 'user.User'
