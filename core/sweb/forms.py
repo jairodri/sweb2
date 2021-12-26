@@ -76,10 +76,10 @@ class DescuentoMOForm(ModelForm):
 class BancoForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         # diferenciamos add/edit
         instance = getattr(self, 'instance', None)
-
-        if instance and instance.pk:  # diferenciamos add/edit
+        if instance and instance.pk:
             self.fields['codigo'].disabled = True
             self.fields['sucursal'].disabled = True
             # self.fields['descripcion'].widget.attrs['autofocus'] = True

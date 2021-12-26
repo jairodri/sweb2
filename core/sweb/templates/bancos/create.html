@@ -43,91 +43,91 @@
                         </ul>
                     </div>
                 {% endif %}
-                <div class="form-group">
+                <div class="">
                     <div class="form-row p-2 justify-content-between text-left">
-                        <div class="col-sm-6 flex-column d-flex">
+                        <div class="form-group col-sm-6 flex-column d-flex">
                             <label class="px-3" for="{{ form.codigo.name }}">{{ form.codigo.label }}<span
                                     class="text-danger"> *</span></label>
-                            <input type="text" class="form-control" value="{{ form.codigo.value }}">
+                            {{ form.codigo | add_class:'form-control' }}
                         </div>
-                        <div class="col-sm-6 flex-column d-flex">
+                        <div class="form-group col-sm-6 flex-column d-flex">
                             <label class="px-3" for="{{ form.sucursal.name }}">{{ form.sucursal.label }}<span
                                     class="text-danger"> *</span></label>
-                            <input type="text" class="form-control" value="{{ form.sucursal.value }}">
+                            {{ form.sucursal | add_class:'form-control' }}
                         </div>
                     </div>
-                    <div class="form-row col-sm-12 p-2 flex-column d-flex">
+                    <div class="form-group form-row col-sm-12 p-2 flex-column d-flex">
                         <label class="px-3" for="{{ form.razonsocial.name }}">{{ form.razonsocial.label }}<span
                                 class="text-danger"> *</span></label>
-                        <input type="text" class="form-control" value="{{ form.razonsocial.value }}">
+                        {{ form.razonsocial | add_class:'form-control' }}
                     </div>
                     <div class="p-2"></div>
                     <div class="card p-2">
                         <h6 class="text-left px-3 mb-2 text-dark text-bold">Dirección</h6>
                         <div class="form-row p-2 justify-content-between text-left">
-                            <div class="col-sm-2 flex-column d-flex">
+                            <div class="form-group col-sm-3 col-md-2 flex-column d-flex">
                                 <label class="px-3" for="{{ form.tipovia.name }}">{{ form.tipovia.label }}<span
                                         class="text-danger"> *</span></label>
-                                <input type="text" class="form-control" value="{{ form.tipovia.value }}">
+                                {{ form.tipovia | add_class:'form-control' }}
                             </div>
-                            <div class="col-sm-8 flex-column d-flex">
+                            <div class="form-group col-sm-6 col-md-8 flex-column d-flex">
                                 <label class="px-3" for="{{ form.nomvia.name }}">{{ form.nomvia.label }}<span
                                         class="text-danger"> *</span></label>
-                                <input type="text" class="form-control" value="{{ form.nomvia.value }}">
+                                {{ form.nomvia | add_class:'form-control' }}
                             </div>
-                            <div class="col-sm-2 flex-column d-flex">
+                            <div class="form-group col-sm-3 col-md-2 flex-column d-flex">
                                 <label class="px-3" for="{{ form.numvia.name }}">{{ form.numvia.label }}<span
                                         class="text-danger"> *</span></label>
-                                <input type="text" class="form-control" value="{{ form.numvia.value }}">
+                                {{ form.numvia | add_class:'form-control' }}
                             </div>
                         </div>
                         <div class="form-row p-2 justify-content-between text-left">
-                            <div class="col-sm-4 flex-column d-flex">
+                            <div class="form-group col-sm-4 flex-column d-flex">
                                 <label class="px-3" for="{{ form.codpostal.name }}">{{ form.codpostal.label }}<span
                                         class="text-danger"> *</span></label>
-                                <input type="text" class="form-control" value="{{ form.codpostal.value }}">
+                                {{ form.codpostal | add_class:'form-control' }}
                             </div>
-                            <div class="col-sm-8 flex-column d-flex">
+                            <div class="form-group col-sm-8 flex-column d-flex">
                                 <label class="px-3" for="{{ form.municipio.name }}">{{ form.municipio.label }}<span
                                         class="text-danger"> *</span></label>
-                                <input type="text" class="form-control" value="{{ form.municipio.value }}">
+                                {{ form.municipio | add_class:'form-control' }}
                             </div>
                         </div>
                         <div class="form-row p-2 justify-content-between text-left">
-                            <div class="col-sm-12 flex-column d-flex">
+                            <div class="form-group col-sm-12 flex-column d-flex">
                                 <label class="px-3" for="{{ form.provincia.name }}">{{ form.provincia.label }}<span
                                         class="text-danger"> *</span></label>
-                                <input type="text" class="form-control" value="{{ form.provincia.value }}">
+                                {{ form.provincia | add_class:'form-control' }}
                             </div>
                         </div>
                     </div>
 
                     <div class="form-row p-2 justify-content-between text-left">
-                        <div class="col-sm-6 flex-column d-flex">
+                        <div class="form-group col-sm-6 flex-column d-flex">
                             <label class="px-3" for="{{ form.telefono.name }}">{{ form.telefono.label }}</label>
-                            <input type="text" class="form-control" value="{{ form.telefono.value | default_if_none:'' }}">
+                            {{ form.telefono | add_class:'form-control' }}
                         </div>
-                        <div class="col-sm-6 flex-column d-flex">
+                        <div class="form-group col-sm-6 flex-column d-flex">
                             <label class="px-3" for="{{ form.telex.name }}">{{ form.telex.label }}</label>
-                            <input type="text" class="form-control" value="{{ form.telex.value | default_if_none:'' }}">
+                            {{ form.telex | add_class:'form-control' }}
                         </div>
                     </div>
 
                     <div class="form-row p-2 justify-content-between text-left">
-                        <div class="col-sm-6 flex-column d-flex">
+                        <div class="form-group col-sm-6 flex-column d-flex">
                             <label class="px-3" for="{{ form.extension.name }}">{{ form.extension.label }}</label>
-                            <input type="text" class="form-control" value="{{ form.extension.value | default_if_none:'' }}">
+                            {{ form.extension | add_class:'form-control' }}
                         </div>
-                        <div class="col-sm-6 flex-column d-flex">
+                        <div class="form-group col-sm-6 flex-column d-flex">
                             <label class="px-3" for="{{ form.telperso.name }}">{{ form.telperso.label }}</label>
-                            <input type="text" class="form-control" value="{{ form.telperso.value | default_if_none:'' }}">
+                            {{ form.telperso | add_class:'form-control' }}
                         </div>
                     </div>
 
                     <div class="form-row p-2 justify-content-between text-left">
-                        <div class="col-sm-12 flex-column d-flex">
+                        <div class="form-group col-sm-12 flex-column d-flex">
                             <label class="px-3" for="{{ form.contacto.name }}">{{ form.contacto.label }}</label>
-                            <input type="text" class="form-control" value="{{ form.contacto.value | default_if_none:'' }}">
+                            {{ form.contacto | add_class:'form-control' }}
                         </div>
                     </div>
                 </div>
@@ -137,7 +137,6 @@
                 <button type="submit" class="btn btn-primary btn-flat">
                     <i class="fas fa-save"></i> Guardar
                     {% block data %}
-
                     {% endblock %}
                 </button>
                 <a href="{{ list_url }}" class="btn btn-secondary btn-flat">
@@ -156,7 +155,7 @@
             },
             {
                 codigo: {required: "Introduzca código de banco"},
-                descripcion: {required: "Introduzca código de sucursal"},
+                sucursal: {required: "Introduzca código de sucursal"},
             }
         );
     </script>

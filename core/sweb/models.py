@@ -24,12 +24,12 @@ class Banco(BaseModel):
                                  blank=False)
     provincia = models.CharField(max_length=100, verbose_name='provincia', db_column='ban_provin', null=False,
                                  blank=False)
-    telex = models.CharField(max_length=25, verbose_name='telex', db_column='ban_telex', null=True)
-    prefijo = models.IntegerField(db_column='ban_preftel', verbose_name='prefijo teléfono', null=True)
-    telefono = models.IntegerField(db_column='ban_telef', verbose_name='teléfono', null=True)
-    telperso = models.IntegerField(db_column='ban_telper', verbose_name='teléfono personal', null=True)
-    extension = models.IntegerField(db_column='ban_extelf', verbose_name='extensión', null=True)
-    contacto = models.CharField(max_length=100, verbose_name='contacto', db_column='ban_contac', null=True)
+    telex = models.CharField(max_length=25, verbose_name='telex', db_column='ban_telex', null=True, blank=True)
+    prefijo = models.IntegerField(db_column='ban_preftel', verbose_name='prefijo teléfono', null=True, blank=True)
+    telefono = models.IntegerField(db_column='ban_telef', verbose_name='teléfono', null=True, blank=True)
+    telperso = models.IntegerField(db_column='ban_telper', verbose_name='teléfono personal', null=True, blank=True)
+    extension = models.IntegerField(db_column='ban_extelf', verbose_name='extensión', null=True, blank=True)
+    contacto = models.CharField(max_length=100, verbose_name='contacto', db_column='ban_contac', null=True, blank=True)
 
     def __str__(self):
         # return self.codigo + self.sucursal
