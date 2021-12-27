@@ -1,8 +1,9 @@
 
-function validar(rules, messages) {
+function validar(entity) {
+    console.log(entity)
     $('#idform').validate({
-        rules: rules,
-        messages: messages,
+        rules: {},
+        messages: {},
         errorElement: 'span',
         errorPlacement: function (error, element) {
             error.addClass('invalid-feedback');

@@ -103,9 +103,9 @@
             <a class="text-white" href="http://http:/esirag.com/index.html"> Sirag Informática</a>
         </div>
         <div class="col-md-5 col-6 text-end">
-            <a class="m-1 text-white" href="https://twitter.com/siraginf"><i class="fab fa-twitter"></i></a>
-            <a class="m-1 text-white" href="https://es-es.facebook.com/SiragInformatica/"><i class="fab fa-facebook"></i></a>
-            <a class="m-1 text-white" href="https://es.linkedin.com/company/sirag-inform-tica"><i class="fab fa-linkedin"></i></a>
+            <a class="m-1 text-white" href="https://twitter.com/siraginf" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a class="m-1 text-white" href="https://es-es.facebook.com/SiragInformatica/" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a class="m-1 text-white" href="https://es.linkedin.com/company/sirag-inform-tica" target="_blank"><i class="fab fa-linkedin"></i></a>
         </div>
     </div>
 </footer>
@@ -118,18 +118,11 @@
 <!-- jquery-validation -->
 <script type="text/javascript" src="{% static 'lib/jquery-validation-1.19.3/jquery.validate.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'lib/jquery-validation-1.19.3/additional-methods.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'lib/jquery-validation-1.19.3/localization/messages_es.min.js' %}"></script>
 <!-- Functions -->
 <script src="{% static 'js/functions.js' %}"></script>
 <script type="application/javascript">
-    validar({
-            username: {required: true},
-            password: {required: true},
-        },
-        {
-            username: {required: "Introduzca su código de usuario"},
-            password: {required: "Introduzca su contraseña"},
-        }
-    );
+        validar({}, {});
 </script>
 
 </body>

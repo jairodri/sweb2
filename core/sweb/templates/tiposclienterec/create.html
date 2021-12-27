@@ -1,17 +1,31 @@
 {% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <form method="post" action="." id="idform" enctype="multipart/form-data">
+        <!-- enctype="multipart/form-data" es necesario para gestionar campos tipo fichero -->
+        <div class="card card-primary">
+            {% include 'tituloform.html' %}
+
+            <div class="card-body">
+                {% csrf_token %}
+                {% include 'errorform.html' %}
+
+                {% for field in form.visible_fields %}
+                    <div class="form-group">
+                        <label for="{{ field.name }}">{{ field.label }}</label>
+                        {{ field | add_class:'form-control' }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% include 'botonform.html' %}
+        </div>
+    </form>
+{% endblock %}
 
 {% block javascript %}
-    <script type="application/javascript">
-        validar({
-                codigo: {required: true},
-                descripcion: {required: true},
-                datocontable: {required: true},
-            },
-            {
-                codigo: {required: "Introduzca un código"},
-                descripcion: {required: "Introduzca una descripción"},
-                datocontable: {required: "Introduzca un valor"},
-            }
-        );
+    <script>
+        validar('TipoClienteRecambios');
     </script>
 {% endblock %}

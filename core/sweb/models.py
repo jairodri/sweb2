@@ -62,7 +62,7 @@ class DescuentoMO(BaseModel):
     descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='dmo_descrip',
                                    null=False, blank=False)
     descuento = models.DecimalField(verbose_name='Descuento', db_column='dmo_descuento', default=0.0,
-                                    max_digits=5, decimal_places=2, null=False)
+                                    max_digits=5, decimal_places=2, null=False, blank=False)
 
     def __str__(self):
         return f'{self.codigo} - {self.descripcion} - {self.descuento}'
@@ -94,9 +94,9 @@ class FormaDePago(BaseModel):
     codigo = models.CharField(max_length=2, verbose_name='Código', db_column='fpg_codigo', unique=True)
     descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='fpg_descrip',
                                    null=False, blank=False)
-    recibos = models.IntegerField(verbose_name='Recibos', db_column='fpg_recibos', default=0, null=True)
+    recibos = models.IntegerField(verbose_name='Recibos', db_column='fpg_recibos', default=0, null=False, blank=False)
     diasvto = models.IntegerField(verbose_name='Días vencimiento factura', db_column='fpg_diasvto', default=0,
-                                  null=True)
+                                  null=False, blank=False)
 
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
@@ -128,7 +128,8 @@ class TipoClienteRecambios(BaseModel):
     codigo = models.CharField(max_length=2, verbose_name='Código', db_column='tcr_codigo', unique=True)
     descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='tcr_descrip',
                                    null=False, blank=False)
-    datocontable = models.CharField(max_length=1, verbose_name='Dato contable', db_column='tcr_datocon', null=True)
+    datocontable = models.CharField(max_length=1, verbose_name='Dato contable', db_column='tcr_datocon',
+                                    null=False, blank=False)
 
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
