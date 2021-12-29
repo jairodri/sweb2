@@ -1,0 +1,20 @@
+
+.bg-navy {
+  background-color: #072146 !important;
+}
+
+.bg-navy,
+.bg-navy > a {
+  color: #fff !important;
+}
+
+.bg-navy.btn:hover {
+  border-color: #59339d;
+  color: #ececec;
+}
+
+.bg-navy.btn:not(:disabled):not(.disabled):active, .bg-navy.btn:not(:disabled):not(.disabled).active, .bg-navy.btn:active, .bg-navy.btn.active {
+  background-color: #59339d !important;
+  border-color: #533093;
+  color: #fff;
+}

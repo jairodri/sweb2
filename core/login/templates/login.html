@@ -17,11 +17,13 @@
     <link rel="stylesheet" href="{% static 'lib/adminlte-3.1.0/plugins/fontawesome-free/css/all.min.css' %}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'lib/adminlte-3.1.0/css/adminlte.min.css' %}">
+    <!-- SirioWeb style -->
+    <link rel="stylesheet" href="{% static 'css/sweb.css' %}">
 </head>
 <body>
 <!-- Header -->
-<nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
-    <a class="navbar-brand" href="#">SirioWeb</a>
+<nav class="navbar navbar-expand-md navbar-dark bg-navy fixed-top">
+    <a class="navbar-brand" href="#"><b>Sirio</b>Web</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsEnlaces"
             aria-controls="navbarsEnlaces" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -30,12 +32,12 @@
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" href="mailto:admin@esirag.com">
-                    <i class="fas fa-envelope"></i> Contactar
+                    <i class="fas fa-envelope mr-2"></i> admin@esirag.com
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-phone-alt"></i>  (+34) 915 339 154
+                <a class="nav-link" href="tel:+34915339154">
+                    <i class="fas fa-phone-alt mr-2"></i>  (+34) 915 339 154
                 </a>
             </li>
         </ul>
@@ -68,7 +70,7 @@
                         </div>
                     {% endif %}
                     <div class="input-group mb-3 form-group">
-                        {{ form.username | add_class:'form-control' | attr:'placeholder:Usuario' | attr:'autocomplete:off' }}
+                        {{ form.username | add_class:'form-control' | attr:'placeholder:Usuario *' | attr:'autocomplete:off' }}
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -76,7 +78,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3 form-group">
-                        {{ form.password | add_class:'form-control' | attr:'placeholder:Contraseña' | attr:'id:current-password' }}
+                        {{ form.password | add_class:'form-control' | attr:'placeholder:Contraseña *' | attr:'id:current-password' }}
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
