@@ -24,24 +24,6 @@
 <!-- Header -->
 <nav class="navbar navbar-expand-md navbar-dark bg-navy fixed-top">
     <a class="navbar-brand" href="#"><b>Sirio</b>Web</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsEnlaces"
-            aria-controls="navbarsEnlaces" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarsEnlaces">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="mailto:admin@esirag.com">
-                    <i class="fas fa-envelope mr-2"></i> admin@esirag.com
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="tel:+34915339154">
-                    <i class="fas fa-phone-alt mr-2"></i>  (+34) 915 339 154
-                </a>
-            </li>
-        </ul>
-    </div>
 </nav>
 <!-- Login -->
 <div class="login-page">
@@ -98,19 +80,51 @@
     </div>
 </div>
 <!-- Footer -->
-<footer class="fixed-bottom">
-    <div class="row p-3 bg-dark text-white">
-        <!-- Copyright -->
-        <div class="col-md-7 col-6">© 2021-2022
-            <a class="text-white" href="http://http:/esirag.com/index.html"> Sirag Informática</a>
+<footer class="py-4 bg-dark">
+    <div class="mx-3 footer-info">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <h3>Sirag Informática</h3>
+                    <p>
+                        <a class="text-light" href="tel:+34915339154">
+                            <i class="fas fa-phone-alt mr-2"></i> (+34) 915 339 154
+                        </a>
+                        <br>
+                        <a class="text-light" href="mailto:admin@esirag.com">
+                            <i class="fas fa-envelope mr-2"></i> admin@esirag.com
+                        </a>
+                        <br>
+                    </p>
+                </div>
+                <div class="col-lg-6 col-md-6 text-md-right text-lg-right">
+                    <h5>Redes Sociales</h5>
+                    <div class="social-links mt-3">
+                        <a class="mr-3 text-white" href="https://twitter.com/siraginf" target="_blank"><i
+                                class="fab fa-twitter fa-lg"></i></a>
+                        <a class="mr-3 text-white" href="https://es-es.facebook.com/SiragInformatica/"
+                           target="_blank"><i
+                                class="fab fa-facebook fa-lg"></i></a>
+                        <a class="mr-3 text-white" href="https://es.linkedin.com/company/sirag-inform-tica"
+                           target="_blank"><i
+                                class="fab fa-linkedin fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-5 col-6 text-end">
-            <a class="m-1 text-white" href="https://twitter.com/siraginf" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a class="m-1 text-white" href="https://es-es.facebook.com/SiragInformatica/" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a class="m-1 text-white" href="https://es.linkedin.com/company/sirag-inform-tica" target="_blank"><i class="fab fa-linkedin"></i></a>
+    </div>
+
+    <div class="container-fluid py-4">
+        <div class="copyright m-3">
+            &copy; Copyright <strong><span><a class="text-white" href="http://http:/esirag.com/index.html"> Sirag Informática</a></span></strong>.
+            Todos los derechos reservados
+        </div>
+        <div class="credits m-3">
+            <span class="brand-text font-weight-light text-white"><b>Sirio</b>Web <small>1.0</small></span>
         </div>
     </div>
 </footer>
+
 <!-- jQuery -->
 <script src="{% static 'lib/adminlte-3.1.0/plugins/jquery/jquery.min.js' %}"></script>
 <!-- Bootstrap 4 -->
@@ -124,7 +138,7 @@
 <!-- Functions -->
 <script src="{% static 'js/functions.js' %}"></script>
 <script type="application/javascript">
-        validar({}, {});
+        validar('Login');
 </script>
 
 </body>
