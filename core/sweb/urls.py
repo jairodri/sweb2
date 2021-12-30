@@ -10,6 +10,7 @@ app_name = 'sweb'
 urlpatterns = [
     # Home
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
+    path('', DashboardView.as_view(), name='index'),
 
     # Formas de Pago
     path('formasdepago/list/', FormaDePagoListView.as_view(), name='formasdepago_list'),

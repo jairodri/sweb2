@@ -20,7 +20,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', IndexView.as_view(), name='index'),
+    # path('', IndexView.as_view(), name='index'),
+    path('', include('core.sweb.urls')),
     path('admin/', admin.site.urls),
     path('login/', include('core.login.urls')),
     path('sweb/', include('core.sweb.urls')),
