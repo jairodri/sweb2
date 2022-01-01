@@ -30,19 +30,19 @@ class FormaDePagoForm(ModelForm):
         widgets = {
             'codigo': TextInput(attrs={'minlength': 2, 'required': True}),
             'descripcion': TextInput(attrs={'required': True}),
-            'recibos': TextInput(attrs={'required': True}),
-            'diasvto': TextInput(attrs={'required': True}),
+            'recibos': NumberInput(attrs={'required': True}),
+            'diasvto': NumberInput(attrs={'required': True}),
         }
 
 
 class TipoClienteRecambiosForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         # diferenciamos add/edit
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:  # diferenciamos add/edit
             self.fields['codigo'].disabled = True
-            self.fields['descripcion'].widget.attrs['autofocus'] = True
         else:
             self.fields['codigo'].widget.attrs['autofocus'] = True
 
@@ -55,16 +55,21 @@ class TipoClienteRecambiosForm(ModelForm):
             'descripcion': 'Descripción',
             'datocontable': 'Dato Contable'
         }
+        widgets = {
+            'codigo': TextInput(attrs={'minlength': 2, 'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+            'datocontable': TextInput(attrs={'required': True}),
+        }
 
 
 class DescuentoMOForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         # diferenciamos add/edit
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:  # diferenciamos add/edit
             self.fields['codigo'].disabled = True
-            self.fields['descripcion'].widget.attrs['autofocus'] = True
         else:
             self.fields['codigo'].widget.attrs['autofocus'] = True
 
@@ -77,6 +82,11 @@ class DescuentoMOForm(ModelForm):
             'descripcion': 'Descripción',
             'descuento': 'Descuento'
         }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+            'descuento': NumberInput(attrs={'required': True}),
+        }
 
 
 class BancoForm(ModelForm):
@@ -88,7 +98,6 @@ class BancoForm(ModelForm):
         if instance and instance.pk:
             self.fields['codigo'].disabled = True
             self.fields['sucursal'].disabled = True
-            # self.fields['descripcion'].widget.attrs['autofocus'] = True
         else:
             self.fields['codigo'].widget.attrs['autofocus'] = True
 
@@ -126,4 +135,15 @@ class BancoForm(ModelForm):
             'contacto': 'Contacto',
             'extension': 'Ext. Teléfono',
             'telperso': 'Teléfono Personal',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'minlength': 4, 'required': True}),
+            'sucursal': TextInput(attrs={'minlength': 4, 'required': True}),
+            'razonsocial': TextInput(attrs={'required': True}),
+            'tipovia': TextInput(attrs={'required': True}),
+            'nomvia': TextInput(attrs={'required': True}),
+            'numvia': TextInput(attrs={'required': True}),
+            'codpostal': TextInput(attrs={'required': True}),
+            'municipio': TextInput(attrs={'required': True}),
+            'provincia': TextInput(attrs={'required': True}),
         }

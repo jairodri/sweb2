@@ -1,1 +1,11 @@
 {% extends 'layout.html' %}
+{% load static %}
+
+{% block cabecera %}
+    <h5 class="text-primary"><strong>Sistema Integral de Talleres</strong></h5>
+{% endblock %}
+{% block content %}
+<div class="img-fluid">
+    <img class="img-dash" src="{% static 'img/sweb05.png' %}">
+</div>
+{% endblock %}

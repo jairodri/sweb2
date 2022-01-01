@@ -1,8 +1,28 @@
 
 function validar(entity) {
     console.log(entity)
+    switch (entity) {
+        case 'DescuentoMO':
+            rules = {descuento: {number: true, min: 0, max: 100}}
+            break
+        case 'FormaDePago':
+            rules = {
+                recibos: {number: true},
+                diasvto: {number: true}
+            }
+            break
+        case 'Banco':
+            rules = {
+                telefono: {number: true},
+                telperso: {number: true},
+                extension: {number: true}
+            }
+            break
+        default:
+            rules = {}
+    }
     $('#idform').validate({
-        rules: {},
+        rules: rules,
         messages: {},
         errorElement: 'span',
         errorPlacement: function (error, element) {

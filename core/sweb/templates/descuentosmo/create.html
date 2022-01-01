@@ -13,7 +13,11 @@
 
                 {% for field in form.visible_fields %}
                     <div class="form-group">
-                        <label for="{{ field.name }}">{{ field.label }}</label>
+                        <label for="{{ field.name }}">{{ field.label }}
+                            {% if field.field.widget.attrs.required %}
+                                <span class="text-danger"> *</span>
+                            {% endif %}
+                        </label>
                         {{ field | add_class:'form-control' }}
                     </div>
                 {% endfor %}
