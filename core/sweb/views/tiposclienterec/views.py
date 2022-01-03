@@ -92,14 +92,14 @@ class TipoClienteRecambiosDeleteView(DeleteView):
         context['title'] = 'Borrar Tipo de Cliente de Recambios'
         context['entity'] = 'Tipos de Cliente'
         context['list_url'] = reverse_lazy('sweb:tiposclienterec_list')
+        context['action'] = 'delete'
         return context
 
-    # No funciona el envío de mensajes de este modo con DeleteView
-    # def form_valid(self, form):
-    #     messages.add_message(self.request, messages.SUCCESS, 'Forma de Pago eliminada')
-    #     return super().form_valid(form)
-
-    def delete(self, request, *args, **kwargs):
+    def form_valid(self, form):
         messages.add_message(self.request, messages.SUCCESS, 'Tipo de Cliente eliminado')
-        return super(TipoClienteRecambiosDeleteView, self).delete(request, *args, **kwargs)
+        return super().form_valid(form)
+
+    # def delete(self, request, *args, **kwargs):
+    #     messages.add_message(self.request, messages.SUCCESS, 'Tipo de Cliente eliminado')
+    #     return super(TipoClienteRecambiosDeleteView, self).delete(request, *args, **kwargs)
 

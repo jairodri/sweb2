@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.forms import model_to_dict
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 from core.sweb.forms import FormaDePagoForm
@@ -78,6 +79,7 @@ class FormaDePagoUpdateView(UpdateView):
 
 class FormaDePagoDeleteView(DeleteView):
     model = FormaDePago
+    # form_class = FormaDePagoForm # No he conseguido que funcione con el form_class
     template_name = 'formasdepago/delete.html'
     success_url = reverse_lazy('sweb:formasdepago_list')
 
@@ -92,14 +94,27 @@ class FormaDePagoDeleteView(DeleteView):
         context['title'] = 'Borrar Forma de Pago'
         context['entity'] = 'Formas de Pago'
         context['list_url'] = reverse_lazy('sweb:formasdepago_list')
+        context['action'] = 'delete'
         return context
 
-    # No funciona el envío de mensajes de este modo con DeleteView
-    # def form_valid(self, form):
-    #     messages.add_message(self.request, messages.SUCCESS, 'Forma de Pago eliminada')
-    #     return super().form_valid(form)
+    # override get_initial para rellenar el form con los datos del registro
+    # serializamos en un diccionario los campos del objeto
+    # def get_initial(self):
+    #     # return {
+    #     #     'codigo': self.object.codigo,
+    #     #     'descripcion': self.object.descripcion,
+    #     #     'recibos': self.object.recibos,
+    #     #     'diasvto': self.object.diasvto
+    #     # }
+    #     return model_to_dict(self.object)
 
-    def delete(self, request, *args, **kwargs):
+    # No funciona el envío de mensajes de este modo con DeleteView
+    # con la versión 4 de Django ya funciona
+    def form_valid(self, form):
         messages.add_message(self.request, messages.SUCCESS, 'Forma de Pago eliminada')
-        return super(FormaDePagoDeleteView, self).delete(request, *args, **kwargs)
+        return super().form_valid(form)
+
+    # def delete(self, request, *args, **kwargs):
+    #     messages.add_message(self.request, messages.SUCCESS, 'Forma de Pago eliminada')
+    #     return super(FormaDePagoDeleteView, self).delete(request, *args, **kwargs)
 

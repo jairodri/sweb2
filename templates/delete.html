@@ -1,61 +1,12 @@
 {% extends 'layout.html' %}
 {% load static %}
-{% load widget_tweaks %}
 
 {% block head %}
-    <script type="text/javascript" src="{% static 'lib/jquery-validation-1.19.3/jquery.validate.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'lib/jquery-validation-1.19.3/additional-methods.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/jquery-validation-1.19.3/localization/messages_es.min.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-    <form method="post" action="." id="idform">
-        <div class="card card-primary">
-
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-trash-alt"></i>
-                    {{ title }}
-                </h3>
-            </div>
-
-            <div class="card-body">
-                {% csrf_token %}
-
-                {% if form.errors %}
-{#                    <div class="alert alert-danger alert-dismissible">#}
-                    <div class="callout callout-danger">
-{#                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>#}
-                        {#                        <h6><i class="icon fas fa-ban"></i> Error!</h6>#}
-{#                        <h6><i class="icon fas fa-ban"></i></h6>#}
-                        <ul class="text-danger">
-                            {% for field in form %}
-                                {% for error in field.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-                <div class="callout callout-danger text-danger">
-{#                <div class="alert alert-danger alert-dismissible">#}
-                    <h6><i class="icon fas fa-ban"></i></h6>
-                    <p>Se va a borrar el registro: "{{ object }}"</p>
-                    <p>¿Estás seguro?</p>
-                </div>
-            </div>
-
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary btn-flat">
-                    <i class="fas fa-trash-alt"></i> Borrar
-                </button>
-                <a href="{{ list_url }}" class="btn btn-secondary btn-flat">
-                    <i class="fas fa-times"></i> Cancelar
-                </a>
-            </div>
-        </div>
-    </form>
 {% endblock %}
 
 {% block javascript %}
-
 {% endblock %}

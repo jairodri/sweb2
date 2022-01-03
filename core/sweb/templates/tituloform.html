@@ -2,8 +2,10 @@
     <h3 class="card-title">
         {% if action == 'add' %}
             <i class="fas fa-plus"></i>
-        {% else %}
+        {% elif action == 'edit' %}
             <i class="fas fa-edit"></i>
+        {% else %}
+            <i class="fas fa-trash-alt"></i>
         {% endif %}
         {{ title }}
     </h3>

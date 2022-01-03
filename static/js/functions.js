@@ -1,6 +1,6 @@
 
 function validar(entity) {
-    console.log(entity)
+    // console.log(entity)
     switch (entity) {
         case 'DescuentoMO':
             rules = {descuento: {number: true, min: 0, max: 100}}

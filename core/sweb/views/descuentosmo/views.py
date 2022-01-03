@@ -92,9 +92,14 @@ class DescuentoMODeleteView(DeleteView):
         context['title'] = 'Borrar Descuento Mano de Obra'
         context['entity'] = 'Descuentos MO'
         context['list_url'] = reverse_lazy('sweb:descuentosmo_list')
+        context['action'] = 'delete'
         return context
 
-    def delete(self, request, *args, **kwargs):
+    def form_valid(self, form):
         messages.add_message(self.request, messages.SUCCESS, 'Descuento MO eliminado')
-        return super(DescuentoMODeleteView, self).delete(request, *args, **kwargs)
+        return super().form_valid(form)
+
+    # def delete(self, request, *args, **kwargs):
+    #     messages.add_message(self.request, messages.SUCCESS, 'Descuento MO eliminado')
+    #     return super(DescuentoMODeleteView, self).delete(request, *args, **kwargs)
 

@@ -34,4 +34,5 @@ urlpatterns = [
     path('bancos/list/', BancoListView.as_view(), name='bancos_list'),
     path('bancos/add/', BancoCreateView.as_view(), name='bancos_add'),
     path('bancos/edit/<int:pk>/', BancoUpdateView.as_view(), name='bancos_edit'),
+    path('bancos/delete/<int:pk>/', BancoDeleteView.as_view(), name='bancos_delete'),
 ]
