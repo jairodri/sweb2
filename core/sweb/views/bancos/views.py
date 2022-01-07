@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from core.sweb.forms import BancoForm
 from core.sweb.models import Banco
 from django.utils.decorators import method_decorator
@@ -100,3 +100,21 @@ class BancoDeleteView(DeleteView):
         return super().form_valid(form)
 
 
+class BancoDetailView(DetailView):
+    model = Banco
+    template_name = 'bancos/detail.html'
+    # success_url = reverse_lazy('sweb:bancos_list')
+
+    # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    # sobreescribimos el método get_context_data para añadir info al contexto
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Detalle Banco'
+        context['entity'] = 'Bancos'
+        context['list_url'] = reverse_lazy('sweb:bancos_list')
+        context['action'] = 'detail'
+        return context

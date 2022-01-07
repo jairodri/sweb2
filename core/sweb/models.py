@@ -5,7 +5,7 @@ from crum import get_current_user
 
 
 def validar_porcentaje(value):
-    if (value > 100) or (value < 0):
+    if value and ((value > 100) or (value < 0)):
         raise ValidationError(f"{value} no es un porcentaje válido")
 
 
@@ -57,6 +57,10 @@ class Banco(BaseModel):
             user = None
         if not self.pk:
             self.user_creation = user
+            # Inicializamos campos
+            self.cuenta = '000000000000000'
+            self.dgc = '0'
+            self.dgc2 = '0'
         else:
             self.user_updated = user
         super(Banco, self).save()
@@ -161,3 +165,147 @@ class TipoClienteRecambios(BaseModel):
         else:
             self.user_updated = user
         super(TipoClienteRecambios, self).save()
+
+
+class Cliente(BaseModel):
+    codigo = models.CharField(max_length=6, verbose_name='código cliente', db_column='cli_codigo', unique=True,
+                              null=False, blank=False)
+    razonSocial = models.CharField(max_length=100, verbose_name='razón social', db_column='cli_rsocial', null=True,
+                                   blank=True)
+    tipoCliente = models.ForeignKey(TipoClienteRecambios, on_delete=models.PROTECT, null=False, blank=False,
+                                    db_column='cli_tipcli', verbose_name='tipo cliente')
+    direccion = models.CharField(max_length=100, verbose_name='direccion', db_column='cli_direccion', null=True,
+                                 blank=True)
+    codpostal = models.CharField(max_length=5, verbose_name='código postal', db_column='cli_cpostal', null=True,
+                                 blank=True)
+    poblacion = models.CharField(max_length=100, verbose_name='poblacion', db_column='cli_poblacion', null=True,
+                                 blank=True)
+    provincia = models.CharField(max_length=100, verbose_name='provincia', db_column='cli_provincia', null=True,
+                                 blank=True)
+    cif = models.CharField(max_length=15, verbose_name='CIF', db_column='cli_cif', null=True, blank=True)
+    telefono = models.CharField(max_length=15, verbose_name='telefono', db_column='cli_telefono', null=True, blank=True)
+    fax = models.CharField(max_length=15, verbose_name='fax', db_column='cli_fax', null=True, blank=True)
+    tlfmovil = models.CharField(max_length=15, verbose_name='teléfono móvil', db_column='cli_tlfmovil', null=True, blank=True)
+    banco = models.ForeignKey(Banco, on_delete=models.PROTECT, null=True, blank=True, db_column='cli_banco',
+                              verbose_name='banco')
+    cuenta = models.CharField(max_length=15, verbose_name='cuenta', db_column='cli_cuenta', null=True, blank=True)
+    formaDePago = models.ForeignKey(FormaDePago, on_delete=models.PROTECT, null=False, blank=False,
+                                    db_column='cli_fpago', verbose_name='forma de pago')
+    diaPagoDesde = models.IntegerField(verbose_name='día pago desde', db_column='cli_diapagod', null=True, blank=True)
+    diaPagoHasta = models.IntegerField(verbose_name='día pago hasta', db_column='cli_diapagoh', null=True, blank=True)
+    dtopieza = models.CharField(max_length=1, verbose_name='descuento pieza', db_column='cli_dtopieza', null=True,
+                                blank=True)
+    dtomo = models.ForeignKey(DescuentoMO, on_delete=models.PROTECT, null=False, blank=False, db_column='cli_dtomo',
+                              verbose_name='descuento MO')
+    dtoEpecial = models.DecimalField(verbose_name='descuento especial', db_column='cli_dtoesp', max_digits=5,
+                                     decimal_places=2, null=True, blank=True, validators=[validar_porcentaje])
+    fechaUltimaFactura = models.DateTimeField(verbose_name='fecha última factura', db_column='cli_fultfac', null=True,
+                                              blank=True)
+    creditoDisponible = models.DecimalField(verbose_name='crédito disponible', db_column='cli_credispo', max_digits=9,
+                                            decimal_places=2, null=True, blank=True)
+    creditoDispuesto = models.DecimalField(verbose_name='crédito dispuesto', db_column='cli_credispu', max_digits=9,
+                                           decimal_places=2, null=True, blank=True)
+    bloquearCredito = models.BooleanField(verbose_name='bloquear crédito', db_column='cli_bloqcred', default=False,
+                                          null=False, blank=False)
+    importeRecambiosMes = models.DecimalField(verbose_name='importe recambios mes', db_column='cli_imprecmes',
+                                              max_digits=9, decimal_places=2, null=True, blank=True)
+    importeRecambiosAno = models.DecimalField(verbose_name='importe recambios año', db_column='cli_imprecano',
+                                              max_digits=9, decimal_places=2, null=True, blank=True)
+    importeRecambiosAnoAnterior = models.DecimalField(verbose_name='importe recambios año anterior', max_digits=9,
+                                                      decimal_places=2, db_column='cli_imprecanoant', null=True,
+                                                      blank=True)
+    costeRecambiosMes = models.DecimalField(verbose_name='coste recambios mes', db_column='cli_cosrecmes', max_digits=9,
+                                            decimal_places=2, null=True, blank=True)
+    costeRecambiosAno = models.DecimalField(verbose_name='coste recambios año', db_column='cli_cosrecano', max_digits=9,
+                                            decimal_places=2, null=True, blank=True)
+    costeRecambiosAnoAnterior = models.DecimalField(verbose_name='coste recambios año anterior', max_digits=9,
+                                                    decimal_places=2, db_column='cli_cosrecanoant', null=True,
+                                                    blank=True)
+    importeTallerMes = models.DecimalField(verbose_name='importe taller mes', db_column='cli_imptalmes', max_digits=9,
+                                           decimal_places=2, null=True, blank=True)
+    importeTallerAno = models.DecimalField(verbose_name='importe taller año', db_column='cli_imptalano', max_digits=9,
+                                           decimal_places=2, null=True, blank=True)
+    importeTallerAnoAnterior = models.DecimalField(verbose_name='importe taller año anterior', max_digits=9,
+                                                   decimal_places=2, db_column='cli_imptalanoant', null=True,
+                                                   blank=True)
+    costeTallerMes = models.DecimalField(verbose_name='coste taller mes', db_column='cli_costalmes', max_digits=9,
+                                         decimal_places=2, null=True, blank=True)
+    costeTallerAno = models.DecimalField(verbose_name='coste taller año', db_column='cli_costalano', max_digits=9,
+                                         decimal_places=2, null=True, blank=True)
+    costeTallerAnoAnterior = models.DecimalField(verbose_name='coste taller año anterior', max_digits=9,
+                                                 decimal_places=2, db_column='cli_costalanoant', null=True, blank=True)
+    fechaUltimoMovimiento = models.DateTimeField(verbose_name='fecha último movimiento', db_column='cli_fultmov',
+                                                 null=True, blank=True)
+    comprasMes = models.DecimalField(verbose_name='compras mes', db_column='cli_comprasmes', max_digits=9,
+                                     decimal_places=2, null=True, blank=True)
+    comprasAno = models.DecimalField(verbose_name='compras año', db_column='cli_comprasano', max_digits=9,
+                                     decimal_places=2, null=True, blank=True)
+    comprasAnoAnterior = models.DecimalField(verbose_name='compras año anterior', max_digits=9, decimal_places=2,
+                                             db_column='cli_comprasanoant', null=True, blank=True)
+    emitirRecibos = models.BooleanField(verbose_name='emitir recibos', db_column='cli_emirec', default=False,
+                                        null=False, blank=False)
+    aplicarIva = models.BooleanField(verbose_name='aplicar IVA', db_column='cli_apliva', default=False, null=False,
+                                     blank=False)
+    importeRecambiosTallerMes = models.DecimalField(verbose_name='importe recambios taller mes', max_digits=9,
+                                                    decimal_places=2, db_column='cli_imprectalmes', null=True,
+                                                    blank=True)
+    importeRecambiosTallerAno = models.DecimalField(verbose_name='importe recambios taller año', max_digits=9,
+                                                    decimal_places=2, db_column='cli_imprectalano', null=True,
+                                                    blank=True)
+    importeRecambiosTallerAnoAnterior = models.DecimalField(verbose_name='importe recambios taller año anterior',
+                                                            max_digits=9, decimal_places=2,
+                                                            db_column='cli_imprectalanoant', null=True, blank=True)
+    costeRecambiosTallerMes = models.DecimalField(verbose_name='coste recambios taller mes', max_digits=9,
+                                                  decimal_places=2, db_column='cli_cosrectalmes', null=True, blank=True)
+    costeRecambiosTallerAno = models.DecimalField(verbose_name='coste recambios taller año', max_digits=9,
+                                                  decimal_places=2, db_column='cli_cosrectalano', null=True, blank=True)
+    costeRecambiosTallerAnoAnterior = models.DecimalField(verbose_name='coste recambios taller año anterior',
+                                                          max_digits=9, decimal_places=2,
+                                                          db_column='cli_cosrectalanoant', null=True, blank=True)
+    listarnetodto = models.BooleanField(verbose_name='listar neto descuento', db_column='cli_lstnetdto', default=False,
+                                        null=False, blank=False)
+    exentoMail = models.BooleanField(verbose_name='exento mail', db_column='cli_exentomail', default=False, null=False,
+                                     blank=False)
+    pasaporte = models.CharField(max_length=15, verbose_name='pasaporte', db_column='cli_pasaporte', null=True,
+                                 blank=True)
+    notas = models.TextField(verbose_name='notas', db_column='cli_notas', null=True, blank=True)
+    precioMo = models.DecimalField(verbose_name='precio MO', db_column='cli_preciomo', max_digits=9, decimal_places=2,
+                                   null=True, blank=True)
+    fechaNacimiento = models.DateField(verbose_name='fecha nacimiento', db_column='cli_fenaci', null=True, blank=True)
+    ivaEpecial = models.DecimalField(verbose_name='iva especial', db_column='cli_ivaesp', max_digits=5,
+                                     decimal_places=2, null=True, blank=True, validators=[validar_porcentaje])
+    email = models.CharField(max_length=100, verbose_name='email', db_column='cli_email', null=True, blank=True)
+    SMS_CHOICES = [
+        ('0', 'No Envío'),
+        ('1', 'Envío Cerrar OR'),
+        ('2', 'Envío Satisfacción'),
+        ('3', 'Envío Ambos'),
+        ('4', 'Envío Sin Importe'),
+    ]
+    enviarSms = models.CharField(max_length=1, choices=SMS_CHOICES, default='0', verbose_name='enviar sms',
+                                 db_column='cli_envsms', null=False, blank=False)
+    ocultarCuenta = models.BooleanField(verbose_name='ocultar cuenta', db_column='cli_ocucta', default=False,
+                                        null=False, blank=False)
+    iban = models.CharField(max_length=4, verbose_name='iban', db_column='cli_iban', null=True, blank=True)
+    dc = models.CharField(max_length=2, verbose_name='dígito control', db_column='cli_dc', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.razonSocial}'
+
+    class Meta:
+        db_table = 'sirtbcli'
+        verbose_name = 'Cliente'
+        verbose_name_plural = 'Clientes'
+        ordering = ['codigo']
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        # Incluimos el código para la auditoría
+        user = get_current_user()
+        if user and not user.pk:
+            user = None
+        if not self.pk:
+            self.user_creation = user
+        else:
+            self.user_updated = user
+        super(Cliente, self).save()
+

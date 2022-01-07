@@ -134,8 +134,8 @@ class BancoForm(ModelForm):
             'telperso': 'Teléfono Personal',
         }
         widgets = {
-            'codigo': TextInput(attrs={'minlength': 4, 'required': True}),
-            'sucursal': TextInput(attrs={'minlength': 4, 'required': True}),
+            'codigo': NumberInput(attrs={'minlength': 4, 'required': True}),
+            'sucursal': NumberInput(attrs={'minlength': 4, 'required': True}),
             'razonsocial': TextInput(attrs={'required': True}),
             'tipovia': TextInput(attrs={'required': True}),
             'nomvia': TextInput(attrs={'required': True}),

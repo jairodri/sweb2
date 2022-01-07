@@ -153,3 +153,6 @@ LOGIN_URL = '/login/'
 
 # Indicamos la clase usuario personalizada
 AUTH_USER_MODEL = 'user.User'
+
+# Tiempo de sesión activa
+SESSION_COOKIE_AGE = 600

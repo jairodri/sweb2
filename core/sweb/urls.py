@@ -4,6 +4,7 @@ from core.sweb.views.dashboard.views import *
 from core.sweb.views.tiposclienterec.views import *
 from core.sweb.views.descuentosmo.views import *
 from core.sweb.views.bancos.views import *
+from core.sweb.views.clientes.views import *
 
 app_name = 'sweb'
 
@@ -35,4 +36,8 @@ urlpatterns = [
     path('bancos/add/', BancoCreateView.as_view(), name='bancos_add'),
     path('bancos/edit/<int:pk>/', BancoUpdateView.as_view(), name='bancos_edit'),
     path('bancos/delete/<int:pk>/', BancoDeleteView.as_view(), name='bancos_delete'),
+    path('bancos/detail/<int:pk>/', BancoDetailView.as_view(), name='bancos_detail'),
+
+    # Clientes
+    path('clientes/list/', ClienteListView.as_view(), name='clientes_list'),
 ]
