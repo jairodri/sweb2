@@ -1,6 +1,6 @@
 
 function validar(entity) {
-    // console.log(entity)
+    console.log(entity)
     switch (entity) {
         case 'DescuentoMO':
             rules = {descuento: {number: true, min: 0, max: 100}}
@@ -18,6 +18,12 @@ function validar(entity) {
                 extension: {number: true}
             }
             break
+        // case 'Login':
+        //     rules = {
+        //         username: {required: true},
+        //         password: {required: true}
+        //     }
+        //     break
         default:
             rules = {}
     }
