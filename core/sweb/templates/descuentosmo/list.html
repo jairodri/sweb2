@@ -2,30 +2,53 @@
 
 {% block columns %}
     <tr>
-        <th scope="col" style="width: 10%;"></th>
-        <th scope="col" style="width: 10%;">Código</th>
-        <th scope="col" style="width: 70%;">Descripción</th>
-        <th scope="col" style="width: 10%;">Descuento</th>
+        <th>Acciones</th>
+        <th>Código</th>
+        <th>Descripción</th>
+        <th>Descuento</th>
     </tr>
 {% endblock %}
 
-{% block rows %}
-    {% for dmo in object_list %}
-        <tr>
-            <td>
-                <a href="{% url 'sweb:descuentosmo_edit' dmo.id %}" class="btn btn-light btn-xs">
-                    <i class="far fa-edit" title="Editar"></i>
-                </a>
-                <a href="{% url 'sweb:descuentosmo_delete' dmo.id %}" class="btn btn-light btn-xs">
-                    <i class="far fa-trash-alt" title="Borrar"></i>
-                </a>
-            </td>
-            <td>{{ dmo.codigo }}</td>
-            <td>{{ dmo.descripcion }}</td>
-            <td>{{ dmo.descuento }}</td>
-        </tr>
-    {% endfor %}
+{% block columnsfoot %}
+    <tr>
+        <th>Acciones</th>
+        <th>Código</th>
+        <th>Descripción</th>
+        <th>Descuento</th>
+    </tr>
 {% endblock %}
+
+{% block jscript2 %}
+<script>
+        var icolumns = [
+            {"data": "id"},
+            {"data": "codigo"},
+            {"data": "descripcion"},
+            {"data": "descuento"},
+        ]
+        var ibuttons = '<a href="/sweb/descuentosmo/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
+        ibuttons += '<a href="/sweb/descuentosmo/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
+        initdtables(icolumns, ibuttons)
+</script>
+{% endblock %}
+
+{#{% block rows %}#}
+{#    {% for dmo in object_list %}#}
+{#        <tr>#}
+{#            <td>#}
+{#                <a href="{% url 'sweb:descuentosmo_edit' dmo.id %}" class="btn btn-light btn-xs">#}
+{#                    <i class="far fa-edit" title="Editar"></i>#}
+{#                </a>#}
+{#                <a href="{% url 'sweb:descuentosmo_delete' dmo.id %}" class="btn btn-light btn-xs">#}
+{#                    <i class="far fa-trash-alt" title="Borrar"></i>#}
+{#                </a>#}
+{#            </td>#}
+{#            <td>{{ dmo.codigo }}</td>#}
+{#            <td>{{ dmo.descripcion }}</td>#}
+{#            <td>{{ dmo.descuento }}</td>#}
+{#        </tr>#}
+{#    {% endfor %}#}
+{#{% endblock %}#}
 
 <!-- Literal del botón para añdir registro
 {% block masdatos %}

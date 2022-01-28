@@ -1,5 +1,7 @@
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from core.sweb.forms import BancoForm
 from core.sweb.models import Banco
@@ -13,8 +15,24 @@ class BancoListView(ListView):
 
     # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
     @method_decorator(login_required)
+    @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
+        print(request)
         return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'searchdata':
+                data = []
+                for i in Banco.objects.all().values('id', 'codigo', 'sucursal', 'razonsocial', 'telefono'):
+                    data.append(i)
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
 
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):

@@ -1,47 +1,40 @@
 {% extends 'home.html' %}
+{% load static %}
 
 {% block body %}
-    <body class="hold-transition sidebar-mini layout-fixed">
+    <!-- Site wrapper -->
     <div class="wrapper">
-        <!-- Header -->
-        {% include 'vtc/header.html' %}
-        <!-- Sidebar -->
+        <!-- Navbar -->
+        {% include 'navbar.html' %}
+
+        <!-- Main Sidebar Container -->
         {% include 'vtc/sidebar.html' %}
-        <!-- Content -->
+
+        <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <div class="content-header">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
                 <div class="container-fluid">
-                    <div class="row">
-{#                        <div class="col-sm-6">#}
-{#                            <h1 class="m-0 text-dark"> <b>Sirio</b>Web <small>1.0</small></h1>#}
-{#                        </div>#}
+                    <div class="row mb-2">
                         <div class="col-sm-6">
-                            {% block cabecera %}
-                            {% endblock %}
+                            <h1><b>Sirio</b>Web</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{% url 'sweb:dashboard' %}">Inicio</a></li>
-                                <li class="breadcrumb-item"><a href="{{ list_url }}">{{ entity }}</a></li>
+                                {% block breadcrumb %}
+                                {% endblock %}
                             </ol>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="content">
-                <div class="container-fluid">
-                    {% block content %}
-
-                    {% endblock %}
-                </div>
-            </div>
+                </div><!-- /.container-fluid -->
+            </section>
+            {% block content %}
+            {% endblock %}
         </div>
+
         <!-- Footer -->
         {% include 'footer.html' %}
     </div>
-    <!-- Block javascript -->
-    {% block javascript %}
-
-    {% endblock %}
-    </body>
+    <!-- ./wrapper -->
 {% endblock %}

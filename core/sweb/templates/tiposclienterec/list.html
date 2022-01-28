@@ -2,32 +2,56 @@
 
 {% block columns %}
     <tr>
-        <th scope="col" style="width: 10%;"></th>
-        <th scope="col" style="width: 10%;">Código</th>
-        <th scope="col" style="width: 70%;">Descripción</th>
-        <th scope="col" style="width: 10%;">Dato Contable</th>
+        <th>Acciones</th>
+        <th>Código</th>
+        <th>Descripción</th>
+        <th>Dato Contable</th>
     </tr>
 {% endblock %}
 
-{% block rows %}
-    {% for tcr in object_list %}
-        <tr>
-            <td>
-                <a href="{% url 'sweb:tiposclienterec_edit' tcr.id %}" class="btn btn-light btn-xs">
-                    <i class="far fa-edit" title="Editar"></i>
-                </a>
-                <a href="{% url 'sweb:tiposclienterec_delete' tcr.id %}" class="btn btn-light btn-xs">
-                    <i class="far fa-trash-alt" title="Borrar"></i>
-                </a>
-            </td>
-            <td>{{ tcr.codigo }}</td>
-            <td>{{ tcr.descripcion }}</td>
-            <td>{{ tcr.datocontable }}</td>
-        </tr>
-    {% endfor %}
+{% block columnsfoot %}
+    <tr>
+        <th>Acciones</th>
+        <th>Código</th>
+        <th>Descripción</th>
+        <th>Dato Contable</th>
+    </tr>
+{% endblock %}
+
+{% block jscript2 %}
+<script>
+        var icolumns = [
+            {"data": "id"},
+            {"data": "codigo"},
+            {"data": "descripcion"},
+            {"data": "datocontable"},
+        ]
+        var ibuttons = '<a href="/sweb/tiposclienterec/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
+        ibuttons += '<a href="/sweb/tiposclienterec/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
+        initdtables(icolumns, ibuttons)
+</script>
 {% endblock %}
 
 <!-- Literal del botón para añdir registro
 {% block masdatos %}
 Añadir Tipo Cliente
 {% endblock %}
+
+{#{% block rows %}#}
+{#    {% for tcr in object_list %}#}
+{#        <tr>#}
+{#            <td>#}
+{#                <a href="{% url 'sweb:tiposclienterec_edit' tcr.id %}" class="btn btn-light btn-xs">#}
+{#                    <i class="far fa-edit" title="Editar"></i>#}
+{#                </a>#}
+{#                <a href="{% url 'sweb:tiposclienterec_delete' tcr.id %}" class="btn btn-light btn-xs">#}
+{#                    <i class="far fa-trash-alt" title="Borrar"></i>#}
+{#                </a>#}
+{#            </td>#}
+{#            <td>{{ tcr.codigo }}</td>#}
+{#            <td>{{ tcr.descripcion }}</td>#}
+{#            <td>{{ tcr.datocontable }}</td>#}
+{#        </tr>#}
+{#    {% endfor %}#}
+{#{% endblock %}#}
+

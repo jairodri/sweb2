@@ -1,13 +1,17 @@
 {% load static %}
-<aside class="main-sidebar sidebar-dark-blue elevation-4">
-{#    <a href="#" class="brand-link">#}
-{#        <img src="{% static 'img/sirag.png' %}"#}
-{#             alt="Sirag Logo"#}
-{#             class="brand-image img-circle elevation-3"#}
-{#             style="opacity: .8">#}
-{#        <span class="brand-text font-weight-light"><b>Sirio</b>Web <small>1.0</small></span>#}
-{#    </a>#}
+
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="#" class="brand-link">
+        <img src="{% static 'img/sirag.png' %}" alt="SirioWeb Logo" class="brand-image img-circle elevation-3"
+             style="opacity: .8">
+        <span class="brand-text font-weight-light"><b>Sirio</b>Web <small>1.0</small></span>
+    </a>
+
+    <!-- Sidebar -->
     <div class="sidebar">
+        <!-- Sidebar user (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 <img src="{{ request.user.get_image }}" class="img-circle elevation-2" alt="User Image">
@@ -16,42 +20,77 @@
                 <a href="#" class="d-block">{{ request.user.username }}</a>
             </div>
         </div>
+
+        <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-header">Tablas</li>
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+                     with font-awesome or any other icon font library -->
+
+                <li class="nav-header">Recambios</li>
                 <li class="nav-item">
-                    <a href="{% url 'sweb:formasdepago_list' %}" class="nav-link">
-                        <i class="nav-icon fas fa-table"></i>
-                        <p>Formas de Pago</p>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-circle"></i>
+                        <p>
+                            Ficheros
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>
+                                    Tablas
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{% url 'sweb:descuentosmo_list' %}" class="nav-link">
+                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <p>Descuentos MO</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'sweb:tiposclienterec_list' %}" class="nav-link">
+                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <p>Tipos de Cliente</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'sweb:formasdepago_list' %}" class="nav-link">
+                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <p>Formas de Pago</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'sweb:clientes_list' %}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Clientes / Proveedores</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="{% url 'sweb:tiposclienterec_list' %}" class="nav-link">
-                        <i class="nav-icon fas fa-table"></i>
-                        <p>Tipos de Cliente</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'sweb:descuentosmo_list' %}" class="nav-link">
-                        <i class="nav-icon fas fa-table"></i>
-                        <p>Descuentos MO</p>
-                    </a>
-                </li>
+                <li class="nav-header">Taller</li>
+                <li class="nav-header">Facturas</li>
                 <li class="nav-header">Recibos</li>
                 <li class="nav-item">
                     <a href="{% url 'sweb:bancos_list' %}" class="nav-link">
-                        </i><i class="fas fa-university"></i>
+                        <i class="fas fa-circle nav-icon"></i>
                         <p>Bancos</p>
                     </a>
                 </li>
-                 <li class="nav-header">Ficheros</li>
-                <li class="nav-item">
-                    <a href="{% url 'sweb:clientes_list' %}" class="nav-link">
-                        <i class="fas fa-user-friends"></i>
-                        <p>Clientes</p>
-                    </a>
-                </li>
+                <li class="nav-header">Estadística</li>
+                <li class="nav-header">Inventario</li>
+                <li class="nav-header">Contabilidad</li>
+                <li class="nav-header">Otros</li>
             </ul>
         </nav>
+        <!-- /.sidebar-menu -->
     </div>
+    <!-- /.sidebar -->
 </aside>

@@ -2,35 +2,60 @@
 
 {% block columns %}
     <tr>
-        <th scope="col" style="width: 10%;"></th>
-        <th scope="col" style="width: 10%;">Código</th>
-        <th scope="col" style="width: 50%;">Descripción</th>
-        <th scope="col" style="width: 15%;">Recibos</th>
-        <th scope="col" style="width: 15%;">Vencimiento Factura</th>
-
+        <th>Acciones</th>
+        <th>Código</th>
+        <th>Descripción</th>
+        <th>Recibos</th>
+        <th>Vencimiento Factura</th>
     </tr>
 {% endblock %}
 
-{% block rows %}
-    {% for fp in object_list %}
-        <tr>
-            <td>
-                <a href="{% url 'sweb:formasdepago_edit' fp.id %}" class="btn btn-light btn-xs">
-                    <i class="far fa-edit" title="Editar"></i>
-                </a>
-                <a href="{% url 'sweb:formasdepago_delete' fp.id %}" class="btn btn-light btn-xs">
-                    <i class="far fa-trash-alt" title="Borrar"></i>
-                </a>
-            </td>
-            <td>{{ fp.codigo }}</td>
-            <td>{{ fp.descripcion }}</td>
-            <td>{{ fp.recibos }}</td>
-            <td>{{ fp.diasvto }}</td>
-        </tr>
-    {% endfor %}
+{% block columnsfoot %}
+    <tr>
+        <th>Acciones</th>
+        <th>Código</th>
+        <th>Descripción</th>
+        <th>Recibos</th>
+        <th>Vencimiento Factura</th>
+    </tr>
+{% endblock %}
+
+{% block jscript2 %}
+<script>
+        var icolumns = [
+            {"data": "id"},
+            {"data": "codigo"},
+            {"data": "descripcion"},
+            {"data": "recibos"},
+            {"data": "diasvto"},
+        ]
+        var ibuttons = '<a href="/sweb/formasdepago/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
+        ibuttons += '<a href="/sweb/formasdepago/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
+        initdtables(icolumns, ibuttons)
+</script>
 {% endblock %}
 
 <!-- Literal del botón para añdir registro
 {% block masdatos %}
 Añadir Forma de Pago
 {% endblock %}
+
+{#{% block rows %}#}
+{#    {% for fp in object_list %}#}
+{#        <tr>#}
+{#            <td>#}
+{#                <a href="{% url 'sweb:formasdepago_edit' fp.id %}" class="btn btn-light btn-xs">#}
+{#                    <i class="far fa-edit" title="Editar"></i>#}
+{#                </a>#}
+{#                <a href="{% url 'sweb:formasdepago_delete' fp.id %}" class="btn btn-light btn-xs">#}
+{#                    <i class="far fa-trash-alt" title="Borrar"></i>#}
+{#                </a>#}
+{#            </td>#}
+{#            <td>{{ fp.codigo }}</td>#}
+{#            <td>{{ fp.descripcion }}</td>#}
+{#            <td>{{ fp.recibos }}</td>#}
+{#            <td>{{ fp.diasvto }}</td>#}
+{#        </tr>#}
+{#    {% endfor %}#}
+{#{% endblock %}#}
+

@@ -1,5 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.forms import model_to_dict
+
 from core.models import BaseModel
 from crum import get_current_user
 
@@ -308,4 +310,5 @@ class Cliente(BaseModel):
         else:
             self.user_updated = user
         super(Cliente, self).save()
+
 

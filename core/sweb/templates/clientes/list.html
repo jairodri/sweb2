@@ -2,36 +2,67 @@
 
 {% block columns %}
     <tr>
-        <th scope="col" style="width: 10%;"></th>
-        <th scope="col" style="width: 10%;">Código</th>
-        <th scope="col" style="width: 45%;">Razón Social</th>
-        <th scope="col" style="width: 10%;">CIF/NIF</th>
-        <th scope="col" style="width: 10%;">Teléfono</th>
-        <th scope="col" style="width: 15%;">Población</th>
+        <th>Acciones</th>
+        <th>Código</th>
+        <th>Razón Social</th>
+        <th>CIF/NIF</th>
+        <th>Teléfono</th>
+        <th>Población</th>
     </tr>
 {% endblock %}
 
-{% block rows %}
-    {% for cli in object_list %}
-        <tr>
-            <td>
-                <a href="{% url 'sweb:bancos_edit' cli.id %}" class="btn btn-light btn-xs">
-                    <i class="far fa-edit" title="Editar"></i>
-                </a>
-                <a href="{% url 'sweb:bancos_delete' cli.id %}" class="btn btn-light btn-xs">
-                    <i class="far fa-trash-alt" title="Borrar"></i>
-                </a>
-            </td>
-            <td>{{ cli.codigo }}</td>
-            <td>{{ cli.razonSocial }}</td>
-            <td>{{ cli.cif | default_if_none:'' }}</td>
-            <td>{{ cli.telefono | default_if_none:'' }}</td>
-            <td>{{ cli.poblacion | default_if_none:'' }}</td>
-        </tr>
-    {% endfor %}
+{% block columnsfoot %}
+    <tr>
+        <th>Acciones</th>
+        <th>Código</th>
+        <th>Razón Social</th>
+        <th>CIF/NIF</th>
+        <th>Teléfono</th>
+        <th>Población</th>
+    </tr>
+{% endblock %}
+
+{% block jscript2 %}
+<script>
+        var icolumns = [
+            {"data": "id"},
+            {"data": "codigo"},
+            {"data": "razonSocial"},
+            {"data": "cif"},
+            {"data": "telefono"},
+            {"data": "poblacion"},
+        ]
+        var ibuttons = '<a href="/sweb/bancos/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
+        ibuttons += '<a href="/sweb/bancos/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
+        ibuttons += '<a href="/sweb/bancos/detail/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="fas fa-eye" title="Detalle"></i></a>';
+        initdtables(icolumns, ibuttons)
+</script>
 {% endblock %}
 
 <!-- Literal del botón para añdir registro
 {% block masdatos %}
 Añadir Banco
 {% endblock %}
+
+{#{% block rows %}#}
+{#    {% for cli in object_list %}#}
+{#        <tr>#}
+{#            <td>#}
+{#                <a href="{% url 'sweb:bancos_edit' cli.id %}" class="btn btn-light btn-xs">#}
+{#                    <i class="far fa-edit" title="Editar"></i>#}
+{#                </a>#}
+{#                <a href="{% url 'sweb:bancos_delete' cli.id %}" class="btn btn-light btn-xs">#}
+{#                    <i class="far fa-trash-alt" title="Borrar"></i>#}
+{#                </a>#}
+{#            </td>#}
+{#            <td>{{ cli.codigo }}</td>#}
+{#            <td>{{ cli.razonSocial }}</td>#}
+{#            <td>{{ cli.cif | default_if_none:'' }}</td>#}
+{#            <td>{{ cli.telefono | default_if_none:'' }}</td>#}
+{#            <td>{{ cli.poblacion | default_if_none:'' }}</td>#}
+{#        </tr>#}
+{#    {% endfor %}#}
+{#{% endblock %}#}
+
+
+
