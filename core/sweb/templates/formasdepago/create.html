@@ -1,34 +1,30 @@
 {% extends 'form.html' %}
 {% load widget_tweaks %}
 
-{% block content %}
-    <form method="post" action="." id="idform" enctype="multipart/form-data">
-        <!-- enctype="multipart/form-data" es necesario para gestionar campos tipo fichero -->
-        <div class="card card-primary">
-            {% include 'tituloform.html' %}
-
-            <div class="card-body">
-                {% csrf_token %}
-                {% include 'errorform.html' %}
-
-                {% for field in form.visible_fields %}
-                    <div class="form-group">
-                        <label for="{{ field.name }}">{{ field.label }}
-                            {% if field.field.widget.attrs.required %}
-                                <span class="text-danger"> *</span>
-                            {% endif %}
-                        </label>
-                        {{ field | add_class:'form-control' }}
-                    </div>
-                {% endfor %}
-            </div>
-
-            {% include 'botonform.html' %}
-        </div>
-    </form>
+{% block contentform %}
+    <div class="form-group">
+        <label for="{{ form.codigo.name }}">{{ form.codigo.label }}<span
+                class="text-danger"> *</span></label>
+        {{ form.codigo | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.descripcion.name }}">{{ form.descripcion.label }}<span
+                class="text-danger"> *</span></label>
+        {{ form.descripcion | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.recibos.name }}">{{ form.recibos.label }}<span
+                class="text-danger"> *</span></label>
+        {{ form.recibos | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.diasvto.name }}">{{ form.diasvto.label }}<span
+                class="text-danger"> *</span></label>
+        {{ form.diasvto | add_class:'form-control' }}
+    </div>
 {% endblock %}
 
-{% block javascript %}
+{% block jscript2 %}
     <script>
         validar('FormaDePago');
     </script>

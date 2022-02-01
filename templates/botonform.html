@@ -1,0 +1,18 @@
+{% if action == 'detail' %}
+    <a href="{{ list_url }}" class="btn btn-primary btn-flat">
+        <i class="fas fa-undo"></i> Volver
+    </a>
+{% else %}
+    <button type="submit" class="btn btn-primary btn-flat">
+        {% if action == 'delete' %}
+            <i class="fas fa-trash-alt"></i> Borrar
+        {% else %}
+            <i class="fas fa-save"></i> Guardar
+            {% block data %}
+            {% endblock %}
+        {% endif %}
+    </button>
+    <a href="{{ list_url }}" class="btn btn-secondary btn-flat">
+        <i class="fas fa-times"></i> Cancelar
+    </a>
+{% endif %}
