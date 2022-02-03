@@ -5,6 +5,9 @@ function initdtables(icolumns, ibuttons) {
         autoWidth: false,
         destroy: true,
         deferRender: true,
+        // scrollY: 400,
+        // scrollCollapse: true,
+        // scroller: true,
         ajax: {
             url: window.location.pathname,
             type: 'POST',
@@ -97,12 +100,12 @@ function validar(entity) {
                 extension: {number: true}
             }
             break
-        // case 'Login':
-        //     rules = {
-        //         username: {required: true},
-        //         password: {required: true}
-        //     }
-        //     break
+        case 'Login':
+            rules = {
+                username: {required: true},
+                password: {required: true}
+            }
+            break
         default:
             rules = {}
     }
@@ -130,6 +133,21 @@ function sendmessage(msg) {
         backdrop: true,
         footer: '<b>Srio</b>Web',
         toast: true,
+        position: 'center',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: false
+    });
+}
+
+function senderror(err) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Comprueba estos errores',
+        text: err,
+        backdrop: true,
+        footer: '<b>Srio</b>Web',
+        // toast: true,
         position: 'center',
         showConfirmButton: false,
         timer: 3000,
