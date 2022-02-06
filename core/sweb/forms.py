@@ -144,3 +144,52 @@ class BancoForm(ModelForm):
             'municipio': TextInput(attrs={'required': True}),
             'provincia': TextInput(attrs={'required': True}),
         }
+
+
+class ClienteForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['codigo'].disabled = True
+        else:
+            self.fields['codigo'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = Cliente
+        fields = ['codigo',
+                  'razonSocial',
+                  'tipoCliente',
+                  'direccion',
+                  'codpostal',
+                  'poblacion',
+                  'provincia',
+                  'cif',
+                  'fechaNacimiento',
+                  ]
+        exclude = ['user_creation', 'user_updated']
+
+        labels = {
+            'codigo': 'Código',
+            'razonSocial': 'Razón Social',
+            'tipoCliente': 'Tipo',
+            'direccion': 'Dirección',
+            'codpostal': 'Código Postal',
+            'poblacion': 'Población',
+            'provincia': 'Provincia',
+            'cif': 'CIF/NIF',
+            'fechaNacimiento': 'Fecha Nacimiento',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'maxlength': 6, 'required': True}),
+            'tipoCliente': Select(attrs={'required': True}, ),
+            'razonsocial': TextInput(),
+            'direccion': TextInput(),
+            'codpostal': TextInput(),
+            'poblacion': TextInput(),
+            'provincia': TextInput(),
+            'cif': TextInput(),
+            # 'fechaNacimiento': DateInput(),
+        }

@@ -3,9 +3,11 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 
-from core.sweb.models import Cliente
-from django.views.generic import ListView
+from core.sweb.forms import ClienteForm
+from core.sweb.models import Cliente, TipoClienteRecambios
+from django.views.generic import ListView, CreateView
 
 
 class ClienteListView(ListView):
@@ -14,7 +16,7 @@ class ClienteListView(ListView):
 
     # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
     @method_decorator(login_required)
-    @method_decorator(csrf_exempt)  # para el POST que se hace al cargar la datatable con ajax
+    # @method_decorator(csrf_exempt)  # para el POST que se hace al cargar la datatable con ajax
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -38,7 +40,38 @@ class ClienteListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Clientes'
-        # context['add_url'] = reverse_lazy('sweb:bancos_add')
+        context['add_url'] = reverse_lazy('sweb:clientes_add')
         context['list_url'] = reverse_lazy('sweb:clientes_list')
         context['entity'] = 'Clientes'
         return context
+
+
+class ClienteCreateView(CreateView):
+    model = Cliente
+    form_class = ClienteForm
+    template_name = 'clientes/create.html'
+    success_url = reverse_lazy('sweb:clientes_list')
+
+    def get_initial(self):
+        # Pasamos el vamor por defecto del Tipo de Cliente
+        idtipo = TipoClienteRecambios.objects.get(codigo='CL').id
+        initial = {'tipoCliente': idtipo, }
+        return initial
+
+    # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    # sobreescribimos el método get_context_data para añadir info al contexto
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Añadir Cliente'
+        context['entity'] = 'Clientes'
+        context['action'] = 'add'
+        context['list_url'] = reverse_lazy('sweb:clientes_list')
+        return context
+
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Cliente añadido')
+        return super().form_valid(form)

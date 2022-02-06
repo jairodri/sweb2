@@ -15,7 +15,7 @@ class DescuentoMOListView(ListView):
 
     # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
     @method_decorator(login_required)
-    @method_decorator(csrf_exempt)  # para el POST que se hace al cargar la datatable con ajax
+    # @method_decorator(csrf_exempt)  # para el POST que se hace al cargar la datatable con ajax
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 

@@ -40,4 +40,5 @@ urlpatterns = [
 
     # Clientes
     path('clientes/list/', ClienteListView.as_view(), name='clientes_list'),
+    path('clientes/add/', ClienteCreateView.as_view(), name='clientes_add'),
 ]

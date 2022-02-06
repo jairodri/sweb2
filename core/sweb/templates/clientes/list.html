@@ -41,28 +41,9 @@
 
 <!-- Literal del botón para añdir registro
 {% block masdatos %}
-Añadir Banco
+Añadir Cliente
 {% endblock %}
 
-{#{% block rows %}#}
-{#    {% for cli in object_list %}#}
-{#        <tr>#}
-{#            <td>#}
-{#                <a href="{% url 'sweb:bancos_edit' cli.id %}" class="btn btn-light btn-xs">#}
-{#                    <i class="far fa-edit" title="Editar"></i>#}
-{#                </a>#}
-{#                <a href="{% url 'sweb:bancos_delete' cli.id %}" class="btn btn-light btn-xs">#}
-{#                    <i class="far fa-trash-alt" title="Borrar"></i>#}
-{#                </a>#}
-{#            </td>#}
-{#            <td>{{ cli.codigo }}</td>#}
-{#            <td>{{ cli.razonSocial }}</td>#}
-{#            <td>{{ cli.cif | default_if_none:'' }}</td>#}
-{#            <td>{{ cli.telefono | default_if_none:'' }}</td>#}
-{#            <td>{{ cli.poblacion | default_if_none:'' }}</td>#}
-{#        </tr>#}
-{#    {% endfor %}#}
-{#{% endblock %}#}
 
 
 

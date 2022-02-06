@@ -1,0 +1,89 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="{{ form.codigo.name }}">{{ form.codigo.label }}<span class="text-danger"> *</span></label>
+                {{ form.codigo | add_class:'form-control' }}
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="{{ form.tipoCliente.name }}">{{ form.tipoCliente.label }}<span
+                        class="text-danger"> *</span></label>
+                {{ form.tipoCliente | add_class:'form-control' }}
+            </div>
+        </div>
+    </div>
+    <div class="card card-light">
+        <div class="card-header"></div>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="{{ form.razonSocial.name }}">{{ form.razonSocial.label }}</label>
+                {{ form.razonSocial | add_class:'form-control' }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.direccion.name }}">{{ form.direccion.label }}</label>
+                {{ form.direccion | add_class:'form-control' }}
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="{{ form.codpostal.name }}">{{ form.codpostal.label }}</label>
+                        {{ form.codpostal | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <label for="{{ form.poblacion.name }}">{{ form.poblacion.label }}</label>
+                        {{ form.poblacion | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="{{ form.provincia.name }}">{{ form.provincia.label }}</label>
+                {{ form.provincia | add_class:'form-control' }}
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="{{ form.cif.name }}">{{ form.cif.label }}</label>
+                {{ form.cif | add_class:'form-control' }}
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="{{ form.fechaNacimiento.name }}">{{ form.fechaNacimiento.label }}</label>
+                <div class="input-group date" id="fnacimiento" data-target-input="nearest">
+                    {{ form.fechaNacimiento | add_class:'form-control' | add_class:'datetimepicker-input' | attr:'data-target:#fnacimiento' | attr:'data-inputmask-alias:datetime' | attr:'data-inputmask-inputformat:dd/mm/yyyy' | attr:'data-mask'}}
+                    <div class="input-group-append" data-target="#fnacimiento" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block jscript2 %}
+    <script>
+        $(function () {
+            //Datemask dd/mm/yyyy
+            $('[data-mask]').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/aaaa' });
+            $('#fnacimiento').datetimepicker({
+                locale: 'es',
+                format: 'L',
+                autoClose: true
+            });
+        });
+    </script>
+    <script type="application/javascript">
+        validar('Cliente');
+    </script>
+{% endblock %}

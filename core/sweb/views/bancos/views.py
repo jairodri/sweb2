@@ -15,7 +15,7 @@ class BancoListView(ListView):
 
     # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
     @method_decorator(login_required)
-    @method_decorator(csrf_exempt)
+    # @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         print(request)
         return super().dispatch(request, *args, **kwargs)

@@ -155,4 +155,4 @@ LOGIN_URL = '/login/'
 AUTH_USER_MODEL = 'user.User'
 
 # Tiempo de sesión activa
-SESSION_COOKIE_AGE = 600
+SESSION_COOKIE_AGE = 5000
