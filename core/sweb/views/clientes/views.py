@@ -7,7 +7,7 @@ from django.contrib import messages
 
 from core.sweb.forms import ClienteForm
 from core.sweb.models import Cliente, TipoClienteRecambios
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 
 
 class ClienteListView(ListView):
@@ -16,7 +16,6 @@ class ClienteListView(ListView):
 
     # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
     @method_decorator(login_required)
-    # @method_decorator(csrf_exempt)  # para el POST que se hace al cargar la datatable con ajax
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -74,4 +73,29 @@ class ClienteCreateView(CreateView):
 
     def form_valid(self, form):
         messages.add_message(self.request, messages.SUCCESS, 'Cliente añadido')
+        return super().form_valid(form)
+
+
+class ClienteUpdateView(UpdateView):
+    model = Cliente
+    form_class = ClienteForm
+    template_name = 'clientes/create.html'
+    success_url = reverse_lazy('sweb:clientes_list')
+
+    # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    # sobreescribimos el método get_context_data para añadir info al contexto
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Editar Cliente'
+        context['entity'] = 'Clientes'
+        context['action'] = 'edit'
+        context['list_url'] = reverse_lazy('sweb:clientes_list')
+        return context
+
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Cliente modificado')
         return super().form_valid(form)

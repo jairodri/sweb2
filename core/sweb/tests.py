@@ -316,7 +316,8 @@ def clientesimport():
     dtcli5[colsint] = dtcli5[colsint].astype('int64')
     dtcli5[colsdatetime] = dtcli5[colsdatetime].apply(pd.to_datetime)
     dtcli5['cli_fenaci'] = dtcli5['cli_fenaci'].dt.date
-    dtcli5[colsboolean].replace(dbool)
+    # dtcli5[colsboolean].replace(dbool)
+    dtcli5[colsboolean] = dtcli5[colsboolean].replace(dbool)
     dtcli5['cli_envsms'].where(dtcli5['cli_envsms'].isin(['0', '1', '2', '3', '4']), '0', inplace=True)
     # print(dtcli5['cli_envsms'])
 
