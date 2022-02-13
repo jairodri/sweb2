@@ -52,9 +52,17 @@ class ClienteCreateView(CreateView):
     success_url = reverse_lazy('sweb:clientes_list')
 
     def get_initial(self):
-        # Pasamos el vamor por defecto del Tipo de Cliente
+        # valores por defecto
         idtipo = TipoClienteRecambios.objects.get(codigo='CL').id
-        initial = {'tipoCliente': idtipo, }
+        dtopieza = '0'
+        diaPagoDesde = 1
+        diaPagoHasta = 31
+        initial = {
+            'tipoCliente': idtipo,
+            'dtopieza': dtopieza,
+            'diaPagoDesde': diaPagoDesde,
+            'diaPagoHasta': diaPagoHasta,
+        }
         return initial
 
     # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación

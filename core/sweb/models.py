@@ -1,14 +1,10 @@
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.forms import model_to_dict
+
+from core.sweb.utils import digitos_control, validar_porcentaje
 
 from core.models import BaseModel
 from crum import get_current_user
-
-
-def validar_porcentaje(value):
-    if value and ((value > 100) or (value < 0)):
-        raise ValidationError(f"{value} no es un porcentaje válido")
 
 
 class Banco(BaseModel):
@@ -41,7 +37,7 @@ class Banco(BaseModel):
 
     def __str__(self):
         # return self.codigo + self.sucursal
-        return f'{self.codigo}|{self.sucursal} - {self.razonsocial}'
+        return f'| {self.codigo} | {self.sucursal} | {self.razonsocial}'
 
     class Meta:
         db_table = 'sirtbban'
@@ -61,7 +57,7 @@ class Banco(BaseModel):
             self.user_creation = user
             # Inicializamos campos
             self.cuenta = '000000000000000'
-            self.dgc = '0'
+            self.dgc = digitos_control('00' + self.codigo + self.sucursal)
             self.dgc2 = '0'
         else:
             self.user_updated = user

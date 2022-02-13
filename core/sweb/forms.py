@@ -33,6 +33,7 @@ class FormaDePagoForm(ModelForm):
 
 
 class TipoClienteRecambiosForm(ModelForm):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -60,6 +61,7 @@ class TipoClienteRecambiosForm(ModelForm):
 
 
 class DescuentoMOForm(ModelForm):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -87,6 +89,7 @@ class DescuentoMOForm(ModelForm):
 
 
 class BancoForm(ModelForm):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -147,6 +150,7 @@ class BancoForm(ModelForm):
 
 
 class ClienteForm(ModelForm):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -244,8 +248,110 @@ class ClienteForm(ModelForm):
             'bloquearCredito': CheckboxInput(attrs={'id': 'bloquearCredito'}),
             'dtomo': Select(attrs={'required': True}, ),
             'enviarSms': Select(attrs={'required': True}, ),
+            'diaPagoDesde': NumberInput(),
+            'diaPagoHasta': NumberInput(),
             'formaDePago': Select(attrs={'required': True}, ),
             'banco': Select(),
             'ocultarCuenta': CheckboxInput(attrs={'id': 'ocultarCuenta'}),
             'emitirRecibos': CheckboxInput(attrs={'id': 'emitirRecibos'}),
         }
+
+    def clean_codigo(self):
+        codigo = self.cleaned_data['codigo']
+
+        # convertimos a mayúsculas
+        codigo = codigo.upper()
+
+        # rellenamos con ceros a la izquierda
+        if codigo.strip().isdecimal():
+            codigo = codigo.strip().zfill(6)
+        return codigo
+
+    def clean_diaPagoDesde(self):
+        diaPagoDesde = self.cleaned_data['diaPagoDesde']
+
+        # si el día de pago desde no está relleno, lo inicializamos a 1
+        if not diaPagoDesde:
+            diaPagoDesde = 1
+        else:
+            if diaPagoDesde < 1 or diaPagoDesde > 31:
+                raise ValidationError('Días Pago debe estar entre 1 y 31')
+        return diaPagoDesde
+
+    def clean_diaPagoHasta(self):
+        diaPagoHasta = self.cleaned_data['diaPagoHasta']
+
+        # si el día de pago hasta no está relleno, lo inicializamos a 31
+        if not diaPagoHasta:
+            diaPagoHasta = 31
+        else:
+            if diaPagoHasta < 1 or diaPagoHasta > 31:
+                raise ValidationError('Días Pago debe estar entre 1 y 31')
+        return diaPagoHasta
+
+    def clean_dtopieza(self):
+        dtopieza = self.cleaned_data['dtopieza']
+
+        # Si el código de descuento de pieza no está relleno, lo inicializamos con '0'
+        if not dtopieza:
+            dtopieza = '0'
+        return dtopieza
+
+    def clean_dtoEpecial(self):
+        dtoEpecial = self.cleaned_data['dtoEpecial']
+
+        # Si el descuento especial no está relleno, lo inicializamos con 0
+        if not dtoEpecial:
+            dtoEpecial = 0
+        return dtoEpecial
+
+    def clean_ivaEpecial(self):
+        ivaEpecial = self.cleaned_data['ivaEpecial']
+
+        # Si el iva especial no está relleno, lo inicializamos con 0
+        if not ivaEpecial:
+            ivaEpecial = 0
+        return ivaEpecial
+
+    def clean_cif(self):
+        cif = self.cleaned_data['cif']
+        tabla_letras_nif = "TRWAGMYFPDXBNJZSQVHCKE"
+        numeros = "1234567890"
+
+        if not cif:
+            return cif
+
+        cif = cif.upper()
+
+        # si la longitud es mayor de 9, no es un nif, puede ser un pasaporte
+        if len(cif) > 9:
+            return cif
+
+        # si el primer carácter es una letra, es un cif, así que no seguimos
+        if cif[0].isalpha():
+            return cif
+
+        # si el último carácter no es una letra, no es un nif válido
+        if not cif[-1].isalpha():
+            raise ValidationError('El formato del CIF/NIF es incorrecto')
+
+        # la longitud del nif no puede ser menor de 8, si es 8 le añadimos un cero al principio
+        if len(cif) < 8:
+            raise ValidationError('El formato del CIF/NIF es incorrecto')
+        elif len(cif) == 8:
+            cif = '0' + cif
+
+        letra = cif[-1]
+        nif = cif[:8]
+        # print(f'letra:{letra}-nif:{nif}')
+
+        # si alguno de los valores del nif menos el último no es numérico, es un error
+        if len(nif) != len([n for n in nif if n in numeros]):
+            raise ValidationError('El formato del CIF/NIF es incorrecto')
+
+        # si la letra del nif no corresponde a la calculada, es un error
+        # print(f'indice:{int(nif) % 23}')
+        if tabla_letras_nif[int(nif) % 23] != letra:
+            raise ValidationError('El formato del CIF/NIF es incorrecto')
+
+        return cif

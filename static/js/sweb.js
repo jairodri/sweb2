@@ -129,11 +129,16 @@ function validar(entity) {
             break
         case 'Cliente':
             rules = {
+                diaPagoDesde: {number: true, min: 1, max: 31},
+                diaPagoHasta: {number: true, min: 1, max: 31},
+                dtoEpecial: {number: true, min: 0, max: 100},
+                ivaEpecial: {number: true, min: 0, max: 100},
             }
             break
         default:
             rules = {}
     }
+    // console.log(rules)
     $('#idform').validate({
         rules: rules,
         messages: {},
