@@ -1,8 +1,5 @@
-from django.core.exceptions import ValidationError
 from django.db import models
-
 from core.sweb.utils import digitos_control, validar_porcentaje
-
 from core.models import BaseModel
 from crum import get_current_user
 
@@ -73,7 +70,7 @@ class DescuentoMO(BaseModel):
                                     decimal_places=2, null=False, blank=False, validators=[validar_porcentaje])
 
     def __str__(self):
-        return f'{self.codigo} - {self.descripcion} - {self.descuento}'
+        return f'{self.codigo} - {self.descripcion} - {self.descuento}%'
 
     class Meta:
         db_table = 'sirtbdmo'

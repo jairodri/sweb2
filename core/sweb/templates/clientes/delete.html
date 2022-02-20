@@ -1,0 +1,276 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="codigo">Código</label>
+                <input type="text" name="codigo" class="form-control" readonly value="{{ object.codigo }}">
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="tipoCliente">Tipo</label>
+                <input type="text" name="tipoCliente" class="form-control" readonly value="{{ object.tipoCliente }}">
+            </div>
+        </div>
+    </div>
+    <div class="card card-light">
+        <div class="card-header"></div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label for="razonSocial">Razón Social</label>
+                        <input type="text" name="razonSocial" class="form-control" readonly value="{{ object.razonSocial | default_if_none:'' }}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cif">CIF/NIF</label>
+                        <input type="text" name="cif" class="form-control" readonly value="{{ object.cif | default_if_none:'' }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección</label>
+                <input type="text" name="direccion" class="form-control" readonly value="{{ object.direccion | default_if_none:'' }}">
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="codpostal">Código Postal</label>
+                        <input type="text" name="codpostal" class="form-control" readonly value="{{ object.codpostal | default_if_none:'' }}">
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="poblacion">Población</label>
+                        <input type="text" name="poblacion" class="form-control" readonly value="{{ object.poblacion | default_if_none:'' }}">
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="provincia">Provincia</label>
+                        <input type="text" name="provincia" class="form-control" readonly value="{{ object.provincia | default_if_none:'' }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text" name="telefono" class="form-control" readonly value="{{ object.telefono | default_if_none:'' }}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="tlfmovil">Móvil</label>
+                        <input type="text" name="tlfmovil" class="form-control" readonly value="{{ object.tlfmovil | default_if_none:'' }}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="fax">Fax</label>
+                        <input type="text" name="fax" class="form-control" readonly value="{{ object.fax | default_if_none:'' }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label for="email">Correo electrónico</label>
+                        <input type="text" name="email" class="form-control" readonly value="{{ object.email | default_if_none:'' }}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="fechaNacimiento">Fecha Nacimiento</label>
+                        <input type="text" name="fechaNacimiento" class="form-control" readonly value="{{ object.fechaNacimiento | default_if_none:'' }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+    <div class="form-group">
+        <label for="notas">Nota</label>
+        <input type="text" name="notas" class="form-control" readonly value="{{ object.notas | default_if_none:'' }}">
+    </div>
+{#    <div class="card card-light">#}
+{#        <div class="card-header"></div>#}
+{#        <div class="card-body">#}
+{#            <div class="row">#}
+{#                <div class="col-sm-3">#}
+{#                    <div class="form-group">#}
+{#                        <div class="icheck-primary ">#}
+{#                            {{ form.aplicarIva | add_class:'form-control' }}#}
+{#                            <label for="{{ form.aplicarIva.name }}">{{ form.aplicarIva.label }}</label>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-sm-3">#}
+{#                    <div class="form-group">#}
+{#                        <div class="icheck-primary ">#}
+{#                            {{ form.listarnetodto | add_class:'form-control' }}#}
+{#                            <label for="{{ form.listarnetodto.name }}">{{ form.listarnetodto.label }}</label>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-sm-3">#}
+{#                    <div class="form-group">#}
+{#                        <div class="icheck-primary ">#}
+{#                            {{ form.exentoMail | add_class:'form-control' }}#}
+{#                            <label for="{{ form.exentoMail.name }}">{{ form.exentoMail.label }}</label>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-sm-3">#}
+{#                    <div class="form-group">#}
+{#                        <div class="icheck-primary ">#}
+{#                            {{ form.bloquearCredito | add_class:'form-control' }}#}
+{#                            <label for="{{ form.bloquearCredito.name }}">{{ form.bloquearCredito.label }}</label>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="card-footer"></div>#}
+{#    </div>#}
+{#    <div class="row">#}
+{#        <div class="col-sm-4">#}
+{#            <div class="form-group">#}
+{#                <label for="{{ form.dtopieza.name }}">{{ form.dtopieza.label }}</label>#}
+{#                {{ form.dtopieza | add_class:'form-control' }}#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="col-sm-4">#}
+{#            <div class="form-group">#}
+{#                <label for="{{ form.ivaEpecial.name }}">{{ form.ivaEpecial.label }}</label>#}
+{#                {{ form.ivaEpecial | add_class:'form-control' }}#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="col-sm-4">#}
+{#            <div class="form-group">#}
+{#                <label for="{{ form.fechaUltimaFactura.name }}">{{ form.fechaUltimaFactura.label }}</label>#}
+{#                <div class="input-group date" id="fultfactura" data-target-input="nearest">#}
+{#                    <div class="input-group-append" data-target="#fultfactura" data-toggle="datetimepicker">#}
+{#                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>#}
+{#                    </div>#}
+{#                    {{ form.fechaUltimaFactura | add_class:'form-control' | add_class:'datetimepicker-input' | attr:'data-target:#fnacimiento' | attr:'data-inputmask-alias:datetime' | attr:'data-inputmask-inputformat:dd/mm/yyyy' | attr:'data-mask' }}#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="row">#}
+{#        <div class="col-sm-4">#}
+{#            <div class="form-group">#}
+{#                <label for="{{ form.dtomo.name }}">{{ form.dtomo.label }}</label>#}
+{#                {{ form.dtomo | add_class:'form-control' }}#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="col-sm-4">#}
+{#            <div class="form-group">#}
+{#                <label for="{{ form.precioMo.name }}">{{ form.precioMo.label }}</label>#}
+{#                {{ form.precioMo | add_class:'form-control' }}#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="col-sm-4">#}
+{#            <div class="form-group">#}
+{#                <label for="{{ form.dtoEpecial.name }}">{{ form.dtoEpecial.label }}</label>#}
+{#                {{ form.dtoEpecial | add_class:'form-control' }}#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="row">#}
+{#        <div class="col-sm-4">#}
+{#            <div class="form-group">#}
+{#                <label for="{{ form.enviarSms.name }}">{{ form.enviarSms.label }}</label>#}
+{#                {{ form.enviarSms | add_class:'form-control' }}#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="card card-light">#}
+{#        <div class="card-header"></div>#}
+{#        <div class="card-body">#}
+{#            <div class="row">#}
+{#                <div class="col-sm-2">#}
+{#                    <div class="form-group">#}
+{#                        <label for="{{ form.diaPagoDesde.name }}">{{ form.diaPagoDesde.label }}</label>#}
+{#                        {{ form.diaPagoDesde | add_class:'form-control' }}#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-sm-2">#}
+{#                    <div class="form-group">#}
+{#                        <label for="{{ form.diaPagoHasta.name }}">{{ form.diaPagoHasta.label }}</label>#}
+{#                        {{ form.diaPagoHasta | add_class:'form-control' }}#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-sm-4">#}
+{#                    <div class="form-group">#}
+{#                        <label for="{{ form.creditoDisponible.name }}">{{ form.creditoDisponible.label }}</label>#}
+{#                        {{ form.creditoDisponible | add_class:'form-control' }}#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-sm-4">#}
+{#                    <div class="form-group">#}
+{#                        <label for="{{ form.formaDePago.name }}">{{ form.formaDePago.label }}</label>#}
+{#                        {{ form.formaDePago | add_class:'form-control' }}#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="row">#}
+{#                 <div class="col-sm-4">#}
+{#                    <div class="form-group">#}
+{#                        <label for="{{ form.banco.name }}">{{ form.banco.label }}</label>#}
+{#                        {{ form.banco | add_class:'form-control' }}#}
+{#                    </div>#}
+{#                </div>#}
+{#                 <div class="col-sm-2">#}
+{#                    <div class="form-group">#}
+{#                        <label for="{{ form.iban.name }}">{{ form.iban.label }}</label>#}
+{#                        {{ form.iban | add_class:'form-control' | attr:'readonly' }}#}
+{#                    </div>#}
+{#                </div>#}
+{#                 <div class="col-sm-2">#}
+{#                    <div class="form-group">#}
+{#                        <label for="{{ form.iban.dc }}">{{ form.dc.label }}</label>#}
+{#                        {{ form.dc | add_class:'form-control' | attr:'readonly' }}#}
+{#                    </div>#}
+{#                </div>#}
+{#                 <div class="col-sm-4">#}
+{#                    <div class="form-group">#}
+{#                        <label for="{{ form.cuenta.name }}">{{ form.cuenta.label }}</label>#}
+{#                        {{ form.cuenta | add_class:'form-control' }}#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="row">#}
+{#                <div class="col-sm-3">#}
+{#                    <div class="form-group">#}
+{#                        <div class="icheck-primary ">#}
+{#                            {{ form.ocultarCuenta | add_class:'form-control' }}#}
+{#                            <label for="{{ form.ocultarCuenta.name }}">{{ form.ocultarCuenta.label }}</label>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-sm-3">#}
+{#                    <div class="form-group">#}
+{#                        <div class="icheck-primary ">#}
+{#                            {{ form.emitirRecibos | add_class:'form-control' }}#}
+{#                            <label for="{{ form.emitirRecibos.name }}">{{ form.emitirRecibos.label }}</label>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="card-footer"></div>#}
+{#    </div>#}
+{% endblock %}
+
+{% block jscript2 %}
+    <script>
+        confirmdelete();
+    </script>
+{% endblock %}

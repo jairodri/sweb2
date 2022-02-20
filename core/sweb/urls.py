@@ -42,4 +42,5 @@ urlpatterns = [
     path('clientes/list/', ClienteListView.as_view(), name='clientes_list'),
     path('clientes/add/', ClienteCreateView.as_view(), name='clientes_add'),
     path('clientes/edit/<int:pk>/', ClienteUpdateView.as_view(), name='clientes_edit'),
+    path('clientes/delete/<int:pk>/', ClienteDeleteView.as_view(), name='clientes_delete'),
 ]

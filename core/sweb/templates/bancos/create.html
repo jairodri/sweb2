@@ -28,21 +28,21 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="form-group">
                         <label for="{{ form.tipovia.name }}">{{ form.tipovia.label }}<span
                                 class="text-danger"> *</span></label>
                         {{ form.tipovia | add_class:'form-control' }}
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <div class="form-group">
                         <label for="{{ form.nomvia.name }}">{{ form.nomvia.label }}<span
                                 class="text-danger"> *</span></label>
                         {{ form.nomvia | add_class:'form-control' }}
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="form-group">
                         <label for="{{ form.numvia.name }}">{{ form.numvia.label }}<span
                                 class="text-danger"> *</span></label>
@@ -51,25 +51,27 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="form-group">
                         <label for="{{ form.codpostal.name }}">{{ form.codpostal.label }}<span
                                 class="text-danger"> *</span></label>
                         {{ form.codpostal | add_class:'form-control' }}
                     </div>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                     <div class="form-group">
                         <label for="{{ form.municipio.name }}">{{ form.municipio.label }}<span
                                 class="text-danger"> *</span></label>
                         {{ form.municipio | add_class:'form-control' }}
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="{{ form.provincia.name }}">{{ form.provincia.label }}<span
-                        class="text-danger"> *</span></label>
-                {{ form.provincia | add_class:'form-control' }}
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="{{ form.provincia.name }}">{{ form.provincia.label }}<span
+                                class="text-danger"> *</span></label>
+                        {{ form.provincia | add_class:'form-control' }}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="card-footer"></div>

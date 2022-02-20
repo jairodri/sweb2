@@ -1,5 +1,8 @@
 from django.forms import *
 from core.sweb.models import *
+from core.sweb.utils import digitos_control
+from schwifty import IBAN
+from django.contrib import messages
 
 
 class FormaDePagoForm(ModelForm):
@@ -151,6 +154,9 @@ class BancoForm(ModelForm):
 
 class ClienteForm(ModelForm):
 
+    confirm_cif = BooleanField(label='Confirmar CIF', widget=HiddenInput(attrs={'id': 'confirm_cif'}))
+    confirm_cif.required = False
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -211,8 +217,8 @@ class ClienteForm(ModelForm):
             'provincia': 'Provincia',
             'cif': 'CIF/NIF',
             'fechaNacimiento': 'Fecha Nacimiento',
-            'telefono': 'Teléfono 1',
-            'tlfmovil': 'Teléfono 2',
+            'telefono': 'Teléfono',
+            'tlfmovil': 'Móvil',
             'fax': 'Fax',
             'email': 'Correo electrónico',
             'notas': 'Nota',
@@ -252,12 +258,19 @@ class ClienteForm(ModelForm):
             'diaPagoHasta': NumberInput(),
             'formaDePago': Select(attrs={'required': True}, ),
             'banco': Select(),
+            'telefono': TextInput(attrs={'minlength': 9}),
+            'tlfmovil': TextInput(attrs={'minlength': 9}),
             'ocultarCuenta': CheckboxInput(attrs={'id': 'ocultarCuenta'}),
             'emitirRecibos': CheckboxInput(attrs={'id': 'emitirRecibos'}),
+            'email': EmailInput(),
+            # 'cif': TextInput(attrs={'required': False}),
         }
 
     def clean_codigo(self):
         codigo = self.cleaned_data['codigo']
+
+        if not codigo:
+            raise ValidationError('El campo Código es obligatorio')
 
         # convertimos a mayúsculas
         codigo = codigo.upper()
@@ -265,62 +278,24 @@ class ClienteForm(ModelForm):
         # rellenamos con ceros a la izquierda
         if codigo.strip().isdecimal():
             codigo = codigo.strip().zfill(6)
+
+        # en altas comprobamos si ya existe en la tabla otro código igual
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            pass
+        else:
+            clientes = Cliente.objects.filter(codigo=codigo)
+            # print(clientes)
+            if clientes:
+                raise ValidationError('Ya existe un Cliente con este Código: %(value)s', code='coddup', params={'value': codigo})
+
         return codigo
 
-    def clean_diaPagoDesde(self):
-        diaPagoDesde = self.cleaned_data['diaPagoDesde']
-
-        # si el día de pago desde no está relleno, lo inicializamos a 1
-        if not diaPagoDesde:
-            diaPagoDesde = 1
-        else:
-            if diaPagoDesde < 1 or diaPagoDesde > 31:
-                raise ValidationError('Días Pago debe estar entre 1 y 31')
-        return diaPagoDesde
-
-    def clean_diaPagoHasta(self):
-        diaPagoHasta = self.cleaned_data['diaPagoHasta']
-
-        # si el día de pago hasta no está relleno, lo inicializamos a 31
-        if not diaPagoHasta:
-            diaPagoHasta = 31
-        else:
-            if diaPagoHasta < 1 or diaPagoHasta > 31:
-                raise ValidationError('Días Pago debe estar entre 1 y 31')
-        return diaPagoHasta
-
-    def clean_dtopieza(self):
-        dtopieza = self.cleaned_data['dtopieza']
-
-        # Si el código de descuento de pieza no está relleno, lo inicializamos con '0'
-        if not dtopieza:
-            dtopieza = '0'
-        return dtopieza
-
-    def clean_dtoEpecial(self):
-        dtoEpecial = self.cleaned_data['dtoEpecial']
-
-        # Si el descuento especial no está relleno, lo inicializamos con 0
-        if not dtoEpecial:
-            dtoEpecial = 0
-        return dtoEpecial
-
-    def clean_ivaEpecial(self):
-        ivaEpecial = self.cleaned_data['ivaEpecial']
-
-        # Si el iva especial no está relleno, lo inicializamos con 0
-        if not ivaEpecial:
-            ivaEpecial = 0
-        return ivaEpecial
-
-    def clean_cif(self):
+    def validar_nif(self):
         cif = self.cleaned_data['cif']
+
         tabla_letras_nif = "TRWAGMYFPDXBNJZSQVHCKE"
         numeros = "1234567890"
-
-        if not cif:
-            return cif
-
         cif = cif.upper()
 
         # si la longitud es mayor de 9, no es un nif, puede ser un pasaporte
@@ -355,3 +330,174 @@ class ClienteForm(ModelForm):
             raise ValidationError('El formato del CIF/NIF es incorrecto')
 
         return cif
+
+    def clean_cif(self):
+        cif = self.cleaned_data['cif']
+
+        if not cif:
+            return cif
+        cif = self.validar_nif()
+
+        return cif
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        # print(email)
+
+        # Hay que tener cuidado antes de hacer el lower porque cuando está vacío devuelve None
+        if not email:
+            return email
+
+        # convertimos los email a minúsculas
+        email = str(email).lower()
+        return email
+
+    def clean_dtopieza(self):
+        dtopieza = self.cleaned_data['dtopieza']
+
+        # Si el código de descuento de pieza no está relleno, lo inicializamos con '0'
+        if not dtopieza:
+            dtopieza = '0'
+        return dtopieza
+
+    def clean_ivaEpecial(self):
+        iva_epecial = self.cleaned_data['ivaEpecial']
+
+        # Si el iva especial no está relleno, lo inicializamos con 0
+        if not iva_epecial:
+            iva_epecial = 0
+        else:
+            validar_porcentaje(iva_epecial)
+        return iva_epecial
+
+    def clean_precioMo(self):
+        precio_mo = self.cleaned_data['precioMo']
+
+        # el precio de mo no puede ser de 1000 o superior
+        if precio_mo and precio_mo > 999.99:
+            raise ValidationError('Precio MO tiene que ser menor de 1000: %(value)s', code='pvpinvalid',
+                                  params={'value': precio_mo})
+        return precio_mo
+
+    def clean_dtoEpecial(self):
+        dto_epecial = self.cleaned_data['dtoEpecial']
+
+        # Si el descuento especial no está relleno, lo inicializamos con 0
+        if not dto_epecial:
+            dto_epecial = 0
+        else:
+            validar_porcentaje(dto_epecial)
+        return dto_epecial
+
+    def clean_diaPagoDesde(self):
+        diaPagoDesde = self.cleaned_data['diaPagoDesde']
+
+        # si el día de pago desde no está relleno, lo inicializamos a 1
+        if not diaPagoDesde:
+            diaPagoDesde = 1
+        else:
+            if diaPagoDesde < 1 or diaPagoDesde > 31:
+                raise ValidationError('Días Pago debe estar entre 1 y 31')
+        return diaPagoDesde
+
+    def clean_diaPagoHasta(self):
+        diaPagoHasta = self.cleaned_data['diaPagoHasta']
+
+        # si el día de pago hasta no está relleno, lo inicializamos a 31
+        if not diaPagoHasta:
+            diaPagoHasta = 31
+        else:
+            if diaPagoHasta < 1 or diaPagoHasta > 31:
+                raise ValidationError('Días Pago debe estar entre 1 y 31')
+        return diaPagoHasta
+
+    def clean_cuenta(self):
+        cuenta = self.cleaned_data['cuenta']
+
+        # si existe cuenta debe ser de 10 dígitos
+        if cuenta:
+            if len(cuenta) == 10 and cuenta.isdigit():
+                pass
+            else:
+                raise ValidationError('Cuenta debe tener 10 dígitos: %(value)s', code='ctainvalid', params={'value': cuenta})
+        return cuenta
+
+    # definimos método para obtener DC e IBAN
+    def clean_dc_iban(self):
+        cleaned_data = self.cleaned_data
+
+        cuenta = cleaned_data['cuenta']
+        banco = cleaned_data['banco']
+
+        # obenemos el DC
+        dc = banco.dgc + digitos_control(cuenta)
+
+        # obenemos el IBAN
+        country_code = 'ES'
+        bank_code = banco.codigo + banco.sucursal
+        account_code = dc + cuenta
+        iban_obj = IBAN.generate(country_code=country_code, bank_code=bank_code, account_code=account_code)
+        iban = country_code + iban_obj.checksum_digits
+
+        cleaned_data['dc'] = dc
+        cleaned_data['iban'] = iban
+        return cleaned_data
+
+    def validar_cif_duplicado(self):
+        # Comprobamos primero si hay código, puesto que hubo una validación anterior
+        try:
+            codigo = self.cleaned_data['codigo']
+        except KeyError:
+            # si no hay código no continuamos con la validación
+            return
+
+        confirm_cif = self.cleaned_data['confirm_cif']
+        cif = self.cleaned_data['cif']
+        # print(f'cif:{cif} - confirm_cif:{confirm_cif}')
+
+        if not cif:
+            return
+
+        clientes = Cliente.objects.filter(cif=cif).exclude(codigo=codigo)
+        if clientes and not confirm_cif:
+            self.fields['confirm_cif'].widget = widgets.CheckboxInput(attrs={'id': 'confirm_cif'})
+            self.fields['confirm_cif'].required = False
+            raise ValidationError('El CIF/NIF ya existe en el cliente: %(value)s. Confirme para validar', code='cifdup',
+                                  params={'value': clientes[0].codigo})
+        else:
+            self.fields['confirm_cif'].widget = widgets.HiddenInput(attrs={'id': 'confirm_cif'})
+            self.fields['confirm_cif'].required = False
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        # print(cleaned_data)
+
+        # validamos si el cif está duplicado
+        self.validar_cif_duplicado()
+
+        # Si la validación de la cuenta ha fallado (clean_cuenta) y se ha lanzado el ValidationError
+        # ya no tenemos ese campo en cleaned_data por lo que obtenemos KeyError al ir a buscarlo
+        try:
+            # obtenemos DC e IBAN dependiendo del contenido de los campos Cuenta y Banco
+            cuenta = cleaned_data['cuenta']
+            banco = cleaned_data['banco']
+            if (not cuenta) or (not banco):
+                dc = None
+                iban = None
+                cleaned_data['dc'] = dc
+                cleaned_data['iban'] = iban
+            else:
+                cleaned_data = self.clean_dc_iban()
+        except KeyError:
+            # ya ha habido una validación errónea en la cuenta por lo que no tenemos que hacer nada
+            pass
+
+        # Si está activo el envío SMS el teléfono móvil debe estar relleno
+        enviarSms = cleaned_data['enviarSms']
+        tlfmovil = cleaned_data['tlfmovil']
+        if enviarSms != '0':
+            if not tlfmovil:
+                raise ValidationError('Si se activa el envío SMS es necesario rellenar el teléfono móvil')
+
+        return cleaned_data
+

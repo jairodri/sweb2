@@ -116,7 +116,7 @@ function validar(entity) {
             break
         case 'Banco':
             rules = {
-                telefono: {number: true},
+                telefono: {number: true}, // está definido como numérico en bbdd
                 telperso: {number: true},
                 extension: {number: true}
             }
@@ -133,6 +133,9 @@ function validar(entity) {
                 diaPagoHasta: {number: true, min: 1, max: 31},
                 dtoEpecial: {number: true, min: 0, max: 100},
                 ivaEpecial: {number: true, min: 0, max: 100},
+                precioMo: {number: true, max: 999.99},
+                // telefono: {number: true},
+                // tlfmovil: {number: true},
             }
             break
         default:
