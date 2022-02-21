@@ -7,7 +7,7 @@ from django.contrib import messages
 
 from core.sweb.forms import ClienteForm
 from core.sweb.models import Cliente, TipoClienteRecambios, FormaDePago, DescuentoMO
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
 
 class ClienteListView(ListView):
@@ -157,3 +157,22 @@ class ClienteDeleteView(DeleteView):
     def form_valid(self, form):
         messages.add_message(self.request, messages.SUCCESS, 'Cliente eliminado')
         return super().form_valid(form)
+
+
+class ClienteDetailView(DetailView):
+    model = Cliente
+    template_name = 'clientes/detail.html'
+
+    # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    # sobreescribimos el método get_context_data para añadir info al contexto
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Detalle Cliente'
+        context['entity'] = 'Clientes'
+        context['list_url'] = reverse_lazy('sweb:clientes_list')
+        context['action'] = 'detail'
+        return context
