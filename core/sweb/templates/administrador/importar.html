@@ -1,0 +1,26 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <div class="form-group">
+        <label for="lista_tablas">Tabla destino</label>
+        {{ form.lista_tablas | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="fichero_tabla">Fichero a importar</label>
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="fichero_tabla" name="fichero_tabla">
+            <label class="custom-file-label" for="fichero_tabla">Seleccione fichero</label>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block jscript2 %}
+    <script>
+        $(document).ready(function () {
+            bsCustomFileInput.init()
+        })
+        validar('Importar');
+    </script>
+{% endblock %}

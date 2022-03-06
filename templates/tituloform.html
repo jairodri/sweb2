@@ -5,7 +5,8 @@
         <i class="fas fa-edit"></i>
     {% elif action == 'detail' %}
         <i class="fas fa-eye"></i>
-    {% else %}
+{#    {% else %}#}
+    {% elif action == 'delete' %}
         <i class="fas fa-trash-alt"></i>
     {% endif %}
     {{ title }}

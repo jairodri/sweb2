@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Libs
     'widget_tweaks',
+    'import_export',
     # Mis Apps
     'core.sweb',
     'core.homepage',
@@ -155,3 +156,6 @@ AUTH_USER_MODEL = 'user.User'
 
 # Tiempo de sesión activa
 SESSION_COOKIE_AGE = 5000
+
+# Para utilizar database transactions en import y que sea más seguro
+IMPORT_EXPORT_USE_TRANSACTIONS = True

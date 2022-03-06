@@ -6,13 +6,20 @@
     <button type="submit" class="btn btn-primary btn-flat">
         {% if action == 'delete' %}
             <i class="fas fa-trash-alt"></i> Borrar
+        {% elif action == 'importar' %}
+            <i class="fas fa-file-import"></i> Importar
         {% else %}
             <i class="fas fa-save"></i> Guardar
             {% block data %}
             {% endblock %}
         {% endif %}
     </button>
-    <a href="{{ list_url }}" class="btn btn-secondary btn-flat">
+    <a  {% if action == 'importar' %}
+            href="{{ dashboard_url }}"
+        {% else %}
+            href="{{ list_url }}"
+        {% endif %}
+            class="btn btn-secondary btn-flat">
         <i class="fas fa-times"></i> Cancelar
     </a>
 {% endif %}

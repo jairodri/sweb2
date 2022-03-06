@@ -4,6 +4,23 @@ from core.sweb.utils import digitos_control
 from schwifty import IBAN
 from django.contrib import messages
 
+LIST_TABLES = [
+    ('01', 'Descuentos MO'),
+    ('02', 'Tipos de Cliente'),
+    ('03', 'Formas de Pago'),
+    ('04', 'Bancos'),
+    ('05', 'Clientes/Proveedores'),
+]
+
+
+class ImportarForm(Form):
+    lista_tablas = CharField(widget=Select(choices=LIST_TABLES))
+    fichero_tabla = FileField()
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        # print(cleaned_data)
+
 
 class FormaDePagoForm(ModelForm):
 
@@ -154,8 +171,8 @@ class BancoForm(ModelForm):
 
 class ClienteForm(ModelForm):
 
-    confirm_cif = BooleanField(label='Confirmar CIF', widget=HiddenInput(attrs={'id': 'confirm_cif'}))
-    confirm_cif.required = False
+    confirm_cif = BooleanField(label='Confirmar CIF', required=False, widget=HiddenInput(attrs={'id': 'confirm_cif'}))
+    # confirm_cif.required = False
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -447,12 +464,13 @@ class ClienteForm(ModelForm):
         # Comprobamos primero si hay código, puesto que hubo una validación anterior
         try:
             codigo = self.cleaned_data['codigo']
+            cif = self.cleaned_data['cif']
         except KeyError:
             # si no hay código no continuamos con la validación
             return
 
         confirm_cif = self.cleaned_data['confirm_cif']
-        cif = self.cleaned_data['cif']
+        # cif = self.cleaned_data['cif']
         # print(f'cif:{cif} - confirm_cif:{confirm_cif}')
 
         if not cif:
@@ -470,7 +488,7 @@ class ClienteForm(ModelForm):
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        # print(cleaned_data)
+        print(cleaned_data)
 
         # validamos si el cif está duplicado
         self.validar_cif_duplicado()

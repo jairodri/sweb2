@@ -105,6 +105,11 @@ function initdtables(icolumns, ibuttons) {
 function validar(entity) {
     // console.log(entity)
     switch (entity) {
+        case 'Importar':
+            rules = {
+                fichero_tabla: {required: true},
+            }
+            break
         case 'DescuentoMO':
             rules = {descuento: {number: true, min: 0, max: 100}}
             break

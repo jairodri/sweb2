@@ -5,6 +5,7 @@ from core.sweb.views.tiposclienterec.views import *
 from core.sweb.views.descuentosmo.views import *
 from core.sweb.views.bancos.views import *
 from core.sweb.views.clientes.views import *
+from core.sweb.views.administrador.views import *
 
 app_name = 'sweb'
 
@@ -44,4 +45,7 @@ urlpatterns = [
     path('clientes/edit/<int:pk>/', ClienteUpdateView.as_view(), name='clientes_edit'),
     path('clientes/delete/<int:pk>/', ClienteDeleteView.as_view(), name='clientes_delete'),
     path('clientes/detail/<int:pk>/', ClienteDetailView.as_view(), name='clientes_detail'),
+
+    # Importar
+    path('administrador/importar/', ImportarView.as_view(), name='administrador_importar'),
 ]
