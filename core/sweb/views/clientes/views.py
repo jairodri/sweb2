@@ -27,7 +27,7 @@ class ClienteListView(ListView):
             if action == 'searchdata':
                 data = []
                 # recuperamos solo los campos necesarios para la paginación
-                for i in Cliente.objects.all().values('id', 'codigo', 'razonSocial', 'cif', 'telefono', 'poblacion'):
+                for i in Cliente.objects.all().values('id', 'codigo', 'razonSocial', 'cif', 'telefono', 'tlfmovil', 'poblacion', 'provincia'):
                     data.append(i)
             else:
                 data['error'] = 'Ha ocurrido un error'

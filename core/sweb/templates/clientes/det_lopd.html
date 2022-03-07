@@ -1,0 +1,96 @@
+{#{% load static %}#}
+{#{% load widget_tweaks %}#}
+
+<!-- Modal -->
+<div class="modal fade" id="lopdModal" tabindex="-1" role="dialog" aria-labelledby="lopdModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="lopdModalLabel">Datos LOPD</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <input type="text" name="codigo" class="form-control" readonly value="{{ object.codigo }}">
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <input type="text" name="razonSocial" class="form-control" readonly value="{{ object.razonSocial | default_if_none:'' }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-light">
+                        <div class="card-header">
+                            <label>
+                                El Cliente da su consentimiento para recibir comunicaciones de marketing (incluida
+                                información sobre productos y servicios, ofertas promocionales, noticias y eventos y
+                                encuestas de marketing) de:
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <div class="icheck-primary ">
+                                    <input type="checkbox" name="lopd1" class="form-control" readonly
+                                           onclick="return false"
+                                            {% if object.lopd1 %}
+                                           checked
+                                            {% endif %}
+                                    >
+                                    <label for="lopd1">CITROEN y el Reparador incluidos medios electrónicos</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="icheck-primary ">
+                                    <input type="checkbox" name="lopd2" class="form-control" readonly
+                                           onclick="return false"
+                                            {% if object.lopd2 %}
+                                           checked
+                                            {% endif %}
+                                    >
+                                    <label for="lopd2">El Reparador, incluido por medios electrónicos</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="icheck-primary ">
+                                    <input type="checkbox" name="lopd3" class="form-control" readonly
+                                           onclick="return false"
+                                            {% if object.lopd3 %}
+                                           checked
+                                            {% endif %}
+                                    >
+                                    <label for="lopd3">
+                                        Cualquier sociedad perteneciente al grupo que CITROEN en España, (Groupe PSA
+                                        matriz - Peugeot, S.A.) dedicadas al sector de la automoción, y la financiación,
+                                        incluido por medios electrónicos, y sus redes de distribuidores de vehículos y
+                                        servicios oficiales de reparación.
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="icheck-primary ">
+                                    <input type="checkbox" name="lopdfirma" class="form-control" readonly
+                                           onclick="return false"
+                                            {% if object.lopdfirma %}
+                                           checked
+                                            {% endif %}
+                                    >
+                                    <label for="lopdfirma">Firmado LOPD</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

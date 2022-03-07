@@ -7,7 +7,9 @@
         <th>Razón Social</th>
         <th>CIF/NIF</th>
         <th>Teléfono</th>
+        <th>Móvil</th>
         <th>Población</th>
+        <th>Provincia</th>
     </tr>
 {% endblock %}
 
@@ -18,7 +20,9 @@
         <th>Razón Social</th>
         <th>CIF/NIF</th>
         <th>Teléfono</th>
+        <th>Móvil</th>
         <th>Población</th>
+        <th>Provincia</th>
     </tr>
 {% endblock %}
 
@@ -30,7 +34,9 @@
             {"data": "razonSocial"},
             {"data": "cif"},
             {"data": "telefono"},
+            {"data": "tlfmovil", "defaultContent": ""},
             {"data": "poblacion"},
+            {"data": "provincia"},
         ]
         var ibuttons = '<a href="/sweb/clientes/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
         ibuttons += '<a href="/sweb/clientes/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';

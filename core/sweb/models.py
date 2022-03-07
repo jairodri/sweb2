@@ -165,8 +165,10 @@ class TipoClienteRecambios(BaseModel):
 class Cliente(BaseModel):
     codigo = models.CharField(max_length=6, verbose_name='código cliente', db_column='cli_codigo', unique=True,
                               null=False, blank=False)
-    razonSocial = models.CharField(max_length=100, verbose_name='razón social', db_column='cli_rsocial', null=True,
-                                   blank=True)
+    razonSocial = models.CharField(max_length=100, verbose_name='razón social', db_column='cli_rsocial', null=True, blank=True)
+    nombre = models.CharField(max_length=100, verbose_name='nombre', db_column='cli_nombre', null=True, blank=True)
+    apellido1 = models.CharField(max_length=100, verbose_name='apellido 1', db_column='cli_ape1', null=True, blank=True)
+    apellido2 = models.CharField(max_length=100, verbose_name='apellido 2', db_column='cli_ape2', null=True, blank=True)
     tipoCliente = models.ForeignKey(TipoClienteRecambios, on_delete=models.PROTECT, null=False, blank=False,
                                     db_column='cli_tipcli', verbose_name='tipo cliente')
     direccion = models.CharField(max_length=100, verbose_name='direccion', db_column='cli_direccion', null=True,
@@ -257,8 +259,7 @@ class Cliente(BaseModel):
     costeRecambiosTallerAnoAnterior = models.DecimalField(verbose_name='coste recambios taller año anterior',
                                                           max_digits=9, decimal_places=2,
                                                           db_column='cli_cosrectalanoant', null=True, blank=True)
-    listarnetodto = models.BooleanField(verbose_name='listar neto descuento', db_column='cli_lstnetdto', default=False,
-                                        null=False, blank=False)
+    listarnetodto = models.BooleanField(verbose_name='listar neto descuento', db_column='cli_lstnetdto', default=False, null=False, blank=False)
     exentoMail = models.BooleanField(verbose_name='exento mail', db_column='cli_exentomail', default=False, null=False,
                                      blank=False)
     pasaporte = models.CharField(max_length=15, verbose_name='pasaporte', db_column='cli_pasaporte', null=True,
@@ -283,9 +284,17 @@ class Cliente(BaseModel):
                                         null=False, blank=False)
     iban = models.CharField(max_length=4, verbose_name='iban', db_column='cli_iban', null=True, blank=True)
     dc = models.CharField(max_length=2, verbose_name='dígito control', db_column='cli_dc', null=True, blank=True)
+    lopd = models.BooleanField(verbose_name='LOPD', db_column='cli_lopd', default=False, null=False, blank=False)
+    lopd1 = models.BooleanField(verbose_name='LOPD 1', db_column='cli_lopd1', default=False, null=False, blank=False)
+    lopd2 = models.BooleanField(verbose_name='LOPD 2', db_column='cli_lopd2', default=False, null=False, blank=False)
+    lopd3 = models.BooleanField(verbose_name='LOPD 3', db_column='cli_lopd3', default=False, null=False, blank=False)
+    lopdfirma = models.BooleanField(verbose_name='LOPD firma', db_column='cli_lopdf', default=False, null=False, blank=False)
 
     def __str__(self):
-        return f'{self.codigo} - {self.razonSocial}'
+        if self.nombre:
+            return f'{self.codigo} - {self.nombre} - {self.apellido1} - {self.apellido2}'
+        else:
+            return f'{self.codigo} - {self.razonSocial}'
 
     class Meta:
         db_table = 'sirtbcli'

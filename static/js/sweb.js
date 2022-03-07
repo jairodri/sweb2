@@ -23,6 +23,7 @@ function initdtables(icolumns, ibuttons) {
         autoWidth: false,
         destroy: true,
         deferRender: true,
+        stateSave: true,
         // scrollY: 400,
         // scrollCollapse: true,
         // scroller: true,

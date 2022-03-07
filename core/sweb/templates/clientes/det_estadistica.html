@@ -1,0 +1,139 @@
+{#{% load static %}#}
+{#{% load widget_tweaks %}#}
+
+<!-- Modal -->
+<div class="modal fade" id="estadisticaModal" tabindex="-1" role="dialog" aria-labelledby="estadisticaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h5 class="modal-title" id="estadisticaModalLabel">Datos Estadísticos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="container-fluid">
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="fechaUltimoMovimiento">Fecha Último Movimiento</label>
+                          <input type="text" name="fechaUltimoMovimiento" class="form-control" readonly
+                                 value="{{ object.fechaUltimoMovimiento | date:"SHORT_DATE_FORMAT" | default_if_none:'' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="creditoDisponible">Crédito Disponible</label>
+                          <input type="text" name="creditoDisponible" class="form-control" readonly value="{{ object.creditoDisponible | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="creditoDispuesto">Crédito Dispuesto</label>
+                          <input type="text" name="creditoDispuesto" class="form-control" readonly value="{{ object.creditoDispuesto | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="comprasMes">Compras Mes</label>
+                          <input type="text" name="comprasMes" class="form-control" readonly value="{{ object.comprasMes | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="comprasAno">Compras Año</label>
+                          <input type="text" name="comprasAno" class="form-control" readonly value="{{ object.comprasAno | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeRecambiosMes">Importe Recambios Mes</label>
+                          <input type="text" name="importeRecambiosMes" class="form-control" readonly value="{{ object.importeRecambiosMes | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeRecambiosAno">Importe Recambios Año</label>
+                          <input type="text" name="importeRecambiosAno" class="form-control" readonly value="{{ object.importeRecambiosAno | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="costeRecambiosMes">Coste Recambios Mes</label>
+                          <input type="text" name="costeRecambiosMes" class="form-control" readonly value="{{ object.costeRecambiosMes | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="costeRecambiosAno">Coste Recambios Año</label>
+                          <input type="text" name="costeRecambiosAno" class="form-control" readonly value="{{ object.costeRecambiosAno | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+              </div>
+
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeTallerMes">Importe Taller Mes</label>
+                          <input type="text" name="importeTallerMes" class="form-control" readonly value="{{ object.importeTallerMes | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeTallerAno">Importe Taller Año</label>
+                          <input type="text" name="importeTallerAno" class="form-control" readonly value="{{ object.importeTallerAno | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="costeTallerMes">Coste Taller Mes</label>
+                          <input type="text" name="costeTallerMes" class="form-control" readonly value="{{ object.costeTallerMes | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="costeTallerAno">Coste Taller Año</label>
+                          <input type="text" name="costeTallerAno" class="form-control" readonly value="{{ object.costeTallerAno | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+              </div>
+
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeRecambiosTallerMes">Importe Recambios Taller Mes</label>
+                          <input type="text" name="importeRecambiosTallerMes" class="form-control" readonly value="{{ object.importeRecambiosTallerMes | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeRecambiosTallerAno">Importe Recambios Taller Año</label>
+                          <input type="text" name="importeRecambiosTallerAno" class="form-control" readonly value="{{ object.importeRecambiosTallerAno | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="costeRecambiosTallerMes">Coste Recambios Taller Mes</label>
+                          <input type="text" name="costeRecambiosTallerMes" class="form-control" readonly value="{{ object.costeRecambiosTallerMes | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="costeRecambiosTallerAno">Coste Recambios Taller Año</label>
+                          <input type="text" name="costeRecambiosTallerAno" class="form-control" readonly value="{{ object.costeRecambiosTallerAno | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

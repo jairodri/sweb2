@@ -33,6 +33,26 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" name="nombre" class="form-control" readonly value="{{ object.nombre | default_if_none:'' }}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="apellido1">Apellido 1</label>
+                        <input type="text" name="apellido1" class="form-control" readonly value="{{ object.apellido1 | default_if_none:'' }}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="apellido2">Apellido 2</label>
+                        <input type="text" name="apellido2" class="form-control" readonly value="{{ object.apellido2 | default_if_none:'' }}">
+                    </div>
+                </div>
+            </div>
             <div class="form-group">
                 <label for="direccion">Dirección</label>
                 <input type="text" name="direccion" class="form-control" readonly value="{{ object.direccion | default_if_none:'' }}">
@@ -169,9 +189,8 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group">
-                <label for="fechaUltimaFactura">Fecha ültima Factura</label>
+                <label for="fechaUltimaFactura">Fecha Última Factura</label>
                 <input type="text" name="fechaUltimaFactura" class="form-control" readonly value="{{ object.fechaUltimaFactura | date:"SHORT_DATE_FORMAT" | default_if_none:'' }}">
-                <label for="{{ form.fechaUltimaFactura.name }}">{{ form.fechaUltimaFactura.label }}</label>
             </div>
         </div>
     </div>
@@ -287,6 +306,18 @@
         </div>
         <div class="card-footer"></div>
     </div>
+{% endblock %}
+
+{% block otrosbotones %}
+    <button type="button" class="btn btn-info btn-flat" data-toggle="modal" data-target="#estadisticaModal">
+{#        <i class="fas fa-info"></i> Estadística#}
+        Estadística
+    </button>
+    {% include 'clientes/det_estadistica.html' %}
+    <button type="button" class="btn btn-info btn-flat" data-toggle="modal" data-target="#lopdModal">
+        LOPD
+    </button>
+    {% include 'clientes/det_lopd.html' %}
 {% endblock %}
 
 {% block jscript2 %}

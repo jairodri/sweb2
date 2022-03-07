@@ -155,6 +155,14 @@ class ClienteResource(resources.ModelResource):
             'ocultarCuenta',
             'iban',
             'dc',
+            'nombre',
+            'apellido1',
+            'apellido2',
+            'lopd',
+            'lopd1',
+            'lopd2',
+            'lopd3',
+            'lopdfirma',
         )
 
         clean_model_instances = True
