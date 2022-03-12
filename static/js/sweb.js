@@ -32,7 +32,6 @@ function initdtables(icolumns, ibuttons) {
             type: 'POST',
             data: {
                 'action': 'searchdata',
-                // {#'csrf_token':$('meta[name="csrf_token"]').attr("content")#}
             },
             headers: {
                 'X-CSRFToken': csrftoken

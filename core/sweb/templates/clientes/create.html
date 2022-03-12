@@ -2,6 +2,7 @@
 {% load widget_tweaks %}
 
 {% block contentform %}
+    <input type="hidden" name="tipo_form" value="formbase">
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
@@ -305,7 +306,16 @@
     </div>
 {% endblock %}
 
+{% block otrosbotones %}
+{#    <button type="button" class="btn btn-info btn-flat" data-toggle="modal" data-target="#lopdModal">#}
+    <button type="button" class="btn btn-info btn-flat btnLopd">
+        LOPD
+    </button>
+{#    {% include 'clientes/cre_lopd.html' %}#}
+{% endblock %}
+
 {% block jscript2 %}
+    {% include 'clientes/cre_lopd.html' %}
     <script>
         $(function () {
             $('[data-mask]').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/aaaa' });
@@ -318,6 +328,66 @@
                 locale: 'es',
                 format: 'L',
                 autoClose: true
+            });
+            $('.btnLopd').on('click', function () {
+                {#var form2 = $('#idformmodal')#}
+                {#console.log(form2[0][1].value)#}
+                {#console.log(form2[0][2].value)#}
+                {#console.log(form2)#}
+                $.ajax({
+                    url: window.location.pathname,
+                    type: 'POST',
+                    data: {
+                        'action2': 'initlopd',
+                        'tipo_form': 'formlopd',
+                    },
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    dataType: 'json',
+                }).done(function (data) {
+                    console.log(data)
+                    $('input[name="lopd1"]').prop('checked', data.lopd1);
+                    $('input[name="lopd2"]').prop('checked', data.lopd2);
+                    $('input[name="lopd3"]').prop('checked', data.lopd3);
+                    $('input[name="lopdfirma"]').prop('checked', data.lopdfirma);
+                    $('#lopdModal').modal('show');
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    {#alert(textStatus + ': ' + errorThrown);#}
+                }).always(function (data) {
+                });
+            });
+            $('#idformmodal').on('submit', function (e) {
+                e.preventDefault();
+                console.log('submit lopd form');
+                {#var data = new FormData(this);#}
+                {#console.log(data);#}
+                var formlopd = $('#idformmodal');
+                $.ajax({
+                    url: window.location.pathname,
+                    type: 'POST',
+                    {#processData: false,#}
+                    {#contentType: false,#}
+                    {#data: data,#}
+                    data: {
+                        'action2': 'editlopd',
+                        'tipo_form': 'formlopd',
+                        'lopd1': formlopd[0]['lopd1'].checked,
+                        'lopd2': formlopd[0]['lopd2'].checked,
+                        'lopd3': formlopd[0]['lopd3'].checked,
+                        'lopdfirma': formlopd[0]['lopdfirma'].checked,
+                    },
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    dataType: 'json',
+                }).done(function (data) {
+                    sendmessage('Datos LOPD modificados')
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    {#alert(textStatus + ': ' + errorThrown);#}
+                }).always(function (data) {
+                });
+                $('#lopdModal').modal('hide');
             });
         });
     </script>

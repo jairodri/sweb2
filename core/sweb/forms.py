@@ -169,6 +169,41 @@ class BancoForm(ModelForm):
         }
 
 
+class ClientLopdForm(ModelForm):
+
+    class Meta:
+        model = Cliente
+        fields = ['codigo',
+                  'razonSocial',
+                  'lopd',
+                  'lopd1',
+                  'lopd2',
+                  'lopd3',
+                  'lopdfirma',
+                  ]
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'razonSocial': 'Razón Social',
+            'lopd1': 'CITROEN y el Reparador incluidos medios electrónicos',
+            'lopd2': 'El Reparador, incluido por medios electrónicos',
+            'lopd3': 'Cualquier sociedad perteneciente al grupo que CITROEN en España, (Groupe PSA matriz - Peugeot, S.A.) dedicadas al sector de la automoción, y la financiación, incluido por medios electrónicos, y sus redes de distribuidores de vehículos y servicios oficiales de reparación.',
+            'lopdfirma': 'Firmado LOPD',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'maxlength': 6, 'required': True}),
+            'lopd1': CheckboxInput(attrs={'id': 'lopd1'}),
+            'lopd2': CheckboxInput(attrs={'id': 'lopd2'}),
+            'lopd3': CheckboxInput(attrs={'id': 'lopd3'}),
+            'lopdfirma': CheckboxInput(attrs={'id': 'lopdfirma'}),
+        }
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        print(f'LOPD form: {cleaned_data}')
+        return cleaned_data
+
+
 class ClienteForm(ModelForm):
 
     confirm_cif = BooleanField(label='Confirmar CIF', required=False, widget=HiddenInput(attrs={'id': 'confirm_cif'}))
@@ -240,11 +275,11 @@ class ClienteForm(ModelForm):
                   'costeRecambiosTallerAno',
                   'comprasMes',
                   'comprasAno',
-                  'lopd',
-                  'lopd1',
-                  'lopd2',
-                  'lopd3',
-                  'lopdfirma',
+                  # 'lopd',
+                  # 'lopd1',
+                  # 'lopd2',
+                  # 'lopd3',
+                  # 'lopdfirma',
                   ]
         exclude = ['user_creation', 'user_updated']
 
@@ -289,6 +324,10 @@ class ClienteForm(ModelForm):
             'apellido2': 'Apellido 2',
             'fechaUltimoMovimiento': 'Fecha Último Movimiento',
             'creditoDispuesto': 'Crédito Dispuesto',
+            # 'lopd1': 'CITROEN y el Reparador incluidos medios electrónicos',
+            # 'lopd2': 'El Reparador, incluido por medios electrónicos',
+            # 'lopd3': 'Cualquier sociedad perteneciente al grupo que CITROEN en España, (Groupe PSA matriz - Peugeot, S.A.) dedicadas al sector de la automoción, y la financiación, incluido por medios electrónicos, y sus redes de distribuidores de vehículos y servicios oficiales de reparación.',
+            # 'lopdfirma': 'Firmado LOPD',
         }
         widgets = {
             'codigo': TextInput(attrs={'maxlength': 6, 'required': True}),
@@ -309,7 +348,11 @@ class ClienteForm(ModelForm):
             'ocultarCuenta': CheckboxInput(attrs={'id': 'ocultarCuenta'}),
             'emitirRecibos': CheckboxInput(attrs={'id': 'emitirRecibos'}),
             'email': EmailInput(),
-            # 'cif': TextInput(attrs={'required': False}),
+            'cif': TextInput(attrs={'required': False}),
+            # 'lopd1': CheckboxInput(attrs={'id': 'lopd1'}),
+            # 'lopd2': CheckboxInput(attrs={'id': 'lopd2'}),
+            # 'lopd3': CheckboxInput(attrs={'id': 'lopd3'}),
+            # 'lopdfirma': CheckboxInput(attrs={'id': 'lopdfirma'}),
         }
 
     def clean_codigo(self):

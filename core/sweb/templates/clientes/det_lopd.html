@@ -27,13 +27,16 @@
                     </div>
                     <div class="card card-light">
                         <div class="card-header">
+                            {% if defclien == 'CITROEN' %}
                             <label>
                                 El Cliente da su consentimiento para recibir comunicaciones de marketing (incluida
                                 información sobre productos y servicios, ofertas promocionales, noticias y eventos y
                                 encuestas de marketing) de:
                             </label>
+                            {% endif %}
                         </div>
                         <div class="card-body">
+                            {% if defclien == 'CITROEN' %}
                             <div class="form-group">
                                 <div class="icheck-primary ">
                                     <input type="checkbox" name="lopd1" class="form-control" readonly
@@ -72,6 +75,7 @@
                                     </label>
                                 </div>
                             </div>
+                            {% endif %}
                             <div class="form-group">
                                 <div class="icheck-primary ">
                                     <input type="checkbox" name="lopdfirma" class="form-control" readonly

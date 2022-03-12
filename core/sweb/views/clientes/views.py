@@ -4,8 +4,8 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
-
-from core.sweb.forms import ClienteForm
+from decouple import config
+from core.sweb.forms import ClienteForm, ClientLopdForm
 from core.sweb.models import Cliente, TipoClienteRecambios, FormaDePago, DescuentoMO
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
@@ -111,11 +111,46 @@ class ClienteUpdateView(UpdateView):
     form_class = ClienteForm
     template_name = 'clientes/create.html'
     success_url = reverse_lazy('sweb:clientes_list')
+    formLopd = ClientLopdForm()
 
     # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+
+    # redefinimos el post para la gestión del modal de LOPD
+    def post(self, request, *args, **kwargs):
+        try:
+            data = {}
+            print(request.POST)
+            tipo_form = request.POST['tipo_form']
+            if tipo_form == 'formlopd':
+                action2 = request.POST['action2']
+                pk = kwargs['pk']
+                if action2 == 'initlopd':
+                    # recuperamos los datos de LOPD
+                    data = Cliente.objects.all().values('lopd', 'lopd1', 'lopd2', 'lopd3', 'lopdfirma').get(id=pk)
+                elif action2 == 'editlopd':
+                    print('edit lopd')
+                    clienteLopd = Cliente.objects.get(id=pk)
+                    # los boolean llegan en minúsculas de modo que hay que utilizar capitalize()
+                    clienteLopd.lopd1 = request.POST['lopd1'].capitalize()
+                    clienteLopd.lopd2 = request.POST['lopd2'].capitalize()
+                    clienteLopd.lopd3 = request.POST['lopd3'].capitalize()
+                    clienteLopd.lopdfirma = request.POST['lopdfirma'].capitalize()
+                    # print(f'cli: {clienteLopd.lopd1} - {clienteLopd.lopd2} - {clienteLopd.lopd3} - {clienteLopd.lopdfirma}')
+                    clienteLopd.save()
+            else:
+                return super().post(request, *args, **kwargs)
+        except Exception as e:
+            print(e)
+            if str(e) == "'action2'":
+                return super().post(request, *args, **kwargs)
+            else:
+                data = []
+                # data['error'] = str(e)
+        # print(data)
+        return JsonResponse(data, safe=False)
 
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):
@@ -124,6 +159,9 @@ class ClienteUpdateView(UpdateView):
         context['entity'] = 'Clientes'
         context['action'] = 'edit'
         context['list_url'] = reverse_lazy('sweb:clientes_list')
+        context['defclien'] = config('DEFCLIEN')
+        # enviamos también el formulario LOPD por si es necesario
+        context['formlopd'] = self.formLopd
         return context
 
     def form_invalid(self, form):
@@ -175,4 +213,5 @@ class ClienteDetailView(DetailView):
         context['entity'] = 'Clientes'
         context['list_url'] = reverse_lazy('sweb:clientes_list')
         context['action'] = 'detail'
+        context['defclien'] = config('DEFCLIEN')
         return context

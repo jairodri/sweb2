@@ -1,0 +1,84 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!-- Modal -->
+<div class="modal fade" id="lopdModal" tabindex="-1" role="dialog" aria-labelledby="lopdModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="lopdModalLabel">Datos LOPD</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="idformmodal" method="post" action="." enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <input type="hidden" name="tipo_form" value="formlopd">
+                        <input type="hidden" name="action2" value="editlopd">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <input type="text" name="codigo" class="form-control" readonly
+                                           value="{{ object.codigo }}">
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="form-group">
+                                    <input type="text" name="razonSocial" class="form-control" readonly
+                                           value="{{ object.razonSocial | default_if_none:'' }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-light">
+                            <div class="card-header">
+                                {% if defclien == 'CITROEN' %}
+                                    <label>
+                                        El Cliente da su consentimiento para recibir comunicaciones de marketing
+                                        (incluida
+                                        información sobre productos y servicios, ofertas promocionales, noticias y
+                                        eventos y
+                                        encuestas de marketing) de:
+                                    </label>
+                                {% endif %}
+                            </div>
+                            <div class="card-body">
+                                {% if defclien == 'CITROEN' %}
+                                    <div class="form-group">
+                                        <div class="icheck-primary ">
+                                            {{ formlopd.lopd1 | add_class:'form-control' }}
+                                            <label for="{{ formlopd.lopd1.name }}">{{ formlopd.lopd1.label }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="icheck-primary ">
+                                            {{ formlopd.lopd2 | add_class:'form-control' }}
+                                            <label for="{{ formlopd.lopd2.name }}">{{ formlopd.lopd2.label }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="icheck-primary ">
+                                            {{ formlopd.lopd3 | add_class:'form-control' }}
+                                            <label for="{{ formlopd.lopd3.name }}">{{ formlopd.lopd3.label }}</label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <div class="form-group">
+                                    <div class="icheck-primary ">
+                                        {{ formlopd.lopdfirma | add_class:'form-control' }}
+                                        <label for="{{ formlopd.lopdfirma.name }}">{{ formlopd.lopdfirma.label }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
