@@ -307,9 +307,8 @@
 {% endblock %}
 
 {% block otrosbotones %}
-{#    <button type="button" class="btn btn-info btn-flat" data-toggle="modal" data-target="#lopdModal">#}
     <button type="button" class="btn btn-info btn-flat btnLopd">
-        LOPD
+        <i class="fas fa-file-signature"></i> LOPD
     </button>
 {#    {% include 'clientes/cre_lopd.html' %}#}
 {% endblock %}
@@ -330,10 +329,6 @@
                 autoClose: true
             });
             $('.btnLopd').on('click', function () {
-                {#var form2 = $('#idformmodal')#}
-                {#console.log(form2[0][1].value)#}
-                {#console.log(form2[0][2].value)#}
-                {#console.log(form2)#}
                 $.ajax({
                     url: window.location.pathname,
                     type: 'POST',
@@ -346,7 +341,7 @@
                     },
                     dataType: 'json',
                 }).done(function (data) {
-                    console.log(data)
+                    {#console.log(data)#}
                     $('input[name="lopd1"]').prop('checked', data.lopd1);
                     $('input[name="lopd2"]').prop('checked', data.lopd2);
                     $('input[name="lopd3"]').prop('checked', data.lopd3);
@@ -359,16 +354,10 @@
             });
             $('#idformmodal').on('submit', function (e) {
                 e.preventDefault();
-                console.log('submit lopd form');
-                {#var data = new FormData(this);#}
-                {#console.log(data);#}
                 var formlopd = $('#idformmodal');
                 $.ajax({
                     url: window.location.pathname,
                     type: 'POST',
-                    {#processData: false,#}
-                    {#contentType: false,#}
-                    {#data: data,#}
                     data: {
                         'action2': 'editlopd',
                         'tipo_form': 'formlopd',
@@ -382,7 +371,9 @@
                     },
                     dataType: 'json',
                 }).done(function (data) {
-                    sendmessage('Datos LOPD modificados')
+                    {#window.location.reload();#}
+                    $('input[name="exentoMail"]').prop('checked', data.exentoMail);
+                    sendmessage('Información LOPD actualizada')
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     {#alert(textStatus + ': ' + errorThrown);#}
                 }).always(function (data) {

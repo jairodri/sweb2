@@ -175,7 +175,6 @@ class ClientLopdForm(ModelForm):
         model = Cliente
         fields = ['codigo',
                   'razonSocial',
-                  'lopd',
                   'lopd1',
                   'lopd2',
                   'lopd3',

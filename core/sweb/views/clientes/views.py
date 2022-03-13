@@ -122,34 +122,42 @@ class ClienteUpdateView(UpdateView):
     def post(self, request, *args, **kwargs):
         try:
             data = {}
-            print(request.POST)
+            # print(request.POST)
             tipo_form = request.POST['tipo_form']
             if tipo_form == 'formlopd':
                 action2 = request.POST['action2']
                 pk = kwargs['pk']
                 if action2 == 'initlopd':
                     # recuperamos los datos de LOPD
-                    data = Cliente.objects.all().values('lopd', 'lopd1', 'lopd2', 'lopd3', 'lopdfirma').get(id=pk)
+                    data = Cliente.objects.all().values('lopd1', 'lopd2', 'lopd3', 'lopdfirma').get(id=pk)
                 elif action2 == 'editlopd':
-                    print('edit lopd')
                     clienteLopd = Cliente.objects.get(id=pk)
                     # los boolean llegan en minúsculas de modo que hay que utilizar capitalize()
-                    clienteLopd.lopd1 = request.POST['lopd1'].capitalize()
-                    clienteLopd.lopd2 = request.POST['lopd2'].capitalize()
-                    clienteLopd.lopd3 = request.POST['lopd3'].capitalize()
-                    clienteLopd.lopdfirma = request.POST['lopdfirma'].capitalize()
-                    # print(f'cli: {clienteLopd.lopd1} - {clienteLopd.lopd2} - {clienteLopd.lopd3} - {clienteLopd.lopdfirma}')
+                    # utilizamos eval para convertir el string a boolean
+                    clienteLopd.lopd1 = eval(request.POST['lopd1'].capitalize())
+                    clienteLopd.lopd2 = eval(request.POST['lopd2'].capitalize())
+                    clienteLopd.lopd3 = eval(request.POST['lopd3'].capitalize())
+                    clienteLopd.lopdfirma = eval(request.POST['lopdfirma'].capitalize())
+
+                    if clienteLopd.lopd1 is True and clienteLopd.lopd2 is True and clienteLopd.lopd3 is True:
+                        clienteLopd.exentoMail = False
+                    elif clienteLopd.lopd1 is False or clienteLopd.lopd2 is False or clienteLopd.lopd3 is False:
+                        clienteLopd.exentoMail = True
+
                     clienteLopd.save()
+                    data = {
+                        'exentoMail': clienteLopd.exentoMail
+                    }
             else:
                 return super().post(request, *args, **kwargs)
         except Exception as e:
             print(e)
-            if str(e) == "'action2'":
-                return super().post(request, *args, **kwargs)
-            else:
-                data = []
+            # if str(e) == "'action2'":
+            #     return super().post(request, *args, **kwargs)
+            # else:
+            #     data = []
                 # data['error'] = str(e)
-        # print(data)
+        print(data)
         return JsonResponse(data, safe=False)
 
     # sobreescribimos el método get_context_data para añadir info al contexto
