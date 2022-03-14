@@ -307,10 +307,11 @@
 {% endblock %}
 
 {% block otrosbotones %}
+    {% if action == 'edit' %}
     <button type="button" class="btn btn-info btn-flat btnLopd">
         <i class="fas fa-file-signature"></i> LOPD
     </button>
-{#    {% include 'clientes/cre_lopd.html' %}#}
+    {% endif %}
 {% endblock %}
 
 {% block jscript2 %}
@@ -342,11 +343,15 @@
                     dataType: 'json',
                 }).done(function (data) {
                     {#console.log(data)#}
-                    $('input[name="lopd1"]').prop('checked', data.lopd1);
-                    $('input[name="lopd2"]').prop('checked', data.lopd2);
-                    $('input[name="lopd3"]').prop('checked', data.lopd3);
-                    $('input[name="lopdfirma"]').prop('checked', data.lopdfirma);
-                    $('#lopdModal').modal('show');
+                    if(data.hasOwnProperty('error')) {
+                        senderror(data.error)
+                    } else {
+                        $('input[name="lopd1"]').prop('checked', data.lopd1);
+                        $('input[name="lopd2"]').prop('checked', data.lopd2);
+                        $('input[name="lopd3"]').prop('checked', data.lopd3);
+                        $('input[name="lopdfirma"]').prop('checked', data.lopdfirma);
+                        $('#lopdModal').modal('show');
+                    }
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     {#alert(textStatus + ': ' + errorThrown);#}
                 }).always(function (data) {
@@ -372,8 +377,12 @@
                     dataType: 'json',
                 }).done(function (data) {
                     {#window.location.reload();#}
-                    $('input[name="exentoMail"]').prop('checked', data.exentoMail);
-                    sendmessage('Información LOPD actualizada')
+                    if(data.hasOwnProperty('error')) {
+                        senderror(data.error)
+                    } else {
+                        $('input[name="exentoMail"]').prop('checked', data.exentoMail);
+                        sendmessage('Información LOPD actualizada');
+                    }
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     {#alert(textStatus + ': ' + errorThrown);#}
                 }).always(function (data) {

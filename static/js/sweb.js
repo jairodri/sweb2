@@ -24,9 +24,6 @@ function initdtables(icolumns, ibuttons) {
         destroy: true,
         deferRender: true,
         stateSave: true,
-        // scrollY: 400,
-        // scrollCollapse: true,
-        // scroller: true,
         ajax: {
             url: window.location.pathname,
             type: 'POST',
@@ -39,9 +36,10 @@ function initdtables(icolumns, ibuttons) {
             dataSrc: ""
         },
         columns: icolumns,
-        order: [[1, 'asc']],
+        // Gestionamos el ordenamiento en models
+        // order: [[1, 'asc']],
         columnDefs: [
-            // {#{orderable: false, targets: [0]}#}
+            // La columna 0 es la de las Acciones, donde van los botones
             {
                 targets: [0],
                 class: 'text-center',
@@ -49,6 +47,26 @@ function initdtables(icolumns, ibuttons) {
                 render: function (data, type, row) {
                     var buttons = ibuttons.replaceAll('rowid', row.id)
                     return buttons;
+                }
+            },
+            // Tenemos que gestionar los booleans de manera diferente
+            {
+                targets: '_all',
+                render: function (data, type, row) {
+                    if (type === 'exportpdf' || type === 'exportxls' || type === 'exportcsv') {
+                        if (data === true) {
+                            data = 'Si'
+                        } else if (data === false) {
+                            data = 'No'
+                        }
+                    } else {
+                        if (data === true) {
+                            data = '<input type="checkbox" class="checkbox" checked  />'
+                        } else if (data === false) {
+                            data = '<input type="checkbox" class="checkbox"  />'
+                        }
+                    }
+                    return data;
                 }
             },
         ],
@@ -66,6 +84,7 @@ function initdtables(icolumns, ibuttons) {
                         extend: "csv",
                         className: "btn-sm",
                         exportOptions: {
+                            orthogonal: 'exportcsv',
                             columns: function (idx, data, node) {
                                 if (node.innerHTML == "Acciones")
                                     return false;
@@ -77,6 +96,7 @@ function initdtables(icolumns, ibuttons) {
                         extend: "excel",
                         className: "btn-sm",
                         exportOptions: {
+                            orthogonal: 'exportxls',
                             columns: function (idx, data, node) {
                                 if (node.innerHTML == "Acciones")
                                     return false;
@@ -88,6 +108,7 @@ function initdtables(icolumns, ibuttons) {
                         extend: "pdfHtml5",
                         className: "btn-sm",
                         exportOptions: {
+                            orthogonal: 'exportpdf',
                             columns: function (idx, data, node) {
                                 if (node.innerHTML == "Acciones")
                                     return false;

@@ -24,6 +24,10 @@ class ClienteAdmin(ImportExportModelAdmin):
     resource_class = ClienteResource
 
 
+class NumeracionAutomaticaAdmin(ImportExportModelAdmin):
+    resource_class = NumeracionAutomaticaResource
+
+
 # Register your models here.
 # Para que se muestren en el panel administrador del servidor
 admin.site.register(Banco, BancoAdmin)
@@ -31,6 +35,7 @@ admin.site.register(DescuentoMO, DescuentoMOAdmin)
 admin.site.register(FormaDePago, FormaDePagoAdmin)
 admin.site.register(TipoClienteRecambios, TipoClienteRecambiosAdmin)
 admin.site.register(Cliente, ClienteAdmin)
+admin.site.register(NumeracionAutomatica, NumeracionAutomaticaAdmin)
 
 
 

@@ -1,10 +1,10 @@
 from django.db import models
 from core.sweb.utils import digitos_control, validar_porcentaje
 from core.models import BaseModel
-from crum import get_current_user
+from core.sweb.mixins import ModelMixin
 
 
-class Banco(BaseModel):
+class Banco(ModelMixin, BaseModel):
     codigo = models.CharField(max_length=4, verbose_name='código banco', db_column='ban_codcsp', null=False,
                               blank=False)
     sucursal = models.CharField(max_length=4, verbose_name='sucursal', db_column='ban_sucursal', null=False,
@@ -46,22 +46,16 @@ class Banco(BaseModel):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        # Incluimos el código para la auditoría
-        user = get_current_user()
-        if user and not user.pk:
-            user = None
+
         if not self.pk:
-            self.user_creation = user
             # Inicializamos campos
             self.cuenta = '000000000000000'
             self.dgc = digitos_control('00' + self.codigo + self.sucursal)
             self.dgc2 = '0'
-        else:
-            self.user_updated = user
         super(Banco, self).save()
 
 
-class DescuentoMO(BaseModel):
+class DescuentoMO(ModelMixin, BaseModel):
     codigo = models.CharField(max_length=1, verbose_name='Código', db_column='dmo_codigo', unique=True,
                               null=False, blank=False)
     descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='dmo_descrip',
@@ -82,20 +76,8 @@ class DescuentoMO(BaseModel):
         super(DescuentoMO, self).clean()
         self.codigo = self.codigo.upper()
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        # Incluimos el código para la auditoría
-        user = get_current_user()
-        if user and not user.pk:
-            user = None
-        if not self.pk:
-            self.user_creation = user
-        else:
-            self.user_updated = user
-        super(DescuentoMO, self).save()
 
-
-class FormaDePago(BaseModel):
+class FormaDePago(ModelMixin, BaseModel):
     codigo = models.CharField(max_length=2, verbose_name='Código', db_column='fpg_codigo', unique=True)
     descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='fpg_descrip',
                                    null=False, blank=False)
@@ -116,20 +98,8 @@ class FormaDePago(BaseModel):
         super(FormaDePago, self).clean()
         self.codigo = self.codigo.upper()
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        # Incluimos el código para la auditoría
-        user = get_current_user()
-        if user and not user.pk:
-            user = None
-        if not self.pk:
-            self.user_creation = user
-        else:
-            self.user_updated = user
-        super(FormaDePago, self).save()
 
-
-class TipoClienteRecambios(BaseModel):
+class TipoClienteRecambios(ModelMixin, BaseModel):
     codigo = models.CharField(max_length=2, verbose_name='Código', db_column='tcr_codigo', unique=True)
     descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='tcr_descrip',
                                    null=False, blank=False)
@@ -149,20 +119,8 @@ class TipoClienteRecambios(BaseModel):
         super(TipoClienteRecambios, self).clean()
         self.codigo = self.codigo.upper()
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        # Incluimos el código para la auditoría
-        user = get_current_user()
-        if user and not user.pk:
-            user = None
-        if not self.pk:
-            self.user_creation = user
-        else:
-            self.user_updated = user
-        super(TipoClienteRecambios, self).save()
 
-
-class Cliente(BaseModel):
+class Cliente(ModelMixin, BaseModel):
     codigo = models.CharField(max_length=6, verbose_name='código cliente', db_column='cli_codigo', unique=True,
                               null=False, blank=False)
     razonSocial = models.CharField(max_length=100, verbose_name='razón social', db_column='cli_rsocial', null=True, blank=True)
@@ -302,15 +260,23 @@ class Cliente(BaseModel):
         verbose_name_plural = 'Clientes'
         ordering = ['codigo']
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        # Incluimos el código para la auditoría
-        user = get_current_user()
-        if user and not user.pk:
-            user = None
-        if not self.pk:
-            self.user_creation = user
-        else:
-            self.user_updated = user
-        super(Cliente, self).save()
+
+class NumeracionAutomatica(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=2, verbose_name='Código', db_column='nau_codigo', unique=True,
+                              null=False, blank=False)
+    tabla = models.CharField(max_length=100, verbose_name='Tabla', db_column='nau_tabla', null=False, blank=False)
+    serie = models.CharField(max_length=2, verbose_name='Serie', db_column='nau_serie', null=True, blank=True)
+    contador = models.IntegerField(verbose_name='Contador', db_column='nau_cuenta', null=False, blank=False, default=0)
+    activo = models.BooleanField(verbose_name='Activo', db_column='nau_activo', default=False, null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.tabla}'
+
+    class Meta:
+        db_table = 'sirtbnau'
+        verbose_name = 'Numeración Automática'
+        verbose_name_plural = 'Numeraciones Automáticas'
+        ordering = ['codigo']
+
 
 

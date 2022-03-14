@@ -32,7 +32,9 @@ class FormaDePagoListView(ListView):
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
-            data['error'] = str(e)
+            data = {
+                'error': str(e)
+            }
         return JsonResponse(data, safe=False)
 
     # sobreescribimos el método get_context_data para añadir info al contexto

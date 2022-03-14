@@ -6,6 +6,7 @@ from core.sweb.views.descuentosmo.views import *
 from core.sweb.views.bancos.views import *
 from core.sweb.views.clientes.views import *
 from core.sweb.views.administrador.views import *
+from core.sweb.views.numeracionauto.views import *
 
 app_name = 'sweb'
 
@@ -48,4 +49,11 @@ urlpatterns = [
 
     # Importar
     path('administrador/importar/', ImportarView.as_view(), name='administrador_importar'),
+
+    # Numeración Automática
+    path('numeracionauto/list/', NumeracionAutomaticaListView.as_view(), name='mumeracionauto_list'),
+    path('numeracionauto/add/', NumeracionAutomaticaCreateView.as_view(), name='mumeracionauto_add'),
+    path('numeracionauto/edit/<int:pk>/', NumeracionAutomaticaUpdateView.as_view(), name='mumeracionauto_edit'),
+    path('numeracionauto/delete/<int:pk>/', NumeracionAutomaticaDeleteView.as_view(), name='mumeracionauto_delete'),
+
 ]

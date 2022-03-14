@@ -152,12 +152,11 @@ class ClienteUpdateView(UpdateView):
                 return super().post(request, *args, **kwargs)
         except Exception as e:
             print(e)
-            # if str(e) == "'action2'":
-            #     return super().post(request, *args, **kwargs)
-            # else:
-            #     data = []
-                # data['error'] = str(e)
-        print(data)
+            data = {
+                'error': str(e)
+            }
+
+        # print(data)
         return JsonResponse(data, safe=False)
 
     # sobreescribimos el método get_context_data para añadir info al contexto

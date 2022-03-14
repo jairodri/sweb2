@@ -274,11 +274,6 @@ class ClienteForm(ModelForm):
                   'costeRecambiosTallerAno',
                   'comprasMes',
                   'comprasAno',
-                  # 'lopd',
-                  # 'lopd1',
-                  # 'lopd2',
-                  # 'lopd3',
-                  # 'lopdfirma',
                   ]
         exclude = ['user_creation', 'user_updated']
 
@@ -323,10 +318,6 @@ class ClienteForm(ModelForm):
             'apellido2': 'Apellido 2',
             'fechaUltimoMovimiento': 'Fecha Último Movimiento',
             'creditoDispuesto': 'Crédito Dispuesto',
-            # 'lopd1': 'CITROEN y el Reparador incluidos medios electrónicos',
-            # 'lopd2': 'El Reparador, incluido por medios electrónicos',
-            # 'lopd3': 'Cualquier sociedad perteneciente al grupo que CITROEN en España, (Groupe PSA matriz - Peugeot, S.A.) dedicadas al sector de la automoción, y la financiación, incluido por medios electrónicos, y sus redes de distribuidores de vehículos y servicios oficiales de reparación.',
-            # 'lopdfirma': 'Firmado LOPD',
         }
         widgets = {
             'codigo': TextInput(attrs={'maxlength': 6, 'required': True}),
@@ -348,10 +339,6 @@ class ClienteForm(ModelForm):
             'emitirRecibos': CheckboxInput(attrs={'id': 'emitirRecibos'}),
             'email': EmailInput(),
             'cif': TextInput(attrs={'required': False}),
-            # 'lopd1': CheckboxInput(attrs={'id': 'lopd1'}),
-            # 'lopd2': CheckboxInput(attrs={'id': 'lopd2'}),
-            # 'lopd3': CheckboxInput(attrs={'id': 'lopd3'}),
-            # 'lopdfirma': CheckboxInput(attrs={'id': 'lopdfirma'}),
         }
 
     def clean_codigo(self):
@@ -590,3 +577,32 @@ class ClienteForm(ModelForm):
 
         return cleaned_data
 
+
+class NumeracionAutomaticaForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:  # diferenciamos add/edit
+            self.fields['codigo'].disabled = True
+        else:
+            self.fields['codigo'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = NumeracionAutomatica
+        fields = '__all__'
+        # excluimos los campos de auditoría
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'tabla': 'Tipo de Movimiento',
+            'serie': 'Serie',
+            'contador': 'Contador',
+            'activo': 'Activo',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'minlength': 2, 'required': True}),
+            'tabla': TextInput(attrs={'required': True}),
+            'activo': CheckboxInput(attrs={'id': 'activo'}),
+        }

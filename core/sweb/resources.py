@@ -167,3 +167,16 @@ class ClienteResource(resources.ModelResource):
 
         clean_model_instances = True
 
+
+class NumeracionAutomaticaResource(resources.ModelResource):
+
+    class Meta:
+        model = NumeracionAutomatica
+        fields = (
+            'id',
+            'codigo',
+            'tabla',
+            'serie',
+            'contador',
+            'activo',
+        )

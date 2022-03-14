@@ -1,0 +1,35 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <div class="form-group">
+        <label for="{{ form.codigo.name }}">{{ form.codigo.label }}<span
+                class="text-danger"> *</span></label>
+        {{ form.codigo | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.tabla.name }}">{{ form.tabla.label }}<span
+                class="text-danger"> *</span></label>
+        {{ form.tabla | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.serie.name }}">{{ form.serie.label }}</label>
+        {{ form.serie | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.contador.name }}">{{ form.contador.label }}</label>
+        {{ form.contador | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <div class="icheck-primary ">
+            {{ form.activo | add_class:'form-control' }}
+            <label for="{{ form.activo.name }}">{{ form.activo.label }}</label>
+        </div>
+    </div>
+{% endblock %}
+
+{% block jscript2 %}
+    <script>
+        validar('NumeracionAutomatica');
+    </script>
+{% endblock %}

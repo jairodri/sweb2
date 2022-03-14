@@ -1,0 +1,47 @@
+{% extends 'list.html' %}
+
+{% block columns %}
+    <tr>
+        <th>Acciones</th>
+        <th>Tipo de Movimiento</th>
+        <th>Código</th>
+        <th>Serie</th>
+        <th>Contador</th>
+        <th>Activo</th>
+    </tr>
+{% endblock %}
+
+{% block columnsfoot %}
+    <tr>
+        <th>Acciones</th>
+        <th>Tipo de Movimiento</th>
+        <th>Código</th>
+        <th>Serie</th>
+        <th>Contador</th>
+        <th>Activo</th>
+    </tr>
+{% endblock %}
+
+{% block jscript2 %}
+<script>
+        var icolumns = [
+            {"data": "id"},
+            {"data": "tabla"},
+            {"data": "codigo"},
+            {"data": "serie"},
+            {"data": "contador"},
+            {"data": "activo"},
+        ]
+        var ibuttons = '<a href="/sweb/numeracionauto/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
+        ibuttons += '<a href="/sweb/numeracionauto/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
+        initdtables(icolumns, ibuttons)
+</script>
+{% endblock %}
+
+<!-- Literal del botón para añdir registro
+{% block masdatos %}
+Añadir Numeración Automática
+{% endblock %}
+
+
+
