@@ -72,7 +72,7 @@ function initdtables(icolumns, ibuttons) {
         ],
         language: {
             // url: "{% static 'I18N/es_es.json' %}"
-            url: "/static/I18N/es_es.json"
+            url: "/static/i18N/es_es.json"
         },
 
         initComplete: function (settings, json) {
