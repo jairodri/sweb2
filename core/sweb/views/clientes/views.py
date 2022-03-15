@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from decouple import config
 from core.sweb.forms import ClienteForm, ClientLopdForm
-from core.sweb.models import Cliente, TipoClienteRecambios, FormaDePago, DescuentoMO
+from core.sweb.models import Cliente, TipoClienteRecambios, FormaDePago, DescuentoMO, NumeracionAutomatica
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
 
@@ -51,8 +51,30 @@ class ClienteCreateView(CreateView):
     template_name = 'clientes/create.html'
     success_url = reverse_lazy('sweb:clientes_list')
 
+    def get_next_contador(self):
+        codigo_numaut = '00'
+        codigo = ''
+
+        numautos = NumeracionAutomatica.objects.filter(codigo=codigo_numaut)
+        if not numautos or numautos[0].activo is False:
+            return codigo
+
+        valido = False
+        nextnumber = numautos[0].contador
+        while not valido:
+            nextnumber = nextnumber + 1
+            codigo = str(nextnumber)
+            codigo = codigo.strip().zfill(6)
+            cliente = Cliente.objects.filter(codigo=codigo)
+            if not cliente:
+                NumeracionAutomatica.objects.filter(codigo=codigo_numaut).update(contador=nextnumber)
+                valido = True
+
+        return codigo
+
     def get_initial(self):
         # valores por defecto
+        codigo = self.get_next_contador()
         tipo_cl = TipoClienteRecambios.objects.get(codigo='CL').id
         forma_pago = FormaDePago.objects.get(codigo='00').id
         dtomo = DescuentoMO.objects.get(codigo='0').id
@@ -69,6 +91,7 @@ class ClienteCreateView(CreateView):
         dtoEpecial = 0.00
         creditoDisponible = 0.00
         initial = {
+            'codigo': codigo,
             'tipoCliente': tipo_cl,
             'formaDePago': forma_pago,
             'dtomo': dtomo,
