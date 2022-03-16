@@ -369,7 +369,7 @@ class ClienteForm(ModelForm):
     def validar_nif(self):
         cif = self.cleaned_data['cif']
 
-        tabla_letras_nif = "TRWAGMYFPDXBNJZSQVHCKE"
+        tabla_letras_nif = "TRWAGMYFPDXBNJZSQVHLCKE"
         numeros = "1234567890"
         cif = cif.upper()
 
@@ -400,8 +400,12 @@ class ClienteForm(ModelForm):
             raise ValidationError('El formato del CIF/NIF es incorrecto')
 
         # si la letra del nif no corresponde a la calculada, es un error
-        # print(f'indice:{int(nif) % 23}')
-        if tabla_letras_nif[int(nif) % 23] != letra:
+        print(f'indice:{int(nif) % 23}')
+        indice = int(nif) % 23
+        # if indice > 22:
+        #     raise ValidationError('El formato del CIF/NIF es incorrecto')
+
+        if tabla_letras_nif[indice] != letra:
             raise ValidationError('El formato del CIF/NIF es incorrecto')
 
         return cif
