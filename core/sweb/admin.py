@@ -28,6 +28,14 @@ class NumeracionAutomaticaAdmin(ImportExportModelAdmin):
     resource_class = NumeracionAutomaticaResource
 
 
+class UnidadMedidaAdmin(ImportExportModelAdmin):
+    resource_class = UnidadMedidaResource
+
+
+class CodigoAproPiezaAdmin(ImportExportModelAdmin):
+    resource_class = CodigoAproPiezaResource
+
+
 # Register your models here.
 # Para que se muestren en el panel administrador del servidor
 admin.site.register(Banco, BancoAdmin)
@@ -36,6 +44,8 @@ admin.site.register(FormaDePago, FormaDePagoAdmin)
 admin.site.register(TipoClienteRecambios, TipoClienteRecambiosAdmin)
 admin.site.register(Cliente, ClienteAdmin)
 admin.site.register(NumeracionAutomatica, NumeracionAutomaticaAdmin)
+admin.site.register(UnidadMedida, UnidadMedidaAdmin)
+admin.site.register(CodigoAproPieza, CodigoAproPiezaAdmin)
 
 
 

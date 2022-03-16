@@ -272,6 +272,10 @@ class NumeracionAutomatica(ModelMixin, BaseModel):
     def __str__(self):
         return f'{self.codigo} - {self.tabla}'
 
+    def clean(self):
+        super(NumeracionAutomatica, self).clean()
+        self.codigo = self.codigo.upper()
+
     class Meta:
         db_table = 'sirtbnau'
         verbose_name = 'Numeración Automática'
@@ -279,4 +283,37 @@ class NumeracionAutomatica(ModelMixin, BaseModel):
         ordering = ['codigo']
 
 
+class UnidadMedida(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=1, verbose_name='Código', db_column='uni_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='uni_descrip', null=False, blank=False)
 
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    def clean(self):
+        super(UnidadMedida, self).clean()
+        self.codigo = self.codigo.upper()
+
+    class Meta:
+        db_table = 'sirtbuni'
+        verbose_name = 'Unidad de Medida'
+        verbose_name_plural = 'Unidades de Medida'
+        ordering = ['codigo']
+
+
+class CodigoAproPieza(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=1, verbose_name='Código', db_column='cpz_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='cpz_descrip', null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    def clean(self):
+        super(CodigoAproPieza, self).clean()
+        self.codigo = self.codigo.upper()
+
+    class Meta:
+        db_table = 'sirtbcpz'
+        verbose_name = 'Código Aprovisionamiento Pieza'
+        verbose_name_plural = 'Códigos Aprovisionamiento Piezas'
+        ordering = ['codigo']

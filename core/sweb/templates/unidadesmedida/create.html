@@ -1,0 +1,21 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <div class="form-group">
+        <label for="{{ form.codigo.name }}">{{ form.codigo.label }}<span
+                class="text-danger"> *</span></label>
+        {{ form.codigo | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.descripcion.name }}">{{ form.descripcion.label }}<span
+                class="text-danger"> *</span></label>
+        {{ form.descripcion | add_class:'form-control' }}
+    </div>
+{% endblock %}
+
+{% block jscript2 %}
+    <script type="application/javascript">
+        validar('UnidadMedida');
+    </script>
+{% endblock %}

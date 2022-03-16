@@ -93,6 +93,15 @@
             {% endfor %}
             senderror(errors);
         {% endif %}
+        {% if messages %}
+            {% for msg in messages %}
+                {% if msg.level == 40 %}
+                senderror('{{ msg }}');
+                {% else %}
+                sendmessage('{{ msg }}');
+                {% endif %}
+            {% endfor %}
+        {% endif %}
     </script>
 
     {% block jscript2 %}

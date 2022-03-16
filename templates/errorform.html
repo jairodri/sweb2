@@ -1,7 +1,5 @@
-{% if form.errors %}
+{% if form.errors or messages %}
     <div class="callout callout-danger">
-{#        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>#}
-{#        <h6><i class="icon fas fa-ban"></i></h6>#}
         <ul>
             {% for field in form %}
                 {% for error in field.errors %}
@@ -10,6 +8,9 @@
             {% endfor %}
             {% for error in form.non_field_errors %}
                 <li>{{ error }}</li>
+            {% endfor %}
+            {% for msg in messages %}
+                <li>{{ msg }}</li>
             {% endfor %}
         </ul>
     </div>

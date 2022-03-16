@@ -1,27 +1,23 @@
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.db.models import ProtectedError
+from django.http import JsonResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from decouple import config
 from core.sweb.forms import ClienteForm, ClientLopdForm
 from core.sweb.models import Cliente, TipoClienteRecambios, FormaDePago, DescuentoMO, NumeracionAutomatica
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from core.sweb.mixins import BasicView
+
+folder = 'clientes'
 
 
-class ClienteListView(ListView):
+class ClienteListView(BasicView, ListView):
     model = Cliente
-    template_name = 'clientes/list.html'
-
-    # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    template_name = f'{folder}/list.html'
 
     # redefinimos el post para cargar la datatable con ajax
     def post(self, request, *args, **kwargs):
-        data = {}
+        # data = {}
         try:
             action = request.POST['action']
             if action == 'searchdata':
@@ -30,7 +26,7 @@ class ClienteListView(ListView):
                 for i in Cliente.objects.all().values('id', 'codigo', 'razonSocial', 'cif', 'telefono', 'tlfmovil', 'poblacion', 'provincia'):
                     data.append(i)
             else:
-                data['error'] = 'Ha ocurrido un error'
+                data = {'error': 'Ha ocurrido un error'}
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data, safe=False)
@@ -38,18 +34,18 @@ class ClienteListView(ListView):
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Clientes'
-        context['add_url'] = reverse_lazy('sweb:clientes_add')
-        context['list_url'] = reverse_lazy('sweb:clientes_list')
-        context['entity'] = 'Clientes'
+        context['title'] = Cliente._meta.verbose_name_plural
+        context['add_url'] = reverse_lazy(f'sweb:{folder}_add')
+        context['list_url'] = reverse_lazy(f'sweb:{folder}_list')
+        context['entity'] = Cliente._meta.verbose_name_plural
         return context
 
 
-class ClienteCreateView(CreateView):
+class ClienteCreateView(BasicView, CreateView):
     model = Cliente
     form_class = ClienteForm
-    template_name = 'clientes/create.html'
-    success_url = reverse_lazy('sweb:clientes_list')
+    template_name = f'{folder}/create.html'
+    success_url = reverse_lazy(f'sweb:{folder}_list')
 
     def get_next_contador(self):
         codigo_numaut = '00'
@@ -110,36 +106,26 @@ class ClienteCreateView(CreateView):
         }
         return initial
 
-    # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Añadir Cliente'
-        context['entity'] = 'Clientes'
+        context['title'] = f'Añadir {Cliente._meta.verbose_name}'
+        context['entity'] = Cliente._meta.verbose_name_plural
         context['action'] = 'add'
-        context['list_url'] = reverse_lazy('sweb:clientes_list')
+        context['list_url'] = reverse_lazy(f'sweb:{folder}_list')
         return context
 
     def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS, 'Cliente añadido')
+        messages.add_message(self.request, messages.SUCCESS, f'{Cliente._meta.verbose_name} añadido')
         return super().form_valid(form)
 
 
-class ClienteUpdateView(UpdateView):
+class ClienteUpdateView(BasicView, UpdateView):
     model = Cliente
     form_class = ClienteForm
-    template_name = 'clientes/create.html'
-    success_url = reverse_lazy('sweb:clientes_list')
+    template_name = f'{folder}/create.html'
+    success_url = reverse_lazy(f'sweb:{folder}_list')
     formLopd = ClientLopdForm()
-
-    # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
 
     # redefinimos el post para la gestión del modal de LOPD
     def post(self, request, *args, **kwargs):
@@ -185,63 +171,58 @@ class ClienteUpdateView(UpdateView):
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Editar Cliente'
-        context['entity'] = 'Clientes'
+        context['title'] = f'Editar {Cliente._meta.verbose_name}'
+        context['entity'] = Cliente._meta.verbose_name_plural
         context['action'] = 'edit'
-        context['list_url'] = reverse_lazy('sweb:clientes_list')
+        context['list_url'] = reverse_lazy(f'sweb:{folder}_list')
         context['defclien'] = config('DEFCLIEN')
         # enviamos también el formulario LOPD por si es necesario
         context['formlopd'] = self.formLopd
         return context
 
-    def form_invalid(self, form):
-        # print(f'form: {form.errors}')
-        return super().form_invalid(form)
-
     def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS, 'Cliente modificado')
+        messages.add_message(self.request, messages.SUCCESS, f'{Cliente._meta.verbose_name} modificado')
         return super().form_valid(form)
 
 
-class ClienteDeleteView(DeleteView):
+class ClienteDeleteView(BasicView, DeleteView):
     model = Cliente
-    template_name = 'clientes/delete.html'
-    success_url = reverse_lazy('sweb:clientes_list')
-
-    # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    template_name = f'{folder}/delete.html'
+    success_url = reverse_lazy(f'sweb:{folder}_list')
 
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Borrar Cliente'
-        context['entity'] = 'Clientes'
-        context['list_url'] = reverse_lazy('sweb:clientes_list')
+        context['title'] = f'Borrar {Cliente._meta.verbose_name}'
+        context['entity'] = Cliente._meta.verbose_name_plural
+        context['list_url'] = reverse_lazy(f'sweb:{folder}_list')
         context['action'] = 'delete'
         return context
 
     def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS, 'Cliente eliminado')
-        return super().form_valid(form)
+        # Reescribimos form_valid para controlar los ProtectedError
+        try:
+            self.object.delete()
+            messages.success(self.request, f'{Cliente._meta.verbose_name} eliminado')
+            return HttpResponseRedirect(self.success_url)
+        except ProtectedError as e:
+            messages.error(self.request,
+                           f'No se puede borrar este {Cliente._meta.verbose_name} porque está siendo utilizado en otra tabla')
+            return self.render_to_response(context=self.get_context_data())
+        # messages.add_message(self.request, messages.SUCCESS, 'Cliente eliminado')
+        # return super().form_valid(form)
 
 
-class ClienteDetailView(DetailView):
+class ClienteDetailView(BasicView, DetailView):
     model = Cliente
-    template_name = 'clientes/detail.html'
-
-    # se pueden utilizar decoradores para añadir la funcionalidad de control de autenticación
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    template_name = f'{folder}/detail.html'
 
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Detalle Cliente'
-        context['entity'] = 'Clientes'
-        context['list_url'] = reverse_lazy('sweb:clientes_list')
+        context['title'] = f'Detalle {Cliente._meta.verbose_name}'
+        context['entity'] = Cliente._meta.verbose_name_plural
+        context['list_url'] = reverse_lazy(f'sweb:{folder}_list')
         context['action'] = 'detail'
         context['defclien'] = config('DEFCLIEN')
         return context

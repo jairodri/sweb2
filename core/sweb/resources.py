@@ -180,3 +180,25 @@ class NumeracionAutomaticaResource(resources.ModelResource):
             'contador',
             'activo',
         )
+
+
+class UnidadMedidaResource(resources.ModelResource):
+
+    class Meta:
+        model = UnidadMedida
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )
+
+
+class CodigoAproPiezaResource(resources.ModelResource):
+
+    class Meta:
+        model = CodigoAproPieza
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )

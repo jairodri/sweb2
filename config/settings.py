@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['http://sirioweb.eu.pythonanywhere.com/', '127.0.0.1']
 
 # Almacenamiento por defecto para la gestión de mensajes
 # MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'

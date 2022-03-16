@@ -1,0 +1,35 @@
+{% extends 'list.html' %}
+
+{% block columns %}
+    <tr>
+        <th>Acciones</th>
+        <th>Código</th>
+        <th>Descripción</th>
+    </tr>
+{% endblock %}
+
+{% block columnsfoot %}
+    <tr>
+        <th>Acciones</th>
+        <th>Código</th>
+        <th>Descripción</th>
+    </tr>
+{% endblock %}
+
+{% block jscript2 %}
+<script>
+        var icolumns = [
+            {"data": "id"},
+            {"data": "codigo"},
+            {"data": "descripcion"},
+        ]
+        var ibuttons = '<a href="/sweb/codapropza/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
+        ibuttons += '<a href="/sweb/codapropza/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
+        initdtables(icolumns, ibuttons)
+</script>
+{% endblock %}
+
+<!-- Literal del botón para añdir registro
+{% block masdatos %}
+Añadir Código Aprovisionamiento Pieza
+{% endblock %}

@@ -94,7 +94,11 @@
     <script>
         {% if messages %}
             {% for msg in messages %}
-                sendmessage('{{ msg }}');
+                {% if msg.level == 40 %}
+                    senderror('{{ msg }}');
+                {% else %}
+                    sendmessage('{{ msg }}');
+                {% endif %}
             {% endfor %}
         {% endif %}
     </script>

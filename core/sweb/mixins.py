@@ -1,3 +1,7 @@
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views import View
+
 from core.models import BaseModel
 from crum import get_current_user
 
@@ -21,3 +25,11 @@ class ModelMixin(BaseModel):
             self.user_updated = user
 
         super().save(force_insert=False, force_update=False, using=None, update_fields=None)
+
+
+class BasicView(View):
+
+    # utilizamos un decorador para añadir la funcionalidad de control de autenticación
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)

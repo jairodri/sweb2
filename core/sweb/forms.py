@@ -606,3 +606,55 @@ class NumeracionAutomaticaForm(ModelForm):
             'tabla': TextInput(attrs={'required': True}),
             'activo': CheckboxInput(attrs={'id': 'activo'}),
         }
+
+
+class UnidadMedidaForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:  # diferenciamos add/edit
+            self.fields['codigo'].disabled = True
+        else:
+            self.fields['codigo'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = UnidadMedida
+        fields = '__all__'
+        # excluimos los campos de auditoría
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'minlength': 1, 'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }
+
+
+class CodigoAproPiezaForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:  # diferenciamos add/edit
+            self.fields['codigo'].disabled = True
+        else:
+            self.fields['codigo'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = CodigoAproPieza
+        fields = '__all__'
+        # excluimos los campos de auditoría
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'minlength': 1, 'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }
