@@ -2,7 +2,6 @@ from django.forms import *
 from core.sweb.models import *
 from core.sweb.utils import digitos_control
 from schwifty import IBAN
-from django.contrib import messages
 
 LIST_TABLES = [
     ('01', 'Descuentos MO'),
@@ -661,4 +660,32 @@ class CodigoAproPiezaForm(ModelForm):
         widgets = {
             'codigo': TextInput(attrs={'minlength': 1, 'required': True}),
             'descripcion': TextInput(attrs={'required': True}),
+        }
+
+
+class CodigoIvaForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:  # diferenciamos add/edit
+            self.fields['codigo'].disabled = True
+        else:
+            self.fields['codigo'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = CodigoIva
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+            'porcentaje': '%'
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+            'porcentaje': NumberInput(attrs={'required': True}),
         }

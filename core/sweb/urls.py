@@ -9,6 +9,7 @@ from core.sweb.views.administrador.views import *
 from core.sweb.views.numeracionauto.views import *
 from core.sweb.views.unidadesmedida.views import *
 from core.sweb.views.codapropza.views import *
+from core.sweb.views.codigosiva.views import *
 
 app_name = 'sweb'
 folder_cpz = 'codapropza'
@@ -19,6 +20,7 @@ folder_ban = 'bancos'
 folder_cli = 'clientes'
 folder_nau = 'numeracionauto'
 folder_uni = 'unidadesmedida'
+folder_iva = 'codigosiva'
 
 urlpatterns = [
     # Home
@@ -77,4 +79,10 @@ urlpatterns = [
     path(f'{folder_cpz}/add/', CodigoAproPiezaCreateView.as_view(), name=f'{folder_cpz}_add'),
     path(f'{folder_cpz}/edit/<int:pk>/', CodigoAproPiezaUpdateView.as_view(), name=f'{folder_cpz}_edit'),
     path(f'{folder_cpz}/delete/<int:pk>/', CodigoAproPiezaDeleteView.as_view(), name=f'{folder_cpz}_delete'),
+
+    # Códigos IVA
+    path(f'{folder_iva}/list/', CodigoIvaListView.as_view(), name=f'{folder_iva}_list'),
+    path(f'{folder_iva}/add/', CodigoIvaCreateView.as_view(), name=f'{folder_iva}_add'),
+    path(f'{folder_iva}/edit/<int:pk>/', CodigoIvaUpdateView.as_view(), name=f'{folder_iva}_edit'),
+    path(f'{folder_iva}/delete/<int:pk>/', CodigoIvaDeleteView.as_view(), name=f'{folder_iva}_delete'),
 ]

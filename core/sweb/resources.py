@@ -202,3 +202,15 @@ class CodigoAproPiezaResource(resources.ModelResource):
             'codigo',
             'descripcion',
         )
+
+
+class CodigoIvaResource(resources.ModelResource):
+
+    class Meta:
+        model = CodigoIva
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+            'porcentaje',
+        )

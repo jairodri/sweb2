@@ -317,3 +317,25 @@ class CodigoAproPieza(ModelMixin, BaseModel):
         verbose_name = 'Código Aprovisionamiento Pieza'
         verbose_name_plural = 'Códigos Aprovisionamiento Piezas'
         ordering = ['codigo']
+
+
+class CodigoIva(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=2, verbose_name='Código', db_column='iva_codigo', unique=True,
+                              null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='iva_descrip',
+                                   null=False, blank=False)
+    porcentaje = models.DecimalField(verbose_name='Porcentaje', db_column='iva_porcent', default=0.0, max_digits=5,
+                                    decimal_places=2, null=False, blank=False, validators=[validar_porcentaje])
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion} - {self.porcentaje}%'
+
+    class Meta:
+        db_table = 'sirtbiva'
+        verbose_name = 'Código IVA'
+        verbose_name_plural = 'Códigos IVA'
+        ordering = ['codigo']
+
+    def clean(self):
+        super(CodigoIva, self).clean()
+        self.codigo = self.codigo.upper()
