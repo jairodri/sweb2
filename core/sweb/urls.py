@@ -10,6 +10,7 @@ from core.sweb.views.numeracionauto.views import *
 from core.sweb.views.unidadesmedida.views import *
 from core.sweb.views.codapropza.views import *
 from core.sweb.views.codigosiva.views import *
+from core.sweb.views.familiapieza.views import *
 
 app_name = 'sweb'
 folder_cpz = 'codapropza'
@@ -21,6 +22,7 @@ folder_cli = 'clientes'
 folder_nau = 'numeracionauto'
 folder_uni = 'unidadesmedida'
 folder_iva = 'codigosiva'
+folder_fpz = 'familiapieza'
 
 urlpatterns = [
     # Home
@@ -85,4 +87,10 @@ urlpatterns = [
     path(f'{folder_iva}/add/', CodigoIvaCreateView.as_view(), name=f'{folder_iva}_add'),
     path(f'{folder_iva}/edit/<int:pk>/', CodigoIvaUpdateView.as_view(), name=f'{folder_iva}_edit'),
     path(f'{folder_iva}/delete/<int:pk>/', CodigoIvaDeleteView.as_view(), name=f'{folder_iva}_delete'),
+
+    # Familias Piezas
+    path(f'{folder_fpz}/list/', FamiliaPiezaListView.as_view(), name=f'{folder_fpz}_list'),
+    path(f'{folder_fpz}/add/', FamiliaPiezaCreateView.as_view(), name=f'{folder_fpz}_add'),
+    path(f'{folder_fpz}/edit/<int:pk>/', FamiliaPiezaUpdateView.as_view(), name=f'{folder_fpz}_edit'),
+    path(f'{folder_fpz}/delete/<int:pk>/', FamiliaPiezaDeleteView.as_view(), name=f'{folder_fpz}_delete'),
 ]

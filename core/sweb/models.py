@@ -339,3 +339,21 @@ class CodigoIva(ModelMixin, BaseModel):
     def clean(self):
         super(CodigoIva, self).clean()
         self.codigo = self.codigo.upper()
+
+
+class FamiliaPieza(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=3, verbose_name='Código', db_column='cpz_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='cpz_descrip', null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    def clean(self):
+        super(FamiliaPieza, self).clean()
+        self.codigo = self.codigo.upper()
+
+    class Meta:
+        db_table = 'sirtbfpz'
+        verbose_name = 'Familia Pieza'
+        verbose_name_plural = 'Familia Piezas'
+        ordering = ['codigo']

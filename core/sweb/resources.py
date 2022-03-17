@@ -214,3 +214,14 @@ class CodigoIvaResource(resources.ModelResource):
             'descripcion',
             'porcentaje',
         )
+
+
+class FamiliaPiezaResource(resources.ModelResource):
+
+    class Meta:
+        model = FamiliaPieza
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )

@@ -614,3 +614,20 @@ class CodigoIvaForm(CodigoBaseForm, ModelForm):
             'descripcion': TextInput(attrs={'required': True}),
             'porcentaje': NumberInput(attrs={'required': True}),
         }
+
+
+class FamiliaPiezaForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = FamiliaPieza
+        fields = '__all__'
+        # excluimos los campos de auditoría
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }
