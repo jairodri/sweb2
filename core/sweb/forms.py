@@ -1,4 +1,6 @@
 from django.forms import *
+
+from core.sweb.mixins import CodigoBaseForm
 from core.sweb.models import *
 from core.sweb.utils import digitos_control
 from schwifty import IBAN
@@ -21,16 +23,7 @@ class ImportarForm(Form):
         # print(cleaned_data)
 
 
-class FormaDePagoForm(ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # diferenciamos add/edit
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:  # diferenciamos add/edit
-            self.fields['codigo'].disabled = True
-        else:
-            self.fields['codigo'].widget.attrs['autofocus'] = True
+class FormaDePagoForm(CodigoBaseForm, ModelForm):
 
     class Meta:
         model = FormaDePago
@@ -51,17 +44,7 @@ class FormaDePagoForm(ModelForm):
         }
 
 
-class TipoClienteRecambiosForm(ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # diferenciamos add/edit
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:  # diferenciamos add/edit
-            self.fields['codigo'].disabled = True
-        else:
-            self.fields['codigo'].widget.attrs['autofocus'] = True
+class TipoClienteRecambiosForm(CodigoBaseForm, ModelForm):
 
     class Meta:
         model = TipoClienteRecambios
@@ -79,17 +62,7 @@ class TipoClienteRecambiosForm(ModelForm):
         }
 
 
-class DescuentoMOForm(ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # diferenciamos add/edit
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:  # diferenciamos add/edit
-            self.fields['codigo'].disabled = True
-        else:
-            self.fields['codigo'].widget.attrs['autofocus'] = True
+class DescuentoMOForm(CodigoBaseForm, ModelForm):
 
     class Meta:
         model = DescuentoMO
@@ -202,20 +175,9 @@ class ClientLopdForm(ModelForm):
         return cleaned_data
 
 
-class ClienteForm(ModelForm):
+class ClienteForm(CodigoBaseForm, ModelForm):
 
     confirm_cif = BooleanField(label='Confirmar CIF', required=False, widget=HiddenInput(attrs={'id': 'confirm_cif'}))
-    # confirm_cif.required = False
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # diferenciamos add/edit
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:
-            self.fields['codigo'].disabled = True
-        else:
-            self.fields['codigo'].widget.attrs['autofocus'] = True
 
     class Meta:
         model = Cliente
@@ -581,16 +543,7 @@ class ClienteForm(ModelForm):
         return cleaned_data
 
 
-class NumeracionAutomaticaForm(ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # diferenciamos add/edit
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:  # diferenciamos add/edit
-            self.fields['codigo'].disabled = True
-        else:
-            self.fields['codigo'].widget.attrs['autofocus'] = True
+class NumeracionAutomaticaForm(CodigoBaseForm, ModelForm):
 
     class Meta:
         model = NumeracionAutomatica
@@ -611,16 +564,7 @@ class NumeracionAutomaticaForm(ModelForm):
         }
 
 
-class UnidadMedidaForm(ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # diferenciamos add/edit
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:  # diferenciamos add/edit
-            self.fields['codigo'].disabled = True
-        else:
-            self.fields['codigo'].widget.attrs['autofocus'] = True
+class UnidadMedidaForm(CodigoBaseForm, ModelForm):
 
     class Meta:
         model = UnidadMedida
@@ -637,16 +581,7 @@ class UnidadMedidaForm(ModelForm):
         }
 
 
-class CodigoAproPiezaForm(ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # diferenciamos add/edit
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:  # diferenciamos add/edit
-            self.fields['codigo'].disabled = True
-        else:
-            self.fields['codigo'].widget.attrs['autofocus'] = True
+class CodigoAproPiezaForm(CodigoBaseForm, ModelForm):
 
     class Meta:
         model = CodigoAproPieza
@@ -663,17 +598,7 @@ class CodigoAproPiezaForm(ModelForm):
         }
 
 
-class CodigoIvaForm(ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # diferenciamos add/edit
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:  # diferenciamos add/edit
-            self.fields['codigo'].disabled = True
-        else:
-            self.fields['codigo'].widget.attrs['autofocus'] = True
+class CodigoIvaForm(CodigoBaseForm, ModelForm):
 
     class Meta:
         model = CodigoIva
