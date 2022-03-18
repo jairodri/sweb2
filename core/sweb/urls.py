@@ -13,6 +13,7 @@ from core.sweb.views.codigosiva.views import *
 from core.sweb.views.familiapieza.views import *
 from core.sweb.views.marcas.views import *
 from core.sweb.views.codigocontable.views import *
+from core.sweb.views.modvehpieza.views import *
 
 app_name = 'sweb'
 folder_cpz = 'codapropza'
@@ -27,6 +28,7 @@ folder_iva = 'codigosiva'
 folder_fpz = 'familiapieza'
 folder_mca = 'marcas'
 folder_ctb = 'codigocontable'
+folder_mov = 'modvehpieza'
 
 urlpatterns = [
     # Home
@@ -109,4 +111,10 @@ urlpatterns = [
     path(f'{folder_ctb}/add/', CodigoContableCreateView.as_view(), name=f'{folder_ctb}_add'),
     path(f'{folder_ctb}/edit/<int:pk>/', CodigoContableUpdateView.as_view(), name=f'{folder_ctb}_edit'),
     path(f'{folder_ctb}/delete/<int:pk>/', CodigoContableDeleteView.as_view(), name=f'{folder_ctb}_delete'),
+
+    # Modelos Vehículos Piezas
+    path(f'{folder_mov}/list/', ModeloVehPiezaListView.as_view(), name=f'{folder_mov}_list'),
+    path(f'{folder_mov}/add/', ModeloVehPiezaCreateView.as_view(), name=f'{folder_mov}_add'),
+    path(f'{folder_mov}/edit/<int:pk>/', ModeloVehPiezaUpdateView.as_view(), name=f'{folder_mov}_edit'),
+    path(f'{folder_mov}/delete/<int:pk>/', ModeloVehPiezaDeleteView.as_view(), name=f'{folder_mov}_delete'),
 ]

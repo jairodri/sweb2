@@ -52,6 +52,9 @@ class CodigoContableAdmin(ImportExportModelAdmin):
     resource_class = CodigoContableResource
 
 
+class ModeloVehPiezaAdmin(ImportExportModelAdmin):
+    resource_class = ModeloVehPiezaResource
+
 # Register your models here.
 # Para que se muestren en el panel administrador del servidor
 admin.site.register(Banco, BancoAdmin)
@@ -66,6 +69,7 @@ admin.site.register(CodigoIva, CodigoIvaAdmin)
 admin.site.register(FamiliaPieza, FamiliaPiezaAdmin)
 admin.site.register(Marca, MarcaAdmin)
 admin.site.register(CodigoContable, CodigoContableAdmin)
+admin.site.register(ModeloVehPieza, ModeloVehPiezaAdmin)
 
 
 

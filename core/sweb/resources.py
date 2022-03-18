@@ -248,3 +248,14 @@ class CodigoContableResource(resources.ModelResource):
             'descripcion',
         )
 
+
+class ModeloVehPiezaResource(resources.ModelResource):
+
+    class Meta:
+        model = ModeloVehPieza
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )
+

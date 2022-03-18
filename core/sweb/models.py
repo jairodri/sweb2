@@ -354,3 +354,16 @@ class CodigoContable(ModelMixin, BaseModel):
         verbose_name_plural = 'Códigos Contables'
         ordering = ['codigo']
 
+
+class ModeloVehPieza(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=2, verbose_name='Código', db_column='mca_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='mca_descrip', null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    class Meta:
+        db_table = 'sirtbmov'
+        verbose_name = 'Modelo Vehículo (Piezas)'
+        verbose_name_plural = 'Modelos Vehículos (Piezas)'
+        ordering = ['codigo']
