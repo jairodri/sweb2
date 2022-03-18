@@ -236,3 +236,15 @@ class MarcaResource(resources.ModelResource):
             'codigo',
             'descripcion',
         )
+
+
+class CodigoContableResource(resources.ModelResource):
+
+    class Meta:
+        model = CodigoContable
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )
+

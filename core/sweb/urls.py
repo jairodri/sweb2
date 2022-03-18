@@ -12,6 +12,7 @@ from core.sweb.views.codapropza.views import *
 from core.sweb.views.codigosiva.views import *
 from core.sweb.views.familiapieza.views import *
 from core.sweb.views.marcas.views import *
+from core.sweb.views.codigocontable.views import *
 
 app_name = 'sweb'
 folder_cpz = 'codapropza'
@@ -25,6 +26,7 @@ folder_uni = 'unidadesmedida'
 folder_iva = 'codigosiva'
 folder_fpz = 'familiapieza'
 folder_mca = 'marcas'
+folder_ctb = 'codigocontable'
 
 urlpatterns = [
     # Home
@@ -101,4 +103,10 @@ urlpatterns = [
     path(f'{folder_mca}/add/', MarcaCreateView.as_view(), name=f'{folder_mca}_add'),
     path(f'{folder_mca}/edit/<int:pk>/', MarcaUpdateView.as_view(), name=f'{folder_mca}_edit'),
     path(f'{folder_mca}/delete/<int:pk>/', MarcaDeleteView.as_view(), name=f'{folder_mca}_delete'),
+
+    # Códigos Contables
+    path(f'{folder_ctb}/list/', CodigoContableListView.as_view(), name=f'{folder_ctb}_list'),
+    path(f'{folder_ctb}/add/', CodigoContableCreateView.as_view(), name=f'{folder_ctb}_add'),
+    path(f'{folder_ctb}/edit/<int:pk>/', CodigoContableUpdateView.as_view(), name=f'{folder_ctb}_edit'),
+    path(f'{folder_ctb}/delete/<int:pk>/', CodigoContableDeleteView.as_view(), name=f'{folder_ctb}_delete'),
 ]

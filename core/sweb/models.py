@@ -339,3 +339,18 @@ class Marca(ModelMixin, BaseModel):
         verbose_name = 'Marca'
         verbose_name_plural = 'Marcas'
         ordering = ['codigo']
+
+
+class CodigoContable(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=2, verbose_name='Código', db_column='mca_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='mca_descrip', null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    class Meta:
+        db_table = 'sirtbctb'
+        verbose_name = 'Código Contable'
+        verbose_name_plural = 'Códigos Contables'
+        ordering = ['codigo']
+

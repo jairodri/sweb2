@@ -650,3 +650,19 @@ class MarcaForm(CodigoBaseForm, ModelForm):
             'descripcion': TextInput(attrs={'required': True}),
         }
 
+
+class CodigoContableForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = CodigoContable
+        fields = '__all__'
+        # excluimos los campos de auditoría
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }
