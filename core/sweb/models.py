@@ -367,3 +367,17 @@ class ModeloVehPieza(ModelMixin, BaseModel):
         verbose_name = 'Modelo Vehículo (Piezas)'
         verbose_name_plural = 'Modelos Vehículos (Piezas)'
         ordering = ['codigo']
+
+
+class FamiliaMarketing(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=4, verbose_name='Código', db_column='mca_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='mca_descrip', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    class Meta:
+        db_table = 'sirtbfmk'
+        verbose_name = 'Familia Marketing'
+        verbose_name_plural = 'Familias Marketing'
+        ordering = ['codigo']

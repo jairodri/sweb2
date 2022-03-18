@@ -259,3 +259,14 @@ class ModeloVehPiezaResource(resources.ModelResource):
             'descripcion',
         )
 
+
+class FamiliaMarketingResource(resources.ModelResource):
+
+    class Meta:
+        model = FamiliaMarketing
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )
+

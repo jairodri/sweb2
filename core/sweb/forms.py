@@ -683,3 +683,21 @@ class ModeloVehPiezaForm(CodigoBaseForm, ModelForm):
             'codigo': TextInput(attrs={'required': True}),
             'descripcion': TextInput(attrs={'required': True}),
         }
+
+
+class FamiliaMarketingForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = FamiliaMarketing
+        fields = '__all__'
+        # excluimos los campos de auditoría
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            # 'descripcion': TextInput(attrs={'required': True}),
+        }
+

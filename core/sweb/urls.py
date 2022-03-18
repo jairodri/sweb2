@@ -14,6 +14,7 @@ from core.sweb.views.familiapieza.views import *
 from core.sweb.views.marcas.views import *
 from core.sweb.views.codigocontable.views import *
 from core.sweb.views.modvehpieza.views import *
+from core.sweb.views.fmarketing.views import *
 
 app_name = 'sweb'
 folder_cpz = 'codapropza'
@@ -29,6 +30,7 @@ folder_fpz = 'familiapieza'
 folder_mca = 'marcas'
 folder_ctb = 'codigocontable'
 folder_mov = 'modvehpieza'
+folder_fmk = 'fmarketing'
 
 urlpatterns = [
     # Home
@@ -117,4 +119,10 @@ urlpatterns = [
     path(f'{folder_mov}/add/', ModeloVehPiezaCreateView.as_view(), name=f'{folder_mov}_add'),
     path(f'{folder_mov}/edit/<int:pk>/', ModeloVehPiezaUpdateView.as_view(), name=f'{folder_mov}_edit'),
     path(f'{folder_mov}/delete/<int:pk>/', ModeloVehPiezaDeleteView.as_view(), name=f'{folder_mov}_delete'),
+
+    # Familias Marketing
+    path(f'{folder_fmk}/list/', FamiliaMarketingListView.as_view(), name=f'{folder_fmk}_list'),
+    path(f'{folder_fmk}/add/', FamiliaMarketingCreateView.as_view(), name=f'{folder_fmk}_add'),
+    path(f'{folder_fmk}/edit/<int:pk>/', FamiliaMarketingUpdateView.as_view(), name=f'{folder_fmk}_edit'),
+    path(f'{folder_fmk}/delete/<int:pk>/', FamiliaMarketingDeleteView.as_view(), name=f'{folder_fmk}_delete'),
 ]
