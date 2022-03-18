@@ -171,7 +171,7 @@ class ClientLopdForm(ModelForm):
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        print(f'LOPD form: {cleaned_data}')
+        # print(f'LOPD form: {cleaned_data}')
         return cleaned_data
 
 
@@ -303,6 +303,7 @@ class ClienteForm(CodigoBaseForm, ModelForm):
         }
 
     def clean_codigo(self):
+        # print('clean cliente')
         codigo = self.cleaned_data['codigo']
 
         if not codigo:
@@ -631,3 +632,21 @@ class FamiliaPiezaForm(CodigoBaseForm, ModelForm):
             'codigo': TextInput(attrs={'required': True}),
             'descripcion': TextInput(attrs={'required': True}),
         }
+
+
+class MarcaForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = Marca
+        fields = '__all__'
+        # excluimos los campos de auditoría
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }
+

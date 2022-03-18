@@ -72,10 +72,6 @@ class DescuentoMO(ModelMixin, BaseModel):
         verbose_name_plural = 'Descuentos MO'
         ordering = ['codigo']
 
-    def clean(self):
-        super(DescuentoMO, self).clean()
-        self.codigo = self.codigo.upper()
-
 
 class FormaDePago(ModelMixin, BaseModel):
     codigo = models.CharField(max_length=2, verbose_name='Código', db_column='fpg_codigo', unique=True)
@@ -94,10 +90,6 @@ class FormaDePago(ModelMixin, BaseModel):
         verbose_name_plural = 'Formas de Pago'
         ordering = ['codigo']
 
-    def clean(self):
-        super(FormaDePago, self).clean()
-        self.codigo = self.codigo.upper()
-
 
 class TipoClienteRecambios(ModelMixin, BaseModel):
     codigo = models.CharField(max_length=2, verbose_name='Código', db_column='tcr_codigo', unique=True)
@@ -114,10 +106,6 @@ class TipoClienteRecambios(ModelMixin, BaseModel):
         verbose_name = 'Tipo de Cliente Recambios'
         verbose_name_plural = 'Tipos de Cliente Recambios'
         ordering = ['codigo']
-
-    def clean(self):
-        super(TipoClienteRecambios, self).clean()
-        self.codigo = self.codigo.upper()
 
 
 class Cliente(ModelMixin, BaseModel):
@@ -272,10 +260,6 @@ class NumeracionAutomatica(ModelMixin, BaseModel):
     def __str__(self):
         return f'{self.codigo} - {self.tabla}'
 
-    def clean(self):
-        super(NumeracionAutomatica, self).clean()
-        self.codigo = self.codigo.upper()
-
     class Meta:
         db_table = 'sirtbnau'
         verbose_name = 'Numeración Automática'
@@ -290,10 +274,6 @@ class UnidadMedida(ModelMixin, BaseModel):
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
 
-    def clean(self):
-        super(UnidadMedida, self).clean()
-        self.codigo = self.codigo.upper()
-
     class Meta:
         db_table = 'sirtbuni'
         verbose_name = 'Unidad de Medida'
@@ -307,10 +287,6 @@ class CodigoAproPieza(ModelMixin, BaseModel):
 
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
-
-    def clean(self):
-        super(CodigoAproPieza, self).clean()
-        self.codigo = self.codigo.upper()
 
     class Meta:
         db_table = 'sirtbcpz'
@@ -336,24 +312,30 @@ class CodigoIva(ModelMixin, BaseModel):
         verbose_name_plural = 'Códigos IVA'
         ordering = ['codigo']
 
-    def clean(self):
-        super(CodigoIva, self).clean()
-        self.codigo = self.codigo.upper()
-
 
 class FamiliaPieza(ModelMixin, BaseModel):
-    codigo = models.CharField(max_length=3, verbose_name='Código', db_column='cpz_codigo', unique=True, null=False, blank=False)
-    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='cpz_descrip', null=False, blank=False)
+    codigo = models.CharField(max_length=3, verbose_name='Código', db_column='fpz_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='fpz_descrip', null=False, blank=False)
 
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
-
-    def clean(self):
-        super(FamiliaPieza, self).clean()
-        self.codigo = self.codigo.upper()
 
     class Meta:
         db_table = 'sirtbfpz'
         verbose_name = 'Familia Pieza'
         verbose_name_plural = 'Familia Piezas'
+        ordering = ['codigo']
+
+
+class Marca(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=2, verbose_name='Código', db_column='mca_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='mca_descrip', null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    class Meta:
+        db_table = 'sirtbmca'
+        verbose_name = 'Marca'
+        verbose_name_plural = 'Marcas'
         ordering = ['codigo']

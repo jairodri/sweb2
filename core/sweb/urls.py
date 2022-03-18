@@ -11,6 +11,7 @@ from core.sweb.views.unidadesmedida.views import *
 from core.sweb.views.codapropza.views import *
 from core.sweb.views.codigosiva.views import *
 from core.sweb.views.familiapieza.views import *
+from core.sweb.views.marcas.views import *
 
 app_name = 'sweb'
 folder_cpz = 'codapropza'
@@ -23,6 +24,7 @@ folder_nau = 'numeracionauto'
 folder_uni = 'unidadesmedida'
 folder_iva = 'codigosiva'
 folder_fpz = 'familiapieza'
+folder_mca = 'marcas'
 
 urlpatterns = [
     # Home
@@ -93,4 +95,10 @@ urlpatterns = [
     path(f'{folder_fpz}/add/', FamiliaPiezaCreateView.as_view(), name=f'{folder_fpz}_add'),
     path(f'{folder_fpz}/edit/<int:pk>/', FamiliaPiezaUpdateView.as_view(), name=f'{folder_fpz}_edit'),
     path(f'{folder_fpz}/delete/<int:pk>/', FamiliaPiezaDeleteView.as_view(), name=f'{folder_fpz}_delete'),
+
+    # Marcas
+    path(f'{folder_mca}/list/', MarcaListView.as_view(), name=f'{folder_mca}_list'),
+    path(f'{folder_mca}/add/', MarcaCreateView.as_view(), name=f'{folder_mca}_add'),
+    path(f'{folder_mca}/edit/<int:pk>/', MarcaUpdateView.as_view(), name=f'{folder_mca}_edit'),
+    path(f'{folder_mca}/delete/<int:pk>/', MarcaDeleteView.as_view(), name=f'{folder_mca}_delete'),
 ]

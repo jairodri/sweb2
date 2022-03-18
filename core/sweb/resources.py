@@ -225,3 +225,14 @@ class FamiliaPiezaResource(resources.ModelResource):
             'codigo',
             'descripcion',
         )
+
+
+class MarcaResource(resources.ModelResource):
+
+    class Meta:
+        model = Marca
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )

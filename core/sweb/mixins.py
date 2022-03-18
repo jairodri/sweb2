@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.db.models import ProtectedError
 from django.forms import ModelForm
 from django.http import HttpResponseRedirect, JsonResponse
@@ -146,3 +147,13 @@ class CodigoBaseForm(ModelForm):
             self.fields['codigo'].disabled = True
         else:
             self.fields['codigo'].widget.attrs['autofocus'] = True
+
+    def clean_codigo(self):
+        # print('clean mixin')
+        codigo = self.cleaned_data['codigo']
+        if not codigo:
+            raise ValidationError('El campo Código es obligatorio')
+
+        # convertimos a mayúsculas
+        codigo = codigo.upper()
+        return codigo
