@@ -270,3 +270,16 @@ class FamiliaMarketingResource(resources.ModelResource):
             'descripcion',
         )
 
+
+class DescuentoRecambiosResource(resources.ModelResource):
+
+    class Meta:
+        model = DescuentoRecambios
+        fields = (
+            'id',
+            'tipo',
+            'codigo',
+            'codpieza',
+            'descuento',
+        )
+

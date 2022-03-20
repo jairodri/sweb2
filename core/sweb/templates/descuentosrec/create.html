@@ -1,0 +1,29 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <div class="form-group">
+        {{ form.tipo | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.codigo.name }}">{{ form.codigo.label }}<span
+                class="text-danger"> *</span></label>
+        {{ form.codigo | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.codpieza.name }}">{{ form.codpieza.label }}<span
+                class="text-danger"> *</span></label>
+        {{ form.codpieza | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.descuento.name }}">{{ form.descuento.label }}<span
+                class="text-danger"> *</span></label>
+        {{ form.descuento | add_class:'form-control' }}
+    </div>
+{% endblock %}
+
+{% block jscript2 %}
+    <script type="application/javascript">
+        validar('DescuentoRecambios');
+    </script>
+{% endblock %}

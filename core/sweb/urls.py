@@ -5,7 +5,6 @@ from core.sweb.views.tiposclienterec.views import *
 from core.sweb.views.descuentosmo.views import *
 from core.sweb.views.bancos.views import *
 from core.sweb.views.clientes.views import *
-from core.sweb.views.administrador.views import *
 from core.sweb.views.numeracionauto.views import *
 from core.sweb.views.unidadesmedida.views import *
 from core.sweb.views.codapropza.views import *
@@ -15,6 +14,7 @@ from core.sweb.views.marcas.views import *
 from core.sweb.views.codigocontable.views import *
 from core.sweb.views.modvehpieza.views import *
 from core.sweb.views.fmarketing.views import *
+from core.sweb.views.descuentosrec.views import *
 
 app_name = 'sweb'
 folder_cpz = 'codapropza'
@@ -31,6 +31,15 @@ folder_mca = 'marcas'
 folder_ctb = 'codigocontable'
 folder_mov = 'modvehpieza'
 folder_fmk = 'fmarketing'
+
+urlpath_dtr = 'descuentosrec'
+urlpath_dtr_t0 = 'dtoventas'
+urlpath_dtr_t1 = 'dtopedapro'
+urlpath_dtr_t2 = 'dtopedurgte'
+urlpath_dtr_t3 = 'dtopedcamp'
+urlpath_dtr_t4 = 'dtovtacamp'
+urlpath_dtr_t5 = 'dtopzagar'
+
 
 urlpatterns = [
     # Home
@@ -125,4 +134,40 @@ urlpatterns = [
     path(f'{folder_fmk}/add/', FamiliaMarketingCreateView.as_view(), name=f'{folder_fmk}_add'),
     path(f'{folder_fmk}/edit/<int:pk>/', FamiliaMarketingUpdateView.as_view(), name=f'{folder_fmk}_edit'),
     path(f'{folder_fmk}/delete/<int:pk>/', FamiliaMarketingDeleteView.as_view(), name=f'{folder_fmk}_delete'),
+
+    # Descuentos Pedidos Aprovisionamiento
+    path(f'{urlpath_dtr}/{urlpath_dtr_t1}/list/', DescuentoRecambiosPedidosAproListView.as_view(), name=f'{urlpath_dtr_t1}_list'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t1}/add/', DescuentoRecambiosPedidosAproCreateView.as_view(), name=f'{urlpath_dtr_t1}_add'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t1}/edit/<int:pk>/', DescuentoRecambiosPedidosAproUpdateView.as_view(), name=f'{urlpath_dtr_t1}_edit'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t1}/delete/<int:pk>/', DescuentoRecambiosPedidosAproDeleteView.as_view(), name=f'{urlpath_dtr_t1}_delete'),
+
+    # Descuentos Ventas
+    path(f'{urlpath_dtr}/{urlpath_dtr_t0}/list/', DescuentoRecambiosVentasListView.as_view(), name=f'{urlpath_dtr_t0}_list'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t0}/add/', DescuentoRecambiosVentasCreateView.as_view(), name=f'{urlpath_dtr_t0}_add'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t0}/edit/<int:pk>/', DescuentoRecambiosVentasUpdateView.as_view(), name=f'{urlpath_dtr_t0}_edit'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t0}/delete/<int:pk>/', DescuentoRecambiosVentasDeleteView.as_view(), name=f'{urlpath_dtr_t0}_delete'),
+
+    # Descuentos Pedidos Urgentes
+    path(f'{urlpath_dtr}/{urlpath_dtr_t2}/list/', DescuentoRecambiosPedidosUrgtesListView.as_view(), name=f'{urlpath_dtr_t2}_list'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t2}/add/', DescuentoRecambiosPedidosUrgtesCreateView.as_view(), name=f'{urlpath_dtr_t2}_add'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t2}/edit/<int:pk>/', DescuentoRecambiosPedidosUrgtesUpdateView.as_view(), name=f'{urlpath_dtr_t2}_edit'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t2}/delete/<int:pk>/', DescuentoRecambiosPedidosUrgtesDeleteView.as_view(), name=f'{urlpath_dtr_t2}_delete'),
+
+    # Descuentos Pedidos Campaña
+    path(f'{urlpath_dtr}/{urlpath_dtr_t3}/list/', DescuentoRecambiosPedidosCampnaListView.as_view(), name=f'{urlpath_dtr_t3}_list'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t3}/add/', DescuentoRecambiosPedidosCampnaCreateView.as_view(), name=f'{urlpath_dtr_t3}_add'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t3}/edit/<int:pk>/', DescuentoRecambiosPedidosCampnaUpdateView.as_view(), name=f'{urlpath_dtr_t3}_edit'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t3}/delete/<int:pk>/', DescuentoRecambiosPedidosCampnaDeleteView.as_view(), name=f'{urlpath_dtr_t3}_delete'),
+
+    # Descuentos Ventas Campaña
+    path(f'{urlpath_dtr}/{urlpath_dtr_t4}/list/', DescuentoRecambiosVentasCampnaListView.as_view(), name=f'{urlpath_dtr_t4}_list'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t4}/add/', DescuentoRecambiosVentasCampnaCreateView.as_view(), name=f'{urlpath_dtr_t4}_add'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t4}/edit/<int:pk>/', DescuentoRecambiosVentasCampnaUpdateView.as_view(), name=f'{urlpath_dtr_t4}_edit'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t4}/delete/<int:pk>/', DescuentoRecambiosVentasCampnaDeleteView.as_view(), name=f'{urlpath_dtr_t4}_delete'),
+
+    # Descuentos Piezas Garantías
+    path(f'{urlpath_dtr}/{urlpath_dtr_t5}/list/', DescuentoRecambiosPiezasGarantiaListView.as_view(), name=f'{urlpath_dtr_t5}_list'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t5}/add/', DescuentoRecambiosPiezasGarantiaCreateView.as_view(), name=f'{urlpath_dtr_t5}_add'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t5}/edit/<int:pk>/', DescuentoRecambiosPiezasGarantiaUpdateView.as_view(), name=f'{urlpath_dtr_t5}_edit'),
+    path(f'{urlpath_dtr}/{urlpath_dtr_t5}/delete/<int:pk>/', DescuentoRecambiosPiezasGarantiaDeleteView.as_view(), name=f'{urlpath_dtr_t5}_delete'),
 ]

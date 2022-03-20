@@ -11,6 +11,28 @@ from core.models import BaseModel
 from crum import get_current_user
 
 
+class CodigoBaseForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:  # diferenciamos add/edit
+            self.fields['codigo'].disabled = True
+        else:
+            self.fields['codigo'].widget.attrs['autofocus'] = True
+
+    def clean_codigo(self):
+        # print('clean mixin')
+        codigo = self.cleaned_data['codigo']
+        if not codigo:
+            raise ValidationError('El campo Código es obligatorio')
+
+        # convertimos a mayúsculas
+        codigo = codigo.upper()
+        return codigo
+
+
 # Redefinimos la función save para actualizar los campos de auditoría del user
 class ModelMixin(BaseModel):
 
@@ -66,7 +88,8 @@ class BasicListView(BasicView):
         context['title'] = self.model._meta.verbose_name_plural
         context['add_url'] = reverse_lazy(f'sweb:{self.folder}_add')
         context['list_url'] = reverse_lazy(f'sweb:{self.folder}_list')
-        context['entity'] = self.model._meta.verbose_name_plural
+        context['entity'] = self.model._meta.verbose_name
+        context['entity_plural'] = self.model._meta.verbose_name_plural
         return context
 
 
@@ -137,23 +160,98 @@ class BasicDetailView(BasicView):
         return context
 
 
-class CodigoBaseForm(ModelForm):
+class DescuentoRecambiosListView(BasicView):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # diferenciamos add/edit
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:  # diferenciamos add/edit
-            self.fields['codigo'].disabled = True
-        else:
-            self.fields['codigo'].widget.attrs['autofocus'] = True
+    # redefinimos el post para cargar la datatable con ajax
+    def post(self, request, *args, **kwargs):
+        list_values = self.list_values
+        try:
+            action = request.POST['action']
+            if action == 'searchdata':
+                data = []
+                # recuperamos solo los campos necesarios para la paginación
+                for i in self.model.objects.filter(tipo=self.tipo).values(*list_values):
+                    data.append(i)
+            else:
+                data = {'error': 'Ha ocurrido un error'}
+        except Exception as e:
+            data = {
+                'error': str(e)
+            }
+        return JsonResponse(data, safe=False)
 
-    def clean_codigo(self):
-        # print('clean mixin')
-        codigo = self.cleaned_data['codigo']
-        if not codigo:
-            raise ValidationError('El campo Código es obligatorio')
+    # sobreescribimos el método get_context_data para añadir info al contexto
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.model_verbose_plural
+        context['add_url'] = reverse_lazy(f'sweb:{self.subfolder}_add')
+        context['list_url'] = reverse_lazy(f'sweb:{self.subfolder}_list')
+        context['entity_plural'] = self.model_verbose_plural
+        context['entity'] = self.model_verbose_name
+        context['folder'] = self.folder
+        context['subfolder'] = self.subfolder
+        return context
 
-        # convertimos a mayúsculas
-        codigo = codigo.upper()
-        return codigo
+
+class DescuentoRecambiosCreateView(BasicView):
+
+    def get_initial(self):
+        initial = {
+            'tipo': self.tipo,
+        }
+        return initial
+
+    # sobreescribimos el método get_context_data para añadir info al contexto
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Añadir {self.model_verbose_name}'
+        context['entity'] = self.model_verbose_plural
+        context['action'] = 'add'
+        context['list_url'] = reverse_lazy(f'sweb:{self.subfolder}_list')
+        context['subfolder'] = self.subfolder
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, f'{self.model_verbose_name} {self.end_message_success}')
+        return super().form_valid(form)
+
+
+class DescuentoRecambiosUpdateView(BasicView):
+
+    # sobreescribimos el método get_context_data para añadir info al contexto
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Editar {self.model_verbose_name}'
+        context['entity'] = self.model_verbose_plural
+        context['action'] = 'edit'
+        context['list_url'] = reverse_lazy(f'sweb:{self.subfolder}_list')
+        context['subfolder'] = self.subfolder
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, f'{self.model_verbose_name} {self.end_message_success}')
+        return super().form_valid(form)
+
+
+class DescuentoRecambiosDeleteView(BasicView):
+
+    # sobreescribimos el método get_context_data para añadir info al contexto
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Borrar {self.model_verbose_name}'
+        context['entity'] = self.model_verbose_plural
+        context['list_url'] = reverse_lazy(f'sweb:{self.subfolder}_list')
+        context['action'] = 'delete'
+        context['subfolder'] = self.subfolder
+        return context
+
+    def form_valid(self, form):
+        # Reescribimos form_valid para controlar los ProtectedError
+        try:
+            self.object.delete()
+            messages.success(self.request, f'{self.model_verbose_name} {self.end_message_success}')
+            return HttpResponseRedirect(self.success_url)
+        except ProtectedError as e:
+            messages.error(self.request,
+                           f'{self.start_message_error} {self.model_verbose_name} {self.end_message_error}')
+            return self.render_to_response(context=self.get_context_data())

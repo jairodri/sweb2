@@ -381,3 +381,22 @@ class FamiliaMarketing(ModelMixin, BaseModel):
         verbose_name = 'Familia Marketing'
         verbose_name_plural = 'Familias Marketing'
         ordering = ['codigo']
+
+
+class DescuentoRecambios(ModelMixin, BaseModel):
+    tipo = models.CharField(max_length=1, verbose_name='Tipo', db_column='dtr_tipo', null=False, blank=False)
+    codigo = models.CharField(max_length=1, verbose_name='Código', db_column='dtr_codigo', null=False, blank=False)
+    codpieza = models.CharField(max_length=2, verbose_name='Cod pieza', db_column='dtr_codpza', null=False, blank=False)
+    descuento = models.DecimalField(verbose_name='Porcentaje', db_column='dtr_descto', default=0.0, max_digits=5,
+                                    decimal_places=2, null=False, blank=False, validators=[validar_porcentaje])
+
+    def __str__(self):
+        return f'{self.tipo} - {self.codigo} - {self.codpieza}'
+
+    class Meta:
+        db_table = 'sirtbdtr'
+        verbose_name = 'Descuento Recambios'
+        verbose_name_plural = 'Descuentos Recambios'
+        # constraint para que la combinación de código y sucursal no pueda repetirse
+        unique_together = ['tipo', 'codigo', 'codpieza']
+        ordering = ['tipo', 'codigo', 'codpieza']

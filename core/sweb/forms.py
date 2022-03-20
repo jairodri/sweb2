@@ -701,3 +701,50 @@ class FamiliaMarketingForm(CodigoBaseForm, ModelForm):
             # 'descripcion': TextInput(attrs={'required': True}),
         }
 
+
+class DescuentoRecambiosForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:  # diferenciamos add/edit
+            self.fields['codigo'].disabled = True
+            self.fields['codpieza'].disabled = True
+        else:
+            self.fields['codigo'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = DescuentoRecambios
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'codpieza': 'Código Pieza',
+            'descuento': 'Descuento'
+        }
+        widgets = {
+            'tipo': HiddenInput(),
+            'codigo': TextInput(attrs={'required': True}),
+            'codpieza': TextInput(attrs={'required': True}),
+            'descuento': NumberInput(attrs={'required': True}),
+        }
+
+    def clean_codigo(self):
+        # print('clean mixin')
+        codigo = self.cleaned_data['codigo']
+        if not codigo:
+            raise ValidationError('El campo Código es obligatorio')
+
+        # convertimos a mayúsculas
+        codigo = codigo.upper()
+        return codigo
+
+    def clean_codpieza(self):
+        codpieza = self.cleaned_data['codpieza']
+        if not codpieza:
+            raise ValidationError('El campo Código Pieza es obligatorio')
+
+        # convertimos a mayúsculas
+        codpieza = codpieza.upper()
+        return codpieza

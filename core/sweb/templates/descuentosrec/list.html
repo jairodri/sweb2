@@ -1,0 +1,38 @@
+{% extends 'list.html' %}
+
+{% block columns %}
+    <tr>
+        <th>Acciones</th>
+        <th>Código</th>
+        <th>Código Pieza</th>
+        <th>Descuento</th>
+    </tr>
+{% endblock %}
+
+{% block columnsfoot %}
+    <tr>
+        <th>Acciones</th>
+        <th>Código</th>
+        <th>Código Pieza</th>
+        <th>Descuento</th>
+    </tr>
+{% endblock %}
+
+{% block jscript2 %}
+<script>
+        var icolumns = [
+            {"data": "id"},
+            {"data": "codigo"},
+            {"data": "codpieza"},
+            {"data": "descuento"},
+        ]
+        var ibuttons = '<a href="/sweb/{{ folder }}/{{ subfolder }}/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
+        ibuttons += '<a href="/sweb/{{ folder }}/{{ subfolder }}/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
+        initdtables(icolumns, ibuttons)
+</script>
+{% endblock %}
+
+<!-- Literal del botón para añdir registro
+{% block masdatos %}
+Añadir {{ entity }}
+{% endblock %}
