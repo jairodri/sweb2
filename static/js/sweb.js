@@ -28,7 +28,8 @@ var isDecimal = function (value) {
 };
 
 // inicializa datatable
-function initdtables(icolumns, ibuttons) {
+function initdtables(icolumns, ibuttons, iorder) {
+    // console.log(iorder)
     var table = $('#dtable-buttons').DataTable({
         responsive: true,
         autoWidth: false,
@@ -47,8 +48,8 @@ function initdtables(icolumns, ibuttons) {
             dataSrc: ""
         },
         columns: icolumns,
-        // Gestionamos el ordenamiento en models
         // order: [[1, 'asc']],
+        order: iorder,
         columnDefs: [
             // La columna 0 es la de las Acciones, donde van los botones
             {
@@ -65,10 +66,6 @@ function initdtables(icolumns, ibuttons) {
             {
                 targets: '_all',
                 render: function (data, type, row) {
-                    // console.log(data)
-                    // console.log($.isNumeric(data))
-                    // console.log(type)
-                    // console.log(row)
                     if (type === 'exportpdf' || type === 'exportxls' || type === 'exportcsv') {
                         if (data === true) {
                             data = 'Si'
