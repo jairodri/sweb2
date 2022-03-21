@@ -180,6 +180,7 @@ class DescuentoRecambiosListView(BasicView):
                 data = []
                 # recuperamos solo los campos necesarios para la paginación
                 for i in self.model.objects.filter(tipo=self.tipo).values(*list_values):
+                    # print(i)
                     data.append(i)
             else:
                 data = {'error': 'Ha ocurrido un error'}

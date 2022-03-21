@@ -400,3 +400,4 @@ class DescuentoRecambios(ModelMixin, BaseModel):
         # constraint para que la combinación de código y sucursal no pueda repetirse
         unique_together = ['tipo', 'codigo', 'codpieza']
         ordering = ['tipo', 'codigo', 'codpieza']
+

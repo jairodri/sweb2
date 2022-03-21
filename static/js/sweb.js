@@ -16,6 +16,17 @@ function getCookie(name) {
 
 const csrftoken = getCookie('csrftoken');
 
+// el dato es Decimal si tiene punto decimal y luego 2 decimales
+var isDecimal = function (value) {
+    // console.log(value)
+    if (value.toString().split(".").length === 2) {
+        if (value.toString().split(".")[1].length === 2) {
+            return true;
+        }
+    }
+    return false;
+};
+
 // inicializa datatable
 function initdtables(icolumns, ibuttons) {
     var table = $('#dtable-buttons').DataTable({
@@ -47,12 +58,17 @@ function initdtables(icolumns, ibuttons) {
                 render: function (data, type, row) {
                     var buttons = ibuttons.replaceAll('rowid', row.id)
                     return buttons;
-                }
+                },
             },
             // Tenemos que gestionar los booleans de manera diferente
+            // También gestionamos la coma decimal
             {
                 targets: '_all',
                 render: function (data, type, row) {
+                    // console.log(data)
+                    // console.log($.isNumeric(data))
+                    // console.log(type)
+                    // console.log(row)
                     if (type === 'exportpdf' || type === 'exportxls' || type === 'exportcsv') {
                         if (data === true) {
                             data = 'Si'
@@ -64,15 +80,19 @@ function initdtables(icolumns, ibuttons) {
                             data = '<input type="checkbox" class="checkbox" checked  />'
                         } else if (data === false) {
                             data = '<input type="checkbox" class="checkbox"  />'
+                        } else if ($.isNumeric(data) && isDecimal(data)) {
+                            data = data.replace('.', ',');
                         }
                     }
+
                     return data;
                 }
             },
         ],
         language: {
+            decimal: ",",
             // url: "{% static 'I18N/es_es.json' %}"
-            url: "/static/i18N/es_es.json"
+            url: "/static/i18N/es_es.json",
         },
 
         initComplete: function (settings, json) {
