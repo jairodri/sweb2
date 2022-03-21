@@ -124,17 +124,17 @@ function initdtables(icolumns, ibuttons) {
 }
 // valicación de formularios
 function validar(entity) {
-    // console.log(entity)
+    console.log(entity)
     switch (entity) {
         case 'Importar':
             rules = {
                 fichero_tabla: {required: true},
             }
             break
-        case 'DescuentoMO':
+        case 'Descuento MO':
             rules = {descuento: {number: true, min: 0, max: 100}}
             break
-        case 'FormaDePago':
+        case 'Forma de Pago':
             rules = {
                 recibos: {number: true},
                 diasvto: {number: true}

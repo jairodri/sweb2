@@ -32,15 +32,15 @@
             {"data": "contador"},
             {"data": "activo"},
         ]
-        var ibuttons = '<a href="/sweb/numeracionauto/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
-        ibuttons += '<a href="/sweb/numeracionauto/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
+        var ibuttons = '<a href="/sweb/{{ folder }}/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
+        ibuttons += '<a href="/sweb/{{ folder }}/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
         initdtables(icolumns, ibuttons)
 </script>
 {% endblock %}
 
 <!-- Literal del botón para añdir registro
 {% block masdatos %}
-Añadir Numeración Automática
+Añadir {{ entity }}
 {% endblock %}
 
 

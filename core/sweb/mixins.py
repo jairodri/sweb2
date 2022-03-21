@@ -90,6 +90,7 @@ class BasicListView(BasicView):
         context['list_url'] = reverse_lazy(f'sweb:{self.folder}_list')
         context['entity'] = self.model._meta.verbose_name
         context['entity_plural'] = self.model._meta.verbose_name_plural
+        context['folder'] = self.folder
         return context
 
 
@@ -99,9 +100,11 @@ class BasicCreateView(BasicView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Añadir {self.model._meta.verbose_name}'
-        context['entity'] = self.model._meta.verbose_name_plural
+        context['entity'] = self.model._meta.verbose_name
+        context['entity_plural'] = self.model._meta.verbose_name_plural
         context['action'] = 'add'
         context['list_url'] = reverse_lazy(f'sweb:{self.folder}_list')
+        context['folder'] = self.folder
         return context
 
     def form_valid(self, form):
@@ -115,9 +118,11 @@ class BasicUpdateView(BasicView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Editar {self.model._meta.verbose_name}'
-        context['entity'] = self.model._meta.verbose_name_plural
+        context['entity'] = self.model._meta.verbose_name
+        context['entity_plural'] = self.model._meta.verbose_name_plural
         context['action'] = 'edit'
         context['list_url'] = reverse_lazy(f'sweb:{self.folder}_list')
+        context['folder'] = self.folder
         return context
 
     def form_valid(self, form):
@@ -131,9 +136,11 @@ class BasicDeleteView(BasicView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Borrar {self.model._meta.verbose_name}'
-        context['entity'] = self.model._meta.verbose_name_plural
+        context['entity'] = self.model._meta.verbose_name
+        context['entity_plural'] = self.model._meta.verbose_name_plural
         context['list_url'] = reverse_lazy(f'sweb:{self.folder}_list')
         context['action'] = 'delete'
+        context['folder'] = self.folder
         return context
 
     def form_valid(self, form):
@@ -154,9 +161,11 @@ class BasicDetailView(BasicView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Detalle {self.model._meta.verbose_name}'
-        context['entity'] = self.model._meta.verbose_name_plural
+        context['entity'] = self.model._meta.verbose_name
+        context['entity_plural'] = self.model._meta.verbose_name_plural
         context['list_url'] = reverse_lazy(f'sweb:{self.folder}_list')
         context['action'] = 'detail'
+        context['folder'] = self.folder
         return context
 
 

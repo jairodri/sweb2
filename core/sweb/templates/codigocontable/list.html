@@ -23,13 +23,13 @@
             {"data": "codigo"},
             {"data": "descripcion"},
         ]
-        var ibuttons = '<a href="/sweb/codigocontable/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
-        ibuttons += '<a href="/sweb/codigocontable/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
+        var ibuttons = '<a href="/sweb/{{ folder }}/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
+        ibuttons += '<a href="/sweb/{{ folder }}/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
         initdtables(icolumns, ibuttons)
 </script>
 {% endblock %}
 
 <!-- Literal del botón para añdir registro
 {% block masdatos %}
-Añadir Código Contable
+Añadir {{ entity }}
 {% endblock %}

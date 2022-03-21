@@ -26,13 +26,13 @@
             {"data": "descripcion"},
             {"data": "descuento"},
         ]
-        var ibuttons = '<a href="/sweb/descuentosmo/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
-        ibuttons += '<a href="/sweb/descuentosmo/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
+        var ibuttons = '<a href="/sweb/{{ folder }}/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
+        ibuttons += '<a href="/sweb/{{ folder }}/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
         initdtables(icolumns, ibuttons)
 </script>
 {% endblock %}
 
 <!-- Literal del botón para añdir registro
 {% block masdatos %}
-Añadir Descuento MO
+Añadir {{ entity }}
 {% endblock %}

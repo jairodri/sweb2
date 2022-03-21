@@ -29,15 +29,15 @@
             {"data": "recibos"},
             {"data": "diasvto"},
         ]
-        var ibuttons = '<a href="/sweb/formasdepago/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
-        ibuttons += '<a href="/sweb/formasdepago/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
+        var ibuttons = '<a href="/sweb/{{ folder }}/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
+        ibuttons += '<a href="/sweb/{{ folder }}/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
         initdtables(icolumns, ibuttons)
 </script>
 {% endblock %}
 
 <!-- Literal del botón para añdir registro
 {% block masdatos %}
-Añadir Forma de Pago
+Añadir {{ entity }}
 {% endblock %}
 
 {#{% block rows %}#}
