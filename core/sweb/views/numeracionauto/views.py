@@ -9,7 +9,6 @@ class NumeracionAutomaticaListView(BasicListView, ListView):
     folder = 'numeracionauto'
     model = NumeracionAutomatica
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'tabla', 'serie', 'contador', 'activo']
 
 
 class NumeracionAutomaticaCreateView(BasicCreateView, CreateView):

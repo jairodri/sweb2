@@ -9,7 +9,6 @@ class TipoClienteRecambiosListView(BasicListView, ListView):
     folder = 'tiposclienterec'
     model = TipoClienteRecambios
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'descripcion', 'datocontable']
 
 
 class TipoClienteRecambiosCreateView(BasicCreateView, CreateView):

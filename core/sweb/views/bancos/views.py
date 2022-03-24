@@ -9,7 +9,6 @@ class BancoListView(BasicListView, ListView):
     folder = 'bancos'
     model = Banco
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'sucursal', 'razonsocial', 'telefono']
 
 
 class BancoCreateView(BasicCreateView, CreateView):

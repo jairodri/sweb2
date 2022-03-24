@@ -9,7 +9,6 @@ class CodigoIvaListView(BasicListView, ListView):
     folder = 'codigosiva'
     model = CodigoIva
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'descripcion', 'porcentaje']
 
 
 class CodigoIvaCreateView(BasicCreateView, CreateView):

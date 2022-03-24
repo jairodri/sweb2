@@ -1,0 +1,61 @@
+{% extends 'list.html' %}
+{% load static %}
+
+{% block columns %}
+    <tr>
+        <th>Referencia</th>
+        <th>Denominación</th>
+        <th>C</th>
+        <th>Nueva Refer.</th>
+        <th>PVP</th>
+        <th>Múltiplo</th>
+        <th>Dto.</th>
+        <th>P</th>
+        <th>F. Mark.</th>
+        <th>Índice</th>
+    </tr>
+{% endblock %}
+
+{% block columnsfoot %}
+    <tr>
+        <th>Referencia</th>
+        <th>Denominación</th>
+        <th>C</th>
+        <th>Nueva Refer.</th>
+        <th>PVP</th>
+        <th>Múltiplo</th>
+        <th>Dto.</th>
+        <th>P</th>
+        <th>F. Mark.</th>
+        <th>Índice</th>
+    </tr>
+{% endblock %}
+
+{% block botones %}
+{% endblock %}
+
+{% block jscript2 %}
+    <script type="text/javascript">
+        var icolumns = [
+            {"data": "referencia"},
+            {"data": "denominacion"},
+            {"data": "f9"},
+            {"data": "nuevaReferencia"},
+            {"data": "pvp1"},
+            {"data": "multiplo"},
+            {"data": "codigoDescuento"},
+            {"data": "penetracion"},
+            {"data": "familiaMarketing"},
+            {"data": "f1"},
+        ]
+        var ibuttons = '';
+        var iorder = [[0, 'asc']];
+        initdtables(icolumns, ibuttons, iorder)
+    </script>
+{% endblock %}
+
+
+
+
+
+

@@ -9,7 +9,6 @@ class MarcaListView(BasicListView, ListView):
     folder = 'marcas'
     model = Marca
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'descripcion']
 
 
 class MarcaCreateView(BasicCreateView, CreateView):

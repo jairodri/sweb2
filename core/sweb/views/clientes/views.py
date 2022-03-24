@@ -11,7 +11,6 @@ class ClienteListView(BasicListView, ListView):
     folder = 'clientes'
     model = Cliente
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'razonSocial', 'cif', 'telefono', 'tlfmovil', 'poblacion', 'provincia']
 
 
 class ClienteCreateView(BasicCreateView, CreateView):

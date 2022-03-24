@@ -9,7 +9,6 @@ class CodigoAproPiezaListView(BasicListView, ListView):
     folder = 'codapropza'
     model = CodigoAproPieza
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'descripcion']
 
 
 class CodigoAproPiezaCreateView(BasicCreateView, CreateView):

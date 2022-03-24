@@ -15,6 +15,7 @@ from core.sweb.views.codigocontable.views import *
 from core.sweb.views.modvehpieza.views import *
 from core.sweb.views.fmarketing.views import *
 from core.sweb.views.descuentosrec.views import *
+from core.sweb.views.precios.views import *
 
 app_name = 'sweb'
 
@@ -205,4 +206,7 @@ urlpatterns = [
         f'{DescuentoRecambiosPiezasGarantiaDeleteView.folder}/{DescuentoRecambiosPiezasGarantiaDeleteView.subfolder}/delete/<int:pk>/',
         DescuentoRecambiosPiezasGarantiaDeleteView.as_view(),
         name=f'{DescuentoRecambiosPiezasGarantiaDeleteView.subfolder}_delete'),
+
+    # Lista de Precios
+    path(f'{PrecioTarifaListView.folder}/list/', PrecioTarifaListView.as_view(), name=f'{PrecioTarifaListView.folder}_list'),
 ]

@@ -66,14 +66,13 @@ class BasicListView(BasicView):
 
     # redefinimos el post para cargar la datatable con ajax
     def post(self, request, *args, **kwargs):
-        list_values = self.list_values
         try:
             action = request.POST['action']
             if action == 'searchdata':
                 data = []
                 # recuperamos solo los campos necesarios para la paginación
-                for i in self.model.objects.all().values(*list_values):
-                    data.append(i)
+                for i in self.model.objects.all():
+                    data.append(i.to_list())
             else:
                 data = {'error': 'Ha ocurrido un error'}
         except Exception as e:
@@ -173,15 +172,13 @@ class DescuentoRecambiosListView(BasicView):
 
     # redefinimos el post para cargar la datatable con ajax
     def post(self, request, *args, **kwargs):
-        list_values = self.list_values
         try:
             action = request.POST['action']
             if action == 'searchdata':
                 data = []
                 # recuperamos solo los campos necesarios para la paginación
-                for i in self.model.objects.filter(tipo=self.tipo).values(*list_values):
-                    # print(i)
-                    data.append(i)
+                for i in self.model.objects.filter(tipo=self.tipo):
+                    data.append(i.to_list())
             else:
                 data = {'error': 'Ha ocurrido un error'}
         except Exception as e:

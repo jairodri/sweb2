@@ -283,3 +283,35 @@ class DescuentoRecambiosResource(resources.ModelResource):
             'descuento',
         )
 
+
+class PrecioTarifaResource(resources.ModelResource):
+
+    class Meta:
+        model = PrecioTarifa
+        fields = (
+            'id',
+            'referencia',
+            'denominacion',
+            'variacion',
+            'pvp',
+            'f1',
+            'f2',
+            'f3',
+            'f4',
+            'f5',
+            'f6',
+            'f8',
+            'f9',
+            'codigoDescuento',
+            'multiplo',
+            'modeloVehiculo',
+            'penetracion',
+            'nuevaReferencia',
+            'nuevaRefer2',
+            'pvp1',
+            'familiaMarketing',
+            'funcion',
+            'familia',
+            'panier',
+            'codUrgencia',
+        )

@@ -9,7 +9,6 @@ class FamiliaPiezaListView(BasicListView, ListView):
     folder = 'familiapieza'
     model = FamiliaPieza
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'descripcion']
 
 
 class FamiliaPiezaCreateView(BasicCreateView, CreateView):

@@ -9,7 +9,6 @@ class UnidadMedidaListView(BasicListView, ListView):
     folder = 'unidadesmedida'
     model = UnidadMedida
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'descripcion']
 
 
 class UnidadMedidaCreateView(BasicCreateView, CreateView):

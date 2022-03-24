@@ -14,7 +14,6 @@ class DescuentoRecambiosVentasListView(DescuentoRecambiosListView, ListView):
     model_verbose_name = 'Descuento Ventas'
     model = DescuentoRecambios
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'codpieza', 'descuento']
 
 
 class DescuentoRecambiosVentasCreateView(DescuentoRecambiosCreateView, CreateView):
@@ -65,7 +64,6 @@ class DescuentoRecambiosPedidosAproListView(DescuentoRecambiosListView, ListView
     model_verbose_name = 'Descuento Pedido Aprovisionamiento'
     model = DescuentoRecambios
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'codpieza', 'descuento']
 
 
 class DescuentoRecambiosPedidosAproCreateView(DescuentoRecambiosCreateView, CreateView):
@@ -116,7 +114,6 @@ class DescuentoRecambiosPedidosUrgtesListView(DescuentoRecambiosListView, ListVi
     model_verbose_name = 'Descuento Pedido Urgente'
     model = DescuentoRecambios
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'codpieza', 'descuento']
 
 
 class DescuentoRecambiosPedidosUrgtesCreateView(DescuentoRecambiosCreateView, CreateView):
@@ -167,7 +164,6 @@ class DescuentoRecambiosPedidosCampnaListView(DescuentoRecambiosListView, ListVi
     model_verbose_name = 'Descuento Pedido Campaña'
     model = DescuentoRecambios
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'codpieza', 'descuento']
 
 
 class DescuentoRecambiosPedidosCampnaCreateView(DescuentoRecambiosCreateView, CreateView):
@@ -218,7 +214,6 @@ class DescuentoRecambiosVentasCampnaListView(DescuentoRecambiosListView, ListVie
     model_verbose_name = 'Descuento Venta Campaña'
     model = DescuentoRecambios
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'codpieza', 'descuento']
 
 
 class DescuentoRecambiosVentasCampnaCreateView(DescuentoRecambiosCreateView, CreateView):
@@ -269,7 +264,6 @@ class DescuentoRecambiosPiezasGarantiaListView(DescuentoRecambiosListView, ListV
     model_verbose_name = 'Descuento Pieza Garantía'
     model = DescuentoRecambios
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'codpieza', 'descuento']
 
 
 class DescuentoRecambiosPiezasGarantiaCreateView(DescuentoRecambiosCreateView, CreateView):

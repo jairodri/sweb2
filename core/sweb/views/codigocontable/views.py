@@ -9,7 +9,6 @@ class CodigoContableListView(BasicListView, ListView):
     folder = 'codigocontable'
     model = CodigoContable
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'descripcion']
 
 
 class CodigoContableCreateView(BasicCreateView, CreateView):

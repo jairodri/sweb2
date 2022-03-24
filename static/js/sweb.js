@@ -30,6 +30,49 @@ var isDecimal = function (value) {
 // inicializa datatable
 function initdtables(icolumns, ibuttons, iorder) {
     // console.log(iorder)
+    // configuramos columnDefs dependiendo de si recibimos o no el parámetro ibuttons
+    var columnDefs = function () {
+        let temp = []
+        //configuramos la columna 0 correspondiente a las Acciones
+        let col0 = {
+            targets: 0,
+            class: 'text-center',
+            orderable: false,
+            render: function (data, type, row) {
+                var buttons = ibuttons.replaceAll('rowid', row.id);
+                return buttons;
+            },
+        }
+        let coln =
+            {
+                targets: '_all',
+                render: function (data, type, row) {
+                    if (type === 'exportpdf' || type === 'exportxls' || type === 'exportcsv') {
+                        if (data === true) {
+                            data = 'Si'
+                        } else if (data === false) {
+                            data = 'No'
+                        }
+                    } else {
+                        if (data === true) {
+                            data = '<input type="checkbox" class="checkbox" checked  />'
+                        } else if (data === false) {
+                            data = '<input type="checkbox" class="checkbox"  />'
+                        } else if ($.isNumeric(data) && isDecimal(data)) {
+                            data = data.replace('.', ',');
+                            data = '<div style="text-align: right">' + data + '</div>';
+                        }
+                    }
+                    return data;
+                }
+            }
+
+        if (ibuttons) {
+            temp.push(col0)
+        }
+        temp.push(coln)
+        return temp
+    }
     var table = $('#dtable-buttons').DataTable({
         responsive: true,
         autoWidth: false,
@@ -48,44 +91,8 @@ function initdtables(icolumns, ibuttons, iorder) {
             dataSrc: ""
         },
         columns: icolumns,
-        // order: [[1, 'asc']],
         order: iorder,
-        columnDefs: [
-            // La columna 0 es la de las Acciones, donde van los botones
-            {
-                targets: [0],
-                class: 'text-center',
-                orderable: false,
-                render: function (data, type, row) {
-                    var buttons = ibuttons.replaceAll('rowid', row.id)
-                    return buttons;
-                },
-            },
-            // Tenemos que gestionar los booleans de manera diferente
-            // También gestionamos la coma decimal
-            {
-                targets: '_all',
-                render: function (data, type, row) {
-                    if (type === 'exportpdf' || type === 'exportxls' || type === 'exportcsv') {
-                        if (data === true) {
-                            data = 'Si'
-                        } else if (data === false) {
-                            data = 'No'
-                        }
-                    } else {
-                        if (data === true) {
-                            data = '<input type="checkbox" class="checkbox" checked  />'
-                        } else if (data === false) {
-                            data = '<input type="checkbox" class="checkbox"  />'
-                        } else if ($.isNumeric(data) && isDecimal(data)) {
-                            data = data.replace('.', ',');
-                        }
-                    }
-
-                    return data;
-                }
-            },
-        ],
+        columnDefs: columnDefs(),
         language: {
             decimal: ",",
             // url: "{% static 'I18N/es_es.json' %}"

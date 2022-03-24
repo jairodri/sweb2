@@ -9,7 +9,6 @@ class FormaDePagoListView(BasicListView, ListView):
     folder = 'formasdepago'
     model = FormaDePago
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'descripcion', 'recibos', 'diasvto']
 
 
 class FormaDePagoCreateView(BasicCreateView, CreateView):

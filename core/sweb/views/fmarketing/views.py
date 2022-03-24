@@ -9,7 +9,6 @@ class FamiliaMarketingListView(BasicListView, ListView):
     folder = 'fmarketing'
     model = FamiliaMarketing
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'descripcion']
 
 
 class FamiliaMarketingCreateView(BasicCreateView, CreateView):

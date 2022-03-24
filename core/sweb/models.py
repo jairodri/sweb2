@@ -36,6 +36,16 @@ class Banco(ModelMixin, BaseModel):
         # return self.codigo + self.sucursal
         return f'| {self.codigo} | {self.sucursal} | {self.razonsocial}'
 
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'sucursal': self.sucursal,
+            'razonsocial': self.razonsocial,
+            'telefono': self.telefono,
+        }
+        return item
+
     class Meta:
         db_table = 'sirtbban'
         verbose_name = 'Banco'
@@ -66,6 +76,15 @@ class DescuentoMO(ModelMixin, BaseModel):
     def __str__(self):
         return f'{self.codigo} - {self.descripcion} - {self.descuento}%'
 
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+            'descuento': self.descuento,
+        }
+        return item
+
     class Meta:
         db_table = 'sirtbdmo'
         verbose_name = 'Descuento MO'
@@ -84,6 +103,16 @@ class FormaDePago(ModelMixin, BaseModel):
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
 
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+            'recibos': self.recibos,
+            'diasvto': self.diasvto,
+        }
+        return item
+
     class Meta:
         db_table = 'sirtbfpg'
         verbose_name = 'Forma de Pago'
@@ -100,6 +129,15 @@ class TipoClienteRecambios(ModelMixin, BaseModel):
 
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+            'datocontable': self.datocontable,
+        }
+        return item
 
     class Meta:
         db_table = 'sirtbtcr'
@@ -242,6 +280,19 @@ class Cliente(ModelMixin, BaseModel):
         else:
             return f'{self.codigo} - {self.razonSocial}'
 
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'razonSocial': self.razonSocial,
+            'cif': self.cif,
+            'telefono': self.telefono,
+            'tlfmovil': self.tlfmovil,
+            'poblacion': self.poblacion,
+            'provincia': self.provincia,
+        }
+        return item
+
     class Meta:
         db_table = 'sirtbcli'
         verbose_name = 'Cliente'
@@ -260,6 +311,17 @@ class NumeracionAutomatica(ModelMixin, BaseModel):
     def __str__(self):
         return f'{self.codigo} - {self.tabla}'
 
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'tabla': self.tabla,
+            'serie': self.serie,
+            'contador': self.contador,
+            'activo': self.activo,
+        }
+        return item
+
     class Meta:
         db_table = 'sirtbnau'
         verbose_name = 'Numeración Automática'
@@ -274,6 +336,14 @@ class UnidadMedida(ModelMixin, BaseModel):
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
 
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+        }
+        return item
+
     class Meta:
         db_table = 'sirtbuni'
         verbose_name = 'Unidad de Medida'
@@ -287,6 +357,14 @@ class CodigoAproPieza(ModelMixin, BaseModel):
 
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+        }
+        return item
 
     class Meta:
         db_table = 'sirtbcpz'
@@ -306,6 +384,15 @@ class CodigoIva(ModelMixin, BaseModel):
     def __str__(self):
         return f'{self.codigo} - {self.descripcion} - {self.porcentaje}%'
 
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+            'porcentaje': self.porcentaje,
+        }
+        return item
+
     class Meta:
         db_table = 'sirtbiva'
         verbose_name = 'Código IVA'
@@ -319,6 +406,14 @@ class FamiliaPieza(ModelMixin, BaseModel):
 
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+        }
+        return item
 
     class Meta:
         db_table = 'sirtbfpz'
@@ -334,6 +429,14 @@ class Marca(ModelMixin, BaseModel):
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
 
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+        }
+        return item
+
     class Meta:
         db_table = 'sirtbmca'
         verbose_name = 'Marca'
@@ -347,6 +450,14 @@ class CodigoContable(ModelMixin, BaseModel):
 
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+        }
+        return item
 
     class Meta:
         db_table = 'sirtbctb'
@@ -362,6 +473,14 @@ class ModeloVehPieza(ModelMixin, BaseModel):
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
 
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+        }
+        return item
+
     class Meta:
         db_table = 'sirtbmov'
         verbose_name = 'Modelo Vehículo (Piezas)'
@@ -375,6 +494,14 @@ class FamiliaMarketing(ModelMixin, BaseModel):
 
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+        }
+        return item
 
     class Meta:
         db_table = 'sirtbfmk'
@@ -393,6 +520,15 @@ class DescuentoRecambios(ModelMixin, BaseModel):
     def __str__(self):
         return f'{self.tipo} - {self.codigo} - {self.codpieza}'
 
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'codpieza': self.codpieza,
+            'descuento': self.descuento,
+        }
+        return item
+
     class Meta:
         db_table = 'sirtbdtr'
         verbose_name = 'Descuento Recambios'
@@ -400,4 +536,89 @@ class DescuentoRecambios(ModelMixin, BaseModel):
         # constraint para que la combinación de código y sucursal no pueda repetirse
         unique_together = ['tipo', 'codigo', 'codpieza']
         ordering = ['tipo', 'codigo', 'codpieza']
+
+
+class PrecioTarifa(ModelMixin, BaseModel):
+    referencia = models.CharField(max_length=15, verbose_name='Referencia', db_column='ptr_refer', unique=True, null=False, blank=False)
+    denominacion = models.CharField(max_length=100, verbose_name='Denominación', db_column='ptr_denom', null=True, blank=True)
+    variacion = models.CharField(max_length=1, verbose_name='Variación', db_column='ptr_varia', null=True, blank=True)
+    pvp = models.DecimalField(verbose_name='pvp', db_column='ptr_pvp', max_digits=9, decimal_places=2, null=True, blank=True)
+    INDICE_CHOICES = [
+        ('', ''),
+        ('0001', 'Carrocería'),
+        ('0002', 'Mantenimiento'),
+        ('0003', 'Mecánica'),
+        ('0004', 'Accesorios'),
+        ('0005', 'Neumáticos'),
+        ('0006', 'Publicidad'),
+        ('0007', 'Otras marcas'),
+        ('0008', 'Desgaste'),
+        ('0006', 'Publicidad'),
+        ('0006', 'Publicidad'),
+    ]
+    f1 = models.CharField(max_length=5, verbose_name='f1', choices=INDICE_CHOICES, default='', db_column='ptr_f1', null=True, blank=True)
+    f2 = models.CharField(max_length=5, verbose_name='f2', db_column='ptr_f2', null=True, blank=True)
+    f3 = models.CharField(max_length=7, verbose_name='f3', db_column='ptr_f3', null=True, blank=True)
+    f4 = models.CharField(max_length=6, verbose_name='f4', db_column='ptr_f4', null=True, blank=True)
+    f5 = models.CharField(max_length=1, verbose_name='f5', db_column='ptr_f5', null=True, blank=True)
+    f6 = models.CharField(max_length=2, verbose_name='f6', db_column='ptr_f6', null=True, blank=True)
+    f8 = models.CharField(max_length=1, verbose_name='f8', db_column='ptr_f8', null=True, blank=True)
+    C_CHOICES = [
+        ('', ''),
+        ('1', 'Reemplazada por'),
+        ('2', 'Reemplaza a'),
+        ('3', 'Trascodificada a'),
+        ('4', 'Trascodificada por'),
+        ('5', 'No se sirve más'),
+    ]
+    f9 = models.CharField(max_length=1, verbose_name='f9', choices=C_CHOICES, default='', db_column='ptr_f9', null=True, blank=True)
+    codigoDescuento = models.CharField(max_length=2, verbose_name='Código Descuento', db_column='ptr_codito', null=True, blank=True)
+    multiplo = models.IntegerField(verbose_name='Múltiplo', db_column='ptr_multiplo', null=True, blank=True)
+    modeloVehiculo = models.CharField(max_length=2, verbose_name='Modelo Vehículo', db_column='ptr_modveh', null=True, blank=True)
+    penetracion = models.CharField(max_length=1, verbose_name='Penetración', db_column='ptr_penet', null=True, blank=True)
+    nuevaReferencia = models.CharField(max_length=15, verbose_name='Nueva Referencia', db_column='ptr_newrefer', null=True, blank=True)
+    nuevaRefer2 = models.CharField(max_length=15, verbose_name='Nueva Referencia 2', db_column='ptr_newrefer2', null=True, blank=True)
+    pvp1 = models.DecimalField(verbose_name='pvp1', db_column='ptr_pvp1', max_digits=9, decimal_places=2, null=True, blank=True)
+    familiaMarketing = models.CharField(max_length=4, verbose_name='Familia Marketing', db_column='ptr_fmark', null=True, blank=True)
+    funcion = models.CharField(max_length=5, verbose_name='Función', db_column='ptr_funcion', null=True, blank=True)
+    familia = models.CharField(max_length=3, verbose_name='Familia', db_column='ptr_familia', null=True, blank=True)
+    panier = models.CharField(max_length=1, verbose_name='Panier', db_column='ptr_panier', null=True, blank=True)
+    codUrgencia = models.CharField(max_length=2, verbose_name='Código Urgencia', db_column='ptr_codurg', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.referencia} - {self.denominacion}'
+
+    # recuperamos solo los campos necesarios para la paginación
+    def to_list(self):
+        item = {
+            'referencia': self.referencia,
+            'denominacion': self.denominacion,
+            'nuevaReferencia': self.nuevaReferencia,
+            'pvp1': self.pvp1,
+            'multiplo': self.multiplo,
+            'codigoDescuento': self.codigoDescuento,
+            'penetracion': self.penetracion,
+            'familiaMarketing': self.familiaMarketing,
+            'f1': self.f1,
+            'f9': self.f9
+        }
+        if self.f9 is None or self.f9.strip() == '':
+            item['f9'] = ''
+        else:
+            item['f9'] = f'{self.f9}-{self.get_f9_display()}'
+        if self.f1 is None or self.f1.strip() == '':
+            item['f1'] = ''
+        elif self.f1 == self.get_f1_display():
+            item['f1'] = self.f1
+        else:
+            item['f1'] = f'{self.f1}-{self.get_f1_display()}'
+        return item
+
+    class Meta:
+        db_table = 'sirtbptr'
+        verbose_name = 'Precio'
+        verbose_name_plural = 'Lista de Precios'
+        ordering = ['referencia']
+
+
 

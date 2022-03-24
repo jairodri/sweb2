@@ -9,7 +9,6 @@ class DescuentoMOListView(BasicListView, ListView):
     folder = 'descuentosmo'
     model = DescuentoMO
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'descripcion', 'descuento']
 
 
 class DescuentoMOCreateView(BasicCreateView, CreateView):

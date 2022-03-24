@@ -20,6 +20,12 @@
     </tr>
 {% endblock %}
 
+{% block botones %}
+    <a href="{{ add_url }}" class="btn btn-primary btn-flat"">
+        <i class="fas fa-plus"></i> Añadir {{ entity }}
+    </a>
+{% endblock %}
+
 {% block jscript2 %}
 <script>
         var icolumns = [
@@ -36,10 +42,6 @@
 </script>
 {% endblock %}
 
-<!-- Literal del botón para añdir registro
-{% block masdatos %}
-Añadir {{ entity }}
-{% endblock %}
 
 {#{% block rows %}#}
 {#    {% for fp in object_list %}#}

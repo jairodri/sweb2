@@ -55,14 +55,8 @@
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-                            <a href="{{ add_url }}" class="btn btn-primary btn-flat">
-                                <i class="fas fa-plus"></i>
-                                {% block masdatos %}
-                                {% endblock %}
-                            </a>
-                            <a href="{{ list_url }}" class="btn btn-success btn-flat">
-                                <i class="fas fa-sync"></i> Actualizar
-                            </a>
+                            {% block botones %}
+                            {% endblock %}
                         </div>
                         <!-- /.card-footer-->
                     </div>

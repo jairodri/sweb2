@@ -9,7 +9,6 @@ class ModeloVehPiezaListView(BasicListView, ListView):
     folder = 'modvehpieza'
     model = ModeloVehPieza
     template_name = f'{folder}/list.html'
-    list_values = ['id', 'codigo', 'descripcion']
 
 
 class ModeloVehPiezaCreateView(BasicCreateView, CreateView):
