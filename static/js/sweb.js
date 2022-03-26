@@ -1,3 +1,4 @@
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -27,52 +28,93 @@ var isDecimal = function (value) {
     return false;
 };
 
-// inicializa datatable
-function initdtables(icolumns, ibuttons, iorder) {
-    // console.log(iorder)
-    // configuramos columnDefs dependiendo de si recibimos o no el parámetro ibuttons
-    var columnDefs = function () {
-        let temp = []
-        //configuramos la columna 0 correspondiente a las Acciones
-        let col0 = {
-            targets: 0,
-            class: 'text-center',
-            orderable: false,
-            render: function (data, type, row) {
-                var buttons = ibuttons.replaceAll('rowid', row.id);
-                return buttons;
+var vbuttons = function () {
+    let temp = [
+        {
+            extend: "csv",
+            className: "btn-sm",
+            exportOptions: {
+                orthogonal: 'exportcsv',
+                columns: function (idx, data, node) {
+                    if (node.innerHTML == "Acciones")
+                        return false;
+                    return true;
+                }
+            },
+        },
+        {
+            extend: "excel",
+            className: "btn-sm",
+            exportOptions: {
+                orthogonal: 'exportxls',
+                columns: function (idx, data, node) {
+                    if (node.innerHTML == "Acciones")
+                        return false;
+                    return true;
+                }
+            },
+        },
+        {
+            extend: "pdfHtml5",
+            className: "btn-sm",
+            exportOptions: {
+                orthogonal: 'exportpdf',
+                columns: function (idx, data, node) {
+                    if (node.innerHTML == "Acciones")
+                        return false;
+                    return true;
+                }
             },
         }
-        let coln =
-            {
-                targets: '_all',
-                render: function (data, type, row) {
-                    if (type === 'exportpdf' || type === 'exportxls' || type === 'exportcsv') {
-                        if (data === true) {
-                            data = 'Si'
-                        } else if (data === false) {
-                            data = 'No'
-                        }
-                    } else {
-                        if (data === true) {
-                            data = '<input type="checkbox" class="checkbox" checked  />'
-                        } else if (data === false) {
-                            data = '<input type="checkbox" class="checkbox"  />'
-                        } else if ($.isNumeric(data) && isDecimal(data)) {
-                            data = data.replace('.', ',');
-                            data = '<div style="text-align: right">' + data + '</div>';
-                        }
-                    }
-                    return data;
-                }
-            }
-
-        if (ibuttons) {
-            temp.push(col0)
-        }
-        temp.push(coln)
-        return temp
+    ]
+    return temp
+}
+// configuramos columnDefs dependiendo de si recibimos o no el parámetro ibuttons
+var columnDefs = function (ibuttons) {
+    let temp = []
+    //configuramos la columna 0 correspondiente a las Acciones
+    let col0 = {
+        targets: 0,
+        class: 'text-center',
+        orderable: false,
+        render: function (data, type, row) {
+            var buttons = ibuttons.replaceAll('rowid', row.id);
+            return buttons;
+        },
     }
+    let coln =
+        {
+            targets: '_all',
+            render: function (data, type, row) {
+                if (type === 'exportpdf' || type === 'exportxls' || type === 'exportcsv') {
+                    if (data === true) {
+                        data = 'Si'
+                    } else if (data === false) {
+                        data = 'No'
+                    }
+                } else {
+                    if (data === true) {
+                        data = '<input type="checkbox" class="checkbox" checked  />'
+                    } else if (data === false) {
+                        data = '<input type="checkbox" class="checkbox"  />'
+                    } else if ($.isNumeric(data) && isDecimal(data)) {
+                        data = data.replace('.', ',');   // en los decimal cambiamos punto por coma
+                        data = '<div style="text-align: right">' + data + '</div>'; // alineamos a la derecha por las comas
+                    }
+                }
+                return data;
+            }
+        }
+    if (ibuttons) {
+        temp.push(col0)
+    }
+    temp.push(coln)
+    return temp
+}
+
+// inicializa datatable con paginación en cliente
+function initdtables(icolumns, ibuttons, iorder) {
+
     var table = $('#dtable-buttons').DataTable({
         responsive: true,
         autoWidth: false,
@@ -92,7 +134,7 @@ function initdtables(icolumns, ibuttons, iorder) {
         },
         columns: icolumns,
         order: iorder,
-        columnDefs: columnDefs(),
+        columnDefs: columnDefs(ibuttons),
         language: {
             decimal: ",",
             // url: "{% static 'I18N/es_es.json' %}"
@@ -101,46 +143,8 @@ function initdtables(icolumns, ibuttons, iorder) {
 
         initComplete: function (settings, json) {
             var api = this.api();
-
             new $.fn.dataTable.Buttons(api, {
-                buttons: [
-                    {
-                        extend: "csv",
-                        className: "btn-sm",
-                        exportOptions: {
-                            orthogonal: 'exportcsv',
-                            columns: function (idx, data, node) {
-                                if (node.innerHTML == "Acciones")
-                                    return false;
-                                return true;
-                            }
-                        },
-                    },
-                    {
-                        extend: "excel",
-                        className: "btn-sm",
-                        exportOptions: {
-                            orthogonal: 'exportxls',
-                            columns: function (idx, data, node) {
-                                if (node.innerHTML == "Acciones")
-                                    return false;
-                                return true;
-                            }
-                        },
-                    },
-                    {
-                        extend: "pdfHtml5",
-                        className: "btn-sm",
-                        exportOptions: {
-                            orthogonal: 'exportpdf',
-                            columns: function (idx, data, node) {
-                                if (node.innerHTML == "Acciones")
-                                    return false;
-                                return true;
-                            }
-                        },
-                    }
-                ]
+                buttons: vbuttons()
             });
             api.buttons().container().appendTo('#dt-buttons');
         }
@@ -255,25 +259,50 @@ function confirmdelete() {
             cancelButtonText: 'Cancelar',
             allowOutsideClick: false,
             allowEscapeKey: false,
-            // customClass: {
-            //     container: 'container-class',
-            //     popup: 'popup-class',
-            //     header: 'header-class',
-            //     title: 'title-class',
-            //     closeButton: 'close-button-class',
-            //     icon: 'icon-class',
-            //     image: 'image-class',
-            //     content: 'content-class',
-            //     input: 'input-class',
-            //     actions: 'actions-class',
-            //     confirmButton: 'confirm-button-class',
-            //     cancelButton: 'cancel-button-class',
-            //     footer: 'footer-class'
-            // }
         }).then((result) => {
             if (result.isConfirmed) {
                 form.submit();
             }
         })
+    });
+}
+// inicializa datatable con paginación en servidor
+function initdtableserver(icolumns, ibuttons, iorder) {
+
+    var table = $('#dtable-buttons').DataTable({
+        responsive: true,
+        autoWidth: false,
+        destroy: true,
+        deferRender: true,
+        stateSave: true,
+        serverSide: true,  //Paginación por servidor
+        processing: true,
+        ajax: {
+            url: window.location.pathname,
+            type: 'POST',
+            data: {
+                'action': 'searchdata',
+            },
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            dataSrc: "data"
+        },
+        columns: icolumns,
+        order: iorder,
+        columnDefs: columnDefs(ibuttons),
+        language: {
+            decimal: ",",
+            // url: "{% static 'I18N/es_es.json' %}"
+            url: "/static/i18N/es_es.json",
+        },
+
+        initComplete: function (settings, json) {
+            var api = this.api();
+            new $.fn.dataTable.Buttons(api, {
+                buttons: vbuttons()
+            });
+            api.buttons().container().appendTo('#dt-buttons');
+        }
     });
 }

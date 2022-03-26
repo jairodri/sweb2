@@ -2,6 +2,7 @@ from django.db import models
 from core.sweb.utils import digitos_control, validar_porcentaje
 from core.models import BaseModel
 from core.sweb.mixins import ModelMixin
+from django.db.models import Q
 
 
 class Banco(ModelMixin, BaseModel):
@@ -613,6 +614,20 @@ class PrecioTarifa(ModelMixin, BaseModel):
         else:
             item['f1'] = f'{self.f1}-{self.get_f1_display()}'
         return item
+
+    # para la paginación por servidor utilizamos este método para los filtros
+    def to_search(self, value):
+        return self.objects.filter(Q(referencia__icontains=value) |
+                                   Q(denominacion__icontains=value) |
+                                   Q(nuevaReferencia__icontains=value) |
+                                   Q(codigoDescuento__icontains=value) |
+                                   Q(penetracion__icontains=value) |
+                                   Q(familiaMarketing__icontains=value) |
+                                   Q(f1__icontains=value) |
+                                   Q(f9__icontains=value)
+                                   # Q(pvp1__in=value) |
+                                   # Q(multiplo__in=value)
+                                   )
 
     class Meta:
         db_table = 'sirtbptr'
