@@ -281,6 +281,17 @@ class Cliente(ModelMixin, BaseModel):
         else:
             return f'{self.codigo} - {self.razonSocial}'
 
+    # para la paginación por servidor utilizamos este método para los filtros
+    def to_search(self, value):
+        return self.objects.filter(Q(codigo__icontains=value) |
+                                   Q(razonSocial__icontains=value) |
+                                   Q(cif__icontains=value) |
+                                   Q(telefono__icontains=value) |
+                                   Q(tlfmovil__icontains=value) |
+                                   Q(poblacion__icontains=value) |
+                                   Q(provincia__icontains=value)
+                                   )
+
     def to_list(self):
         item = {
             'id': self.id,

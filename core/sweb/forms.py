@@ -362,7 +362,7 @@ class ClienteForm(CodigoBaseForm, ModelForm):
             raise ValidationError('El formato del CIF/NIF es incorrecto')
 
         # si la letra del nif no corresponde a la calculada, es un error
-        print(f'indice:{int(nif) % 23}')
+        # print(f'indice:{int(nif) % 23}')
         indice = int(nif) % 23
         # if indice > 22:
         #     raise ValidationError('El formato del CIF/NIF es incorrecto')
@@ -512,7 +512,7 @@ class ClienteForm(CodigoBaseForm, ModelForm):
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        print(cleaned_data)
+        # print(cleaned_data)
 
         # validamos si el cif está duplicado
         self.validar_cif_duplicado()

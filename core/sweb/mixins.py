@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import ProtectedError
 from django.forms import ModelForm
 from django.http import HttpResponseRedirect, JsonResponse
@@ -68,18 +69,21 @@ class BasicListView(BasicView):
     def post(self, request, *args, **kwargs):
         try:
             action = request.POST['action']
-            if action == 'searchdata':
-                data = []
+            # diferenciamos si la paginación es en cliente o en servidor
+            if action == 'searchdata_c':
+                datos = []
                 # recuperamos solo los campos necesarios para la paginación
                 for i in self.model.objects.all():
-                    data.append(i.to_list())
+                    datos.append(i.to_list())
+            elif action == 'searchdata_s':
+                datos = self.datatables_server(request)
             else:
                 data = {'error': 'Ha ocurrido un error'}
         except Exception as e:
-            data = {
+            datos = {
                 'error': str(e)
             }
-        return JsonResponse(data, safe=False)
+        return JsonResponse(datos, safe=False)
 
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):
@@ -91,6 +95,56 @@ class BasicListView(BasicView):
         context['entity_plural'] = self.model._meta.verbose_name_plural
         context['folder'] = self.folder
         return context
+
+    def datatables_server(self, request):
+        # Recuperarmos los datos enviados por POST en la llamada ajax con el parámetro serverSide: true
+        datatables = request.POST
+        draw = int(datatables.get('draw'))
+        # print(f'draw: {draw}')
+        start = int(datatables.get('start'))
+        # print(f'start: {start}')
+        length = int(datatables.get('length'))
+        # print(f'length: {length}')
+        search = datatables.get('search[value]')
+        # print(f'search: {search}')
+        order_idx = int(datatables.get('order[0][column]'))
+        # print(f'order idx: {order_idx}')
+        order_dir = datatables.get('order[0][dir]')
+        # print(f'order dir: {order_dir}')
+        order_col = 'columns[' + str(order_idx) + '][data]'
+        order_col_name = datatables.get(order_col)
+        # print(f'order_col_name: {order_col_name}')
+        if order_dir == "desc":
+            order_col_name = str('-' + order_col_name)
+
+        if search:
+            data_objects = self.model.to_search(self.model,value=search)
+        else:
+            data_objects = self.model.objects.all()
+        records_total = data_objects.count()
+        records_filtered = records_total
+        data_objects = data_objects.order_by(order_col_name)
+
+        page_number = int(start / length) + 1
+        # print(f'page_number: {page_number}')
+        paginator = Paginator(data_objects, length)
+        try:
+            object_list = paginator.page(page_number).object_list
+        except PageNotAnInteger:
+            object_list = paginator.page(1).object_list
+        except EmptyPage:
+            object_list = paginator.page(paginator.num_pages).object_list
+
+        data = []
+        for i in object_list:
+            data.append(i.to_list())
+
+        return {
+            'draw': draw,
+            'recordsTotal': records_total,
+            'recordsFiltered': records_filtered,
+            'data': data,
+        }
 
 
 class BasicCreateView(BasicView):

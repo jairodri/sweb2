@@ -125,7 +125,7 @@ function initdtables(icolumns, ibuttons, iorder) {
             url: window.location.pathname,
             type: 'POST',
             data: {
-                'action': 'searchdata',
+                'action': 'searchdata_c',
             },
             headers: {
                 'X-CSRFToken': csrftoken
@@ -281,7 +281,7 @@ function initdtableserver(icolumns, ibuttons, iorder) {
             url: window.location.pathname,
             type: 'POST',
             data: {
-                'action': 'searchdata',
+                'action': 'searchdata_s',
             },
             headers: {
                 'X-CSRFToken': csrftoken
