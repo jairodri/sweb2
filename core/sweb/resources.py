@@ -1,6 +1,7 @@
 from import_export import resources, fields, widgets
 from import_export.widgets import ForeignKeyWidget, DateTimeWidget, DateWidget
 from core.sweb.models import *
+from datetime import datetime
 
 
 class DescuentoMOResource(resources.ModelResource):
@@ -314,4 +315,209 @@ class PrecioTarifaResource(resources.ModelResource):
             'familia',
             'panier',
             'codUrgencia',
+        )
+
+
+class ForeignkeyDescuentoRecambiosWidget(widgets.ForeignKeyWidget):
+
+    def clean(self, value, row=None, *args, **kwargs):
+        if not value:
+            return super().clean(value)
+
+        # separamos componentes, tipo, codigo y codigo pieza
+        valores = value.split('|')
+        # print(valores)
+        tipo = valores[0]
+        codigo = valores[1]
+        codpieza = valores[2].rstrip()
+        # print(f'{tipo}-{codigo}-{codpieza}')
+        # obtenemos el id correspondiente
+        # qdtorec = DescuentoRecambios.objects.get(tipo=valores[0], codigo=valores[1], codpieza=valores[2])
+        try:
+            q = DescuentoRecambios.objects.get(tipo=tipo, codigo=codigo, codpieza=codpieza)
+        except Exception as e:
+            # En el caso de que el descuento de recambios no exista, lo creamos
+            # print(f'Descuento Recanbuis inexistente: {tipo}-{codigo}-{codpieza}')
+            # print(e)
+            dtr = DescuentoRecambios()
+            dtr.tipo = tipo
+            dtr.codigo = codigo
+            dtr.codpieza = codpieza
+            dtr.descuento = 0
+            dtr.save()
+            q = DescuentoRecambios.objects.get(tipo=tipo, codigo=codigo, codpieza=codpieza)
+        return super().clean(q.id)
+
+
+class ForeignkeyFamiliaMarketingWidget(widgets.ForeignKeyWidget):
+
+    def clean(self, value, row=None, *args, **kwargs):
+        if not value:
+            return super().clean(value)
+
+        try:
+            q = FamiliaMarketing.objects.get(codigo=value)
+            return super().clean(q.id)
+        except Exception as e:
+            # En el caso de que el código recibido no exista devolvemos null
+            # print(f'familia marketing inexistente: {value}')
+            # print(e)
+            return super().clean(None)
+
+
+class ArticuloResource(resources.ModelResource):
+
+    proveedor = fields.Field(attribute='proveedor', column_name='proveedor', widget=ForeignKeyWidget(Cliente, field='codigo'))
+    unidadMedida = fields.Field(attribute='unidadMedida', column_name='unidadMedida', widget=ForeignKeyWidget(UnidadMedida, field='codigo'))
+    codAproPieza = fields.Field(attribute='codAproPieza', column_name='codAproPieza', widget=ForeignKeyWidget(CodigoAproPieza, field='codigo'))
+    ivaPieza = fields.Field(attribute='ivaPieza', column_name='ivaPieza', widget=ForeignKeyWidget(CodigoIva, field='codigo'))
+    familia = fields.Field(attribute='familia', column_name='familia', widget=ForeignKeyWidget(FamiliaPieza, field='codigo'))
+    marca = fields.Field(attribute='marca', column_name='marca', widget=ForeignKeyWidget(Marca, field='codigo'))
+    codigoContable = fields.Field(attribute='codigoContable', column_name='codigoContable', widget=ForeignKeyWidget(CodigoContable, field='codigo'))
+    codigoModelo = fields.Field(attribute='codigoModelo', column_name='codigoModelo', widget=ForeignKeyWidget(ModeloVehPieza, field='codigo'))
+    familiaMarketing = fields.Field(attribute='familiaMarketing', column_name='familiaMarketing', widget=ForeignkeyFamiliaMarketingWidget(FamiliaMarketing, 'id'))
+    codigoPromo = fields.Field(attribute='codigoPromo', column_name='codigoPromo', widget=ForeignkeyDescuentoRecambiosWidget(DescuentoRecambios, 'id'))
+    codigoApro = fields.Field(attribute='codigoApro', column_name='codigoApro', widget=ForeignkeyDescuentoRecambiosWidget(DescuentoRecambios, 'id'))
+    codigoUrgte = fields.Field(attribute='codigoUrgte', column_name='codigoUrgte', widget=ForeignkeyDescuentoRecambiosWidget(DescuentoRecambios, 'id'))
+
+    fechaAlta = fields.Field(attribute='fechaAlta', column_name='fechaAlta', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
+    fechaUltMovimiento = fields.Field(attribute='fechaUltMovimiento', column_name='fechaUltMovimiento', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
+    fechaUltimoInventario = fields.Field(attribute='fechaUltimoInventario', column_name='fechaUltimoInventario', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
+    fechaUltimaVenta = fields.Field(attribute='fechaUltimaVenta', column_name='fechaUltimaVenta', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
+    fechaUltimaCompra = fields.Field(attribute='fechaUltimaCompra', column_name='fechaUltimaCompra', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
+    fechaBloqueo = fields.Field(attribute='fechaBloqueo', column_name='fechaBloqueo', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
+
+    class Meta:
+        model = Articulo
+        fields = (
+            'id',
+            'referencia',
+            'descripcion',
+            'tarifa',
+            'precioCosteMedio',
+            'precioInicial',
+            'precioCoste',
+            'codigoPromo',
+            'precioPromo',
+            'existencias',
+            'codigoApro',
+            'peidosPendientes',
+            'reserva',
+            'unidadCompra',
+            'unidadVenta',
+            'multiplo',
+            'unidadMedida',
+            'unidadStock',
+            'fechaAlta',
+            'codigoObsoleto',
+            'nuevaReferencia',
+            'entradasMes',
+            'salidasMes',
+            'fechaUltMovimiento',
+            'ubicacion',
+            'ivaPieza',
+            'codAlerta',
+            'stockSeguridad',
+            'stockMinimo',
+            'puntoPedido',
+            'consumoMedio',
+            'codigoContable',
+            'codAproPieza',
+            'codigoAbc',
+            'marca',
+            'codigoCompetencia',
+            'funcion',
+            'difinventario',
+            'fechaUltimoInventario',
+            'fechaUltimaVenta',
+            'entradasAcumuladas',
+            'salidasAcumuladas',
+            'codigoModelo',
+            'proveedor',
+            'unidadesVendidasMes',
+            'unidadesVendidasm1',
+            'unidadesVendidasm2',
+            'unidadesVendidasm3',
+            'unidadesVendidasm4',
+            'unidadesVendidasm5',
+            'unidadesVendidasm6',
+            'unidadesVendidasAno',
+            'unidadesVendidasAnoAnt',
+            'importeVtasMesPvp',
+            'importeVtasMesCoste',
+            'importeDtoMes',
+            'importeVtasAnoPvp',
+            'importeVtasAnoCoste',
+            'importeDtoAno',
+            'importeVtasAnoAntPvp',
+            'importeVtasAnoAntCoste',
+            'unidadesCompradasMes',
+            'unidadesCompradasAno',
+            'unidadesCompradasAnoAnt',
+            'importeComprasMes',
+            'importeComprasAno',
+            'importeComprasAnoAnt',
+            'unidadesSalTallerMes',
+            'unidadesSalTallerAno',
+            'importeSalTallerMes',
+            'importeSalTallerAno',
+            'otrasSalidasMes',
+            'otrasSalidasAno',
+            'otrasEntradasMes',
+            'otrasEntradasAno',
+            'importeOtrasSalmes',
+            'importeOtrasSalano',
+            'importeOtrasEntmes',
+            'importeOtrasEntano',
+            'stockinicialano',
+            'demandaNoServidaMes',
+            'demandaNoServidaAno',
+            'demandaNoServidaDia',
+            'ns',
+            'negativo',
+            'imprimir',
+            'bloqueo',
+            'unidadesVendidasm7',
+            'unidadesVendidasm8',
+            'unidadesVendidasm9',
+            'unidadesVendidasm10',
+            'unidadesVendidasm11',
+            'unidadesVendidasm12',
+            'unidadesVendidas12m',
+            'unidadesDq',
+            'unidadesDq1',
+            'unidadesDq2',
+            'unidadesDq3',
+            'unidadesDq4',
+            'unidadesDq5',
+            'unidadesDq6',
+            'unidadesDq7',
+            'unidadesDq8',
+            'unidadesDq9',
+            'unidadesDq10',
+            'unidadesDq11',
+            'unidadesDq12',
+            'stockMinimoP',
+            'stockSeguridadP',
+            'puntoPedidoP',
+            'consumoP',
+            'familia',
+            'fechaUltimaCompra',
+            'unidadesUltimaCompra',
+            'unidadesUltimaVenta',
+            'bloqueoPieza',
+            'fechaBloqueo',
+            'unidadesDqx',
+            'unidadesDq1x',
+            'unidadesDq2x',
+            'unidadesDq3x',
+            'unidadesDq4x',
+            'unidadesDq5x',
+            'unidadesDq6x',
+            'unidadesDq7x',
+            'unidadesDq8x',
+            'observaciones',
+            'panier',
+            'familiaMarketing',
+            'codigoUrgte',
         )

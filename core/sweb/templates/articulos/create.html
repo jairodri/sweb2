@@ -1,0 +1,258 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="{{ form.referencia.name }}">{{ form.referencia.label }}<span class="text-danger"> *</span></label>
+                {{ form.referencia | add_class:'form-control' }}
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-group">
+                <label for="{{ form.descripcion.name }}">{{ form.descripcion.label }}<span
+                        class="text-danger"> *</span></label>
+                {{ form.descripcion | add_class:'form-control' }}
+            </div>
+        </div>
+    </div>
+    <div class="card card-light">
+        <div class="card-header"></div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.existencias.name }}">{{ form.existencias.label }}</label>
+                        {{ form.existencias | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.tarifa.name }}">{{ form.tarifa.label }}<span
+                                class="text-danger"> *</span></label>
+                        {{ form.tarifa | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.nuevaReferencia.name }}">{{ form.nuevaReferencia.label }}</label>
+                        {{ form.nuevaReferencia | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.codigoApro.name }}">{{ form.codigoApro.label }}<span
+                                class="text-danger"> *</span></label>
+                        {{ form.codigoApro | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.codigoPromo.name }}">{{ form.codigoPromo.label }}</label>
+                        {{ form.codigoPromo | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.codigoUrgte.name }}">{{ form.codigoUrgte.label }}</label>
+                        {{ form.codigoUrgte | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.unidadMedida.name }}">{{ form.unidadMedida.label }}</label>
+                        {{ form.unidadMedida | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.familia.name }}">{{ form.familia.label }}</label>
+                        {{ form.familia | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.ivaPieza.name }}">{{ form.ivaPieza.label }}</label>
+                        {{ form.ivaPieza | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.unidadCompra.name }}">{{ form.unidadCompra.label }}</label>
+                        {{ form.unidadCompra | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.unidadVenta.name }}">{{ form.unidadVenta.label }}</label>
+                        {{ form.unidadVenta | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.codigoContable.name }}">{{ form.codigoContable.label }}</label>
+                        {{ form.codigoContable | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.unidadStock.name }}">{{ form.unidadStock.label }}</label>
+                        {{ form.unidadStock | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.multiplo.name }}">{{ form.multiplo.label }}</label>
+                        {{ form.multiplo | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.ubicacion.name }}">{{ form.ubicacion.label }}</label>
+                        {{ form.ubicacion | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.codAproPieza.name }}">{{ form.codAproPieza.label }}</label>
+                        {{ form.codAproPieza | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.marca.name }}">{{ form.marca.label }}</label>
+                        {{ form.marca | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.codigoModelo.name }}">{{ form.codigoModelo.label }}</label>
+                        {{ form.codigoModelo | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.stockSeguridad.name }}">{{ form.stockSeguridad.label }}</label>
+                        {{ form.stockSeguridad | add_class:'form-control' | attr:'readonly'  }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.stockMinimo.name }}">{{ form.stockMinimo.label }}</label>
+                        {{ form.stockMinimo | add_class:'form-control' | attr:'readonly'  }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.puntoPedido.name }}">{{ form.puntoPedido.label }}</label>
+                        {{ form.puntoPedido | add_class:'form-control' | attr:'readonly'  }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.consumoMedio.name }}">{{ form.consumoMedio.label }}</label>
+                        {{ form.consumoMedio | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.codigoFuncion.name }}">{{ form.codigoFuncion.label }}</label>
+                        {{ form.codigoFuncion | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.panier.name }}">{{ form.panier.label }}</label>
+                        {{ form.panier | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.codigoObsoleto.name }}">{{ form.codigoObsoleto.label }}</label>
+                        {{ form.codigoObsoleto | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.codigoAbc.name }}">{{ form.codigoAbc.label }}</label>
+                        {{ form.codigoAbc | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.familiaMarketing.name }}">{{ form.familiaMarketing.label }}</label>
+                        {{ form.familiaMarketing | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.fechaUltimaCompra.name }}">{{ form.fechaUltimaCompra.label }}</label>
+                        {{ form.fechaUltimaCompra | add_class:'form-control' | attr:'readonly'  }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.fechaAlta.name }}">{{ form.fechaAlta.label }}</label>
+                        <div class="input-group date" id="fecalta" data-target-input="nearest">
+                            <div class="input-group-append" data-target="#fecalta" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                            {{ form.fechaAlta | add_class:'form-control' | add_class:'datetimepicker-input' | attr:'data-target:#fecalta' | attr:'data-inputmask-alias:datetime' | attr:'data-inputmask-inputformat:dd/mm/yyyy' | attr:'data-mask' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.proveedor.name }}">{{ form.proveedor.label }}</label>
+                        {{ form.proveedor | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+    <div class="form-group">
+        <label for="{{ form.observaciones.name }}">{{ form.observaciones.label }}</label>
+        {{ form.observaciones | add_class:'form-control' }}
+    </div>
+
+
+{% endblock %}
+
+{% block otrosbotones %}
+{% endblock %}
+
+{% block jscript2 %}
+    <script>
+        $(function () {
+            $('[data-mask]').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/aaaa' });
+            $('#fecalta').datetimepicker({
+                locale: 'es',
+                format: 'L',
+                autoClose: true
+            });
+         });
+    </script>
+    <script type="application/javascript">
+        validar('{{ entity }}');
+    </script>
+{% endblock %}

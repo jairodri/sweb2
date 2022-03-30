@@ -748,3 +748,93 @@ class DescuentoRecambiosForm(ModelForm):
         # convertimos a mayúsculas
         codpieza = codpieza.upper()
         return codpieza
+
+
+class ArticuloForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['referencia'].disabled = True
+        else:
+            self.fields['referencia'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = Articulo
+        fields = ['referencia',
+                  'descripcion',
+                  'tarifa',
+                  'codigoPromo',
+                  'familia',
+                  'codigoApro',
+                  'unidadMedida',
+                  'codigoUrgte',
+                  'existencias',
+                  'nuevaReferencia',
+                  'ivaPieza',
+                  'unidadCompra',
+                  'unidadVenta',
+                  'unidadStock',
+                  'codigoContable',
+                  'multiplo',
+                  'ubicacion',
+                  'codAproPieza',
+                  'marca',
+                  'codigoModelo',
+                  'stockSeguridad',
+                  'puntoPedido',
+                  'stockMinimo',
+                  'consumoMedio',
+                  'codigoFuncion',
+                  'panier',
+                  'codigoObsoleto',
+                  'codigoAbc',
+                  'familiaMarketing',
+                  'fechaUltimaCompra',
+                  'fechaAlta',
+                  'proveedor',
+                  'observaciones',
+                  ]
+        exclude = ['user_creation', 'user_updated']
+
+        labels = {
+            'referencia': 'Referencia',
+            'descripcion': 'Descripción',
+            'tarifa': 'Precio venta público',
+            'codigoPromo': 'Descuento promoción',
+            'familia': 'Familia',
+            'codigoApro': 'Código descuento',
+            'unidadMedida': 'Unidad de medida',
+            'codigoUrgte': 'Descuento urgente',
+            'existencias': 'Existencias',
+            'nuevaReferencia': 'Ref. que la sustituye',
+            'ivaPieza': 'Código IVA',
+            'unidadCompra': 'Unidad de compra',
+            'unidadVenta': 'Unidad de venta',
+            'unidadStock': 'Unidad de stock',
+            'codigoContable': 'Código contable',
+            'multiplo': 'Múltiplo',
+            'ubicacion': 'Ubicación',
+            'codAproPieza': 'Código aprov. pieza',
+            'marca': 'Código marca',
+            'codigoModelo': 'Código modelo',
+            'stockSeguridad': 'Stock de seguridad',
+            'puntoPedido': 'Punto de pedido',
+            'stockMinimo': 'Stock mínimo',
+            'consumoMedio': 'Consumo medio',
+            'codigoFuncion': 'Código función',
+            'panier': 'Panier',
+            'codigoObsoleto': 'Código de obsoleto',
+            'codigoAbc': 'Código ABC',
+            'familiaMarketing': 'Código Marketing',
+            'fechaUltimaCompra': 'Fecha última compra',
+            'fechaAlta': 'Fecha de alta',
+            'proveedor': 'Proveedor',
+            'observaciones': 'Observaciones',
+        }
+        widgets = {
+            'observaciones': Textarea(attrs={'rows': 4}),
+        }

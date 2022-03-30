@@ -16,6 +16,7 @@ from core.sweb.views.modvehpieza.views import *
 from core.sweb.views.fmarketing.views import *
 from core.sweb.views.descuentosrec.views import *
 from core.sweb.views.precios.views import *
+from core.sweb.views.articulos.views import *
 
 app_name = 'sweb'
 
@@ -209,4 +210,9 @@ urlpatterns = [
 
     # Lista de Precios
     path(f'{PrecioTarifaListView.folder}/list/', PrecioTarifaListView.as_view(), name=f'{PrecioTarifaListView.folder}_list'),
+
+    # Artículos
+    path(f'{ArticuloListView.folder}/list/', ArticuloListView.as_view(), name=f'{ArticuloListView.folder}_list'),
+    path(f'{ArticuloCreateView.folder}/add/', ArticuloCreateView.as_view(), name=f'{ArticuloCreateView.folder}_add'),
+    path(f'{ArticuloUpdateView.folder}/edit/<int:pk>/', ArticuloUpdateView.as_view(), name=f'{ArticuloUpdateView.folder}_edit'),
 ]

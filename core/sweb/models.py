@@ -3,7 +3,7 @@ from core.sweb.utils import digitos_control, validar_porcentaje
 from core.models import BaseModel
 from core.sweb.mixins import ModelMixin
 from django.db.models import Q
-
+from datetime import datetime
 
 class Banco(ModelMixin, BaseModel):
     codigo = models.CharField(max_length=4, verbose_name='código banco', db_column='ban_codcsp', null=False,
@@ -530,7 +530,7 @@ class DescuentoRecambios(ModelMixin, BaseModel):
                                     decimal_places=2, null=False, blank=False, validators=[validar_porcentaje])
 
     def __str__(self):
-        return f'{self.tipo} - {self.codigo} - {self.codpieza}'
+        return f'{self.codigo} - {self.codpieza} - {self.descuento}%'
 
     def to_list(self):
         item = {
@@ -647,4 +647,169 @@ class PrecioTarifa(ModelMixin, BaseModel):
         ordering = ['referencia']
 
 
+class Articulo(ModelMixin, BaseModel):
+    referencia = models.CharField(max_length=15, verbose_name='Referencia', db_column='ref_refer', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='ref_descrip', null=False, blank=False)
+    tarifa = models.DecimalField(verbose_name='Precio tarifa', db_column='ref_tarifa', max_digits=9, default=0, decimal_places=2, null=False, blank=False)
+    existencias = models.IntegerField(verbose_name='Existencias', db_column='ref_exist', default=0, null=True, blank=True)
+    nuevaReferencia = models.CharField(max_length=15, verbose_name='Nueva Referencia', db_column='ref_newrefer', null=True, blank=True)
+    precioCosteMedio = models.DecimalField(verbose_name='Precio coste medio', db_column='ref_pcostmed', max_digits=9, default=0, decimal_places=2, null=False, blank=False)
+    precioInicial = models.DecimalField(verbose_name='Precio inicial', db_column='ref_pinicial', max_digits=9, default=0, decimal_places=2, null=False, blank=False)
+    precioCoste = models.DecimalField(verbose_name='Precio coste', db_column='ref_pcoste', max_digits=9, default=0, decimal_places=2, null=False, blank=False)
+    proveedor = models.ForeignKey(Cliente, on_delete=models.PROTECT, null=False, blank=False, db_column='ref_proved', verbose_name='Proveedor')
+    codigoPromo = models.ForeignKey(DescuentoRecambios, on_delete=models.PROTECT, null=True, blank=True,
+                                    db_column='ref_cpromo', verbose_name='Proveedor', limit_choices_to={'tipo': 3}, related_name='pedcamp')
+    codigoApro = models.ForeignKey(DescuentoRecambios, on_delete=models.PROTECT, null=False, blank=False,
+                                   db_column='ref_capro', verbose_name='Proveedor', limit_choices_to={'tipo': 1}, related_name='pedapro')
+    codigoUrgte = models.ForeignKey(DescuentoRecambios, on_delete=models.PROTECT, null=True, blank=True,
+                                    db_column='ref_curgte', verbose_name='Proveedor', limit_choices_to={'tipo': 2}, related_name='pedurgte')
+    precioPromo = models.DecimalField(verbose_name='Precio promoción', db_column='ref_ppromo', max_digits=9, default=0, decimal_places=2, null=False, blank=False)
+    unidadMedida = models.ForeignKey(UnidadMedida, on_delete=models.PROTECT, null=True, blank=True, db_column='ref_unimed', verbose_name='Unidad Medida')
+    unidadCompra = models.IntegerField(verbose_name='Unidad de compra', db_column='ref_unicomp', default=1, null=True, blank=True)
+    unidadVenta = models.IntegerField(verbose_name='Unidad de venta', db_column='ref_univta', default=1, null=True, blank=True)
+    unidadStock = models.IntegerField(verbose_name='Unidad de stock', db_column='ref_unistk', default=1, null=True, blank=True)
+    multiplo = models.IntegerField(verbose_name='Múltiplo', db_column='ref_multi', default=1, null=True, blank=True)
+    ubicacion = models.CharField(max_length=15, verbose_name='Ubicación', db_column='ref_ubica', null=True, blank=True)
+    codAproPieza = models.ForeignKey(CodigoAproPieza, on_delete=models.PROTECT, null=False, blank=False, db_column='ref_capropza', verbose_name='Código Aprovisionamiento')
+    pedidosPendientes = models.IntegerField(verbose_name='Pedidos pendientes', db_column='ref_pedpte', default=0, null=True, blank=True)
+    entradasMes = models.IntegerField(verbose_name='Entradas mes', db_column='ref_entmes', default=0, null=True, blank=True)
+    salidasMes = models.IntegerField(verbose_name='Salidas mes', db_column='ref_salmes', default=0, null=True, blank=True)
+    entradasAcumuladas = models.IntegerField(verbose_name='Entradas acumuladas', db_column='ref_entacum', default=0, null=True, blank=True)
+    salidasAcumuladas = models.IntegerField(verbose_name='Salidas acumuladas', db_column='ref_salacum', default=0, null=True, blank=True)
+    fechaUltMovimiento = models.DateTimeField(verbose_name='Fecha último movimiento', db_column='ref_fultmov', null=True, blank=True)
+    fechaUltimaVenta = models.DateTimeField(verbose_name='Fecha última venta', db_column='ref_fultvta', null=True, blank=True)
+    fechaUltimaCompra = models.DateTimeField(verbose_name='Fecha última compra', db_column='ref_fultcomp', null=True, blank=True)
+    observaciones = models.TextField(verbose_name='Observaciones', db_column='ref_obser', null=True, blank=True)
+    ivaPieza = models.ForeignKey(CodigoIva, on_delete=models.PROTECT, null=False, blank=False, db_column='ref_iva', verbose_name='IVA pieza')
+    consumoMedio = models.IntegerField(verbose_name='Consumo medio', db_column='ref_consumedio', null=True, blank=True)
+    stockSeguridad = models.IntegerField(verbose_name='Stock de seguridad', db_column='ref_stkmax', default=0, null=True, blank=True)
+    puntoPedido = models.IntegerField(verbose_name='Punto pedido', db_column='ref_ptoped', default=0, null=True, blank=True)
+    stockMinimo = models.IntegerField(verbose_name='Stock mínimo', db_column='ref_stkmin', default=0, null=True, blank=True)
+    codigoAbc = models.CharField(max_length=2, verbose_name='Código ABC', db_column='ref_codabc', null=True, blank=True)
+    codigoObsoleto = models.CharField(max_length=1, verbose_name='Código obsoleto', db_column='ref_codobs', default='0', null=True, blank=True)
+    codigoFuncion = models.CharField(max_length=5, verbose_name='Código función', db_column='ref_codfunc', null=True, blank=True)
+    panier = models.CharField(max_length=1, verbose_name='Panier', db_column='ref_panier', null=True, blank=True)
+    familia = models.ForeignKey(FamiliaPieza, on_delete=models.PROTECT, null=True, blank=True, db_column='ref_familia', verbose_name='Familia pieza')
+    marca = models.ForeignKey(Marca, on_delete=models.PROTECT, null=True, blank=True, db_column='ref_marca', verbose_name='Marca')
+    codigoContable = models.ForeignKey(CodigoContable, on_delete=models.PROTECT, null=True, blank=True,
+                                       db_column='ref_cconta', verbose_name='Código Contable',
+                                       limit_choices_to={'codigo': '01'})
+    COD_COMPETENCIA_CHOICES = [
+        ('00', 'Competitiva'),
+        ('01', 'No Competitiva'),
+    ]
+    codigoCompetencia = models.CharField(max_length=2, verbose_name='Código Competencia',
+                                         choices=COD_COMPETENCIA_CHOICES, db_column='ref_ccompet', null=True,
+                                         blank=True)
+    codigoModelo = models.ForeignKey(ModeloVehPieza, on_delete=models.PROTECT, null=True, blank=True, db_column='ref_modelo', verbose_name='Modelo')
+    familiaMarketing = models.ForeignKey(FamiliaMarketing, on_delete=models.PROTECT, null=True, blank=True, db_column='ref_fmark', verbose_name='Familia marketing')
+    difinventario = models.IntegerField(verbose_name='Diferencia inventario', db_column='ref_difinv', null=True, blank=True)
+    fechaUltimoInventario = models.DateTimeField(verbose_name='Fecha último inventario', db_column='ref_fultinv', null=True, blank=True)
+    unidadesVendidasMes = models.IntegerField(verbose_name='Unidades vendidas mes', db_column='ref_uvenmes', null=True, blank=True)
+    unidadesVendidasAno = models.IntegerField(verbose_name='Unidades vendidas año', db_column='ref_uvenano', null=True, blank=True)
+    unidadesVendidasAnoAnt = models.IntegerField(verbose_name='Unidades vendidas año anterior', db_column='ref_uvenanoant', null=True, blank=True)
+    bloqueoPieza = models.CharField(max_length=1, verbose_name='Bloqueo pieza', db_column='ref_blqpieza', null=True, blank=True)
+    fechaBloqueo = models.DateTimeField(verbose_name='Fecha bloqueo', db_column='ref_fblqpieza', null=True, blank=True)
+    unidadesVendidas12m = models.IntegerField(verbose_name='Unidades vendidas 12 meses', db_column='ref_uven12m', null=True, blank=True)
+    stockinicialano = models.IntegerField(verbose_name='Stock inicial año', db_column='ref_stkiniano', null=True, blank=True)
+    unidadesVendidasm1 = models.IntegerField(verbose_name='Unidades vendidas mes 1', db_column='ref_uvenm1', null=True, blank=True)
+    unidadesVendidasm2 = models.IntegerField(verbose_name='Unidades vendidas mes 2', db_column='ref_uvenm2', null=True, blank=True)
+    unidadesVendidasm3 = models.IntegerField(verbose_name='Unidades vendidas mes 3', db_column='ref_uvenm3', null=True, blank=True)
+    unidadesVendidasm4 = models.IntegerField(verbose_name='Unidades vendidas mes 4', db_column='ref_uvenm4', null=True, blank=True)
+    unidadesVendidasm5 = models.IntegerField(verbose_name='Unidades vendidas mes 5', db_column='ref_uvenm5', null=True, blank=True)
+    unidadesVendidasm6 = models.IntegerField(verbose_name='Unidades vendidas mes 6', db_column='ref_uvenm6', null=True, blank=True)
+    unidadesVendidasm7 = models.IntegerField(verbose_name='Unidades vendidas mes 7', db_column='ref_uvenm7', null=True, blank=True)
+    unidadesVendidasm8 = models.IntegerField(verbose_name='Unidades vendidas mes 8', db_column='ref_uvenm8', null=True, blank=True)
+    unidadesVendidasm9 = models.IntegerField(verbose_name='Unidades vendidas mes 9', db_column='ref_uvenm9', null=True, blank=True)
+    unidadesVendidasm10 = models.IntegerField(verbose_name='Unidades vendidas mes 10', db_column='ref_uvenm10', null=True, blank=True)
+    unidadesVendidasm11 = models.IntegerField(verbose_name='Unidades vendidas mes 11', db_column='ref_uvenm11', null=True, blank=True)
+    unidadesVendidasm12 = models.IntegerField(verbose_name='Unidades vendidas mes 12', db_column='ref_uvenm12', null=True, blank=True)
+    demandaNoServidaDia = models.IntegerField(verbose_name='Demanda no servida día', db_column='ref_demnoserd', null=True, blank=True)
+    demandaNoServidaMes = models.IntegerField(verbose_name='Demanda no servida mes', db_column='ref_demmpserm', null=True, blank=True)
+    demandaNoServidaAno = models.IntegerField(verbose_name='Demanda no servida año', db_column='ref_demmosera', null=True, blank=True)
+    reserva = models.IntegerField(verbose_name='Reserva', db_column='ref_reserva', null=True, blank=True)
+    unidadesCompradasMes = models.IntegerField(verbose_name='Unidades compradas mes', db_column='ref_unicompm', null=True, blank=True)
+    unidadesCompradasAno = models.IntegerField(verbose_name='Unidades compradas año', db_column='ref_unicompa', null=True, blank=True)
+    unidadesCompradasAnoAnt = models.IntegerField(verbose_name='Unidades compradas año anterior', db_column='ref_unicompant', null=True, blank=True)
+    unidadesSalTallerMes = models.IntegerField(verbose_name='Unidades salida taller mes', db_column='ref_unisaltames', null=True, blank=True)
+    unidadesSalTallerAno = models.IntegerField(verbose_name='Unidades salida taller año', db_column='ref_unisaltaano', null=True, blank=True)
+    otrasEntradasMes = models.IntegerField(verbose_name='Otras entradas mes', db_column='ref_otrentmes', null=True, blank=True)
+    otrasEntradasAno = models.IntegerField(verbose_name='Otras entradas año', db_column='ref_otrentano', null=True, blank=True)
+    otrasSalidasMes = models.IntegerField(verbose_name='Otras salidas mes', db_column='ref_otrsalmes', null=True, blank=True)
+    otrasSalidasAno = models.IntegerField(verbose_name='Otras salidas año', db_column='ref_otrsalano', null=True, blank=True)
+    importeVtasMesPvp = models.DecimalField(verbose_name='Importe ventas mes pvp', db_column='ref_ivtamespvp', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeVtasMesCoste = models.DecimalField(verbose_name='Importe ventas mes coste', db_column='ref_ivtamescos', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeVtasAnoPvp = models.DecimalField(verbose_name='Importe ventas año pvp', db_column='ref_ivtaanopvp', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeVtasAnoCoste = models.DecimalField(verbose_name='Importe ventas año coste', db_column='ref_ivtaanocos', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeVtasAnoAntPvp = models.DecimalField(verbose_name='Importe ventas año anterior pvp', db_column='ref_ivtaanoantpvp', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeVtasAnoAntCoste = models.DecimalField(verbose_name='Importe ventas año anterior coste', db_column='ref_ivtaanoantcos', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeDtoMes = models.DecimalField(verbose_name='Importe descuentos mes', db_column='ref_idtomes', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeDtoAno = models.DecimalField(verbose_name='Importe descuentos año', db_column='ref_idtoano', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeComprasMes = models.DecimalField(verbose_name='Importe compras mes', db_column='ref_icommes', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeComprasAno = models.DecimalField(verbose_name='Importe compras año', db_column='ref_icomano', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeComprasAnoAnt = models.DecimalField(verbose_name='Importe compras año anterior', db_column='ref_icomanoant', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeSalTallerMes = models.DecimalField(verbose_name='Importe salidas taller mes', db_column='ref_isaltames', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeSalTallerAno = models.DecimalField(verbose_name='Importe salidas taller año', db_column='ref_isaltaano', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeOtrasSalmes = models.DecimalField(verbose_name='Importe otras salidas mes', db_column='ref_iotrsalmes', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeOtrasSalano = models.DecimalField(verbose_name='Importe otras salidas año', db_column='ref_iotrsalano', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeOtrasEntmes = models.DecimalField(verbose_name='Importe otras entradas mes', db_column='ref_iotrentmes', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeOtrasEntano = models.DecimalField(verbose_name='Importe otras entradas año', db_column='ref_iotrentano', max_digits=9, decimal_places=2, null=True, blank=True)
+    bloqueo = models.BooleanField(verbose_name='Bloqueo', db_column='ref_bloqueo', default=False, null=True, blank=True)
+    ns = models.BooleanField(verbose_name='Ns', db_column='ref_ns', default=False, null=True, blank=True)
+    negativo = models.BooleanField(verbose_name='Negativo', db_column='ref_negativo', default=False, null=True, blank=True)
+    imprimir = models.BooleanField(verbose_name='Imprimir', db_column='ref_imprimir', default=False, null=True, blank=True)
+    unidadesUltimaCompra = models.IntegerField(verbose_name='Unidades última compra', db_column='ref_uniultcom', null=True, blank=True)
+    unidadesUltimaVenta = models.IntegerField(verbose_name='Unidades última venta', db_column='ref_uniultvta', null=True, blank=True)
+    codAlerta = models.CharField(max_length=1, verbose_name='Código alerta', db_column='ref_codalert', null=True, blank=True)
+    unidadesDq = models.IntegerField(verbose_name='Unidades dq', db_column='ref_unidq', null=True, blank=True)
+    unidadesDq1 = models.IntegerField(verbose_name='Unidades dq1', db_column='ref_unidq1', null=True, blank=True)
+    unidadesDq2 = models.IntegerField(verbose_name='Unidades dq2', db_column='ref_unidq2', null=True, blank=True)
+    unidadesDq3 = models.IntegerField(verbose_name='Unidades dq3', db_column='ref_unidq3', null=True, blank=True)
+    unidadesDq4 = models.IntegerField(verbose_name='Unidades dq4', db_column='ref_unidq4', null=True, blank=True)
+    unidadesDq5 = models.IntegerField(verbose_name='Unidades dq5', db_column='ref_unidq5', null=True, blank=True)
+    unidadesDq6 = models.IntegerField(verbose_name='Unidades dq6', db_column='ref_unidq6', null=True, blank=True)
+    unidadesDq7 = models.IntegerField(verbose_name='Unidades dq7', db_column='ref_unidq7', null=True, blank=True)
+    unidadesDq8 = models.IntegerField(verbose_name='Unidades dq8', db_column='ref_unidq8', null=True, blank=True)
+    unidadesDq9 = models.IntegerField(verbose_name='Unidades dq9', db_column='ref_unidq9', null=True, blank=True)
+    unidadesDq10 = models.IntegerField(verbose_name='Unidades dq10', db_column='ref_unidq10', null=True, blank=True)
+    unidadesDq11 = models.IntegerField(verbose_name='Unidades dq11', db_column='ref_unidq11', null=True, blank=True)
+    unidadesDq12 = models.IntegerField(verbose_name='Unidades dq12', db_column='ref_unidq12', null=True, blank=True)
+    unidadesDqx = models.IntegerField(verbose_name='Unidades dqx', db_column='ref_unidqx', null=True, blank=True)
+    unidadesDq1x = models.IntegerField(verbose_name='Unidades dq1x', db_column='ref_unidq1x', null=True, blank=True)
+    unidadesDq2x = models.IntegerField(verbose_name='Unidades dq2x', db_column='ref_unidq2x', null=True, blank=True)
+    unidadesDq3x = models.IntegerField(verbose_name='Unidades dq3x', db_column='ref_unidq3x', null=True, blank=True)
+    unidadesDq4x = models.IntegerField(verbose_name='Unidades dq4x', db_column='ref_unidq4x', null=True, blank=True)
+    unidadesDq5x = models.IntegerField(verbose_name='Unidades dq5x', db_column='ref_unidq5x', null=True, blank=True)
+    unidadesDq6x = models.IntegerField(verbose_name='Unidades dq6x', db_column='ref_unidq6x', null=True, blank=True)
+    unidadesDq7x = models.IntegerField(verbose_name='Unidades dq7x', db_column='ref_unidq7x', null=True, blank=True)
+    unidadesDq8x = models.IntegerField(verbose_name='Unidades dq8x', db_column='ref_unidq8x', null=True, blank=True)
+    stockMinimoP = models.IntegerField(verbose_name='Stock mínimo p', db_column='ref_stkminp', null=True, blank=True)
+    stockSeguridadP = models.IntegerField(verbose_name='Stock seguridad p', db_column='ref_stksegp', null=True, blank=True)
+    puntoPedidoP = models.IntegerField(verbose_name='Punto pedido p', db_column='ref_ptopedp', null=True, blank=True)
+    consumoP = models.IntegerField(verbose_name='Consumo p', db_column='ref_cosumop', null=True, blank=True)
+    fechaAlta = models.DateTimeField(verbose_name='Fecha alta', db_column='ref_falta', null=False, blank=False)
 
+    def __str__(self):
+        return f'{self.referencia} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'referencia': self.referencia,
+            'descripcion': self.descripcion,
+            'existencias': self.existencias,
+            'tarifa': self.tarifa,
+        }
+        return item
+
+    # para la paginación por servidor utilizamos este método para los filtros
+    def to_search(self, value):
+        return self.objects.filter(Q(referencia__icontains=value) |
+                                   Q(descripcion__icontains=value)
+                                   )
+
+    class Meta:
+        db_table = 'sirtbref'
+        verbose_name = 'Artículo'
+        verbose_name_plural = 'Artículos'
+        ordering = ['referencia']

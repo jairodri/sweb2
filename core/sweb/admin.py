@@ -68,6 +68,10 @@ class PrecioTarifaAdmin(ImportExportModelAdmin):
     resource_class = PrecioTarifaResource
 
 
+class ArticuloAdmin(ImportExportModelAdmin):
+    resource_class = ArticuloResource
+
+
 # Register your models here.
 # Para que se muestren en el panel administrador del servidor
 admin.site.register(Banco, BancoAdmin)
@@ -86,6 +90,7 @@ admin.site.register(ModeloVehPieza, ModeloVehPiezaAdmin)
 admin.site.register(FamiliaMarketing, FamiliaMarketingAdmin)
 admin.site.register(DescuentoRecambios, DescuentoRecambiosAdmin)
 admin.site.register(PrecioTarifa, PrecioTarifaAdmin)
+admin.site.register(Articulo, ArticuloAdmin)
 
 
 
