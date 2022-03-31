@@ -198,7 +198,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="{{ form.familiaMarketing.name }}">{{ form.familiaMarketing.label }}</label>
-                        {{ form.familiaMarketing | add_class:'form-control' }}
+                        {{ form.familiaMarketing | add_class:'form-control' | add_class:'select2bs4' }}
                     </div>
                 </div>
             </div>
@@ -222,8 +222,16 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
+                        <label for="{{ form.codigoCompetencia.name }}">{{ form.codigoCompetencia.label }}</label>
+                        {{ form.codigoCompetencia | add_class:'form-control' | attr:'style="width: 100%;"' }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group" >
                         <label for="{{ form.proveedor.name }}">{{ form.proveedor.label }}</label>
-                        {{ form.proveedor | add_class:'form-control' }}
+                        {{ form.proveedor | add_class:'form-control' | add_class:'select2bs4' | attr:'style="width: 100%;"' }}
                     </div>
                 </div>
             </div>
@@ -249,6 +257,11 @@
                 locale: 'es',
                 format: 'L',
                 autoClose: true
+            });
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4',
+                language: 'es'
             });
          });
     </script>

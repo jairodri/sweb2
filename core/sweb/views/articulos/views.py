@@ -2,9 +2,10 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from decouple import config
 from core.sweb.forms import ArticuloForm
-from core.sweb.models import Articulo
+from core.sweb.models import Articulo, UnidadMedida, CodigoAproPieza
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from core.sweb.mixins import BasicCreateView, BasicUpdateView, BasicDeleteView, BasicListView, BasicDetailView
+from datetime import datetime
 
 
 class ArticuloListView(BasicListView, ListView):
@@ -20,67 +21,26 @@ class ArticuloCreateView(BasicCreateView, CreateView):
     template_name = f'{folder}/create.html'
     success_url = reverse_lazy(f'sweb:{folder}_list')
     end_message_success = 'añadido'
-#
-#     def get_next_contador(self):
-#         codigo_numaut = '00'
-#         codigo = ''
-#
-#         numautos = NumeracionAutomatica.objects.filter(codigo=codigo_numaut)
-#         if not numautos or numautos[0].activo is False:
-#             return codigo
-#
-#         valido = False
-#         nextnumber = numautos[0].contador
-#         while not valido:
-#             nextnumber = nextnumber + 1
-#             codigo = str(nextnumber)
-#             codigo = codigo.strip().zfill(6)
-#             cliente = Cliente.objects.filter(codigo=codigo)
-#             if not cliente:
-#                 NumeracionAutomatica.objects.filter(codigo=codigo_numaut).update(contador=nextnumber)
-#                 valido = True
-#
-#         return codigo
-#
-#     def get_initial(self):
-#         # valores por defecto
-#         codigo = self.get_next_contador()
-#         tipo_cl = TipoClienteRecambios.objects.get(codigo='CL').id
-#         forma_pago = FormaDePago.objects.get(codigo='00').id
-#         dtomo = DescuentoMO.objects.get(codigo='0').id
-#         dtopieza = '0'
-#         diaPagoDesde = 1
-#         diaPagoHasta = 31
-#         bloquearCredito = True
-#         emitirRecibos = True
-#         aplicarIva = True
-#         listarnetodto = True
-#         ocultarCuenta = True
-#         # confirm_cif = False
-#         ivaEpecial = 0.00
-#         dtoEpecial = 0.00
-#         creditoDisponible = 0.00
-#         initial = {
-#             'codigo': codigo,
-#             'tipoCliente': tipo_cl,
-#             'formaDePago': forma_pago,
-#             'dtomo': dtomo,
-#             'dtopieza': dtopieza,
-#             'diaPagoDesde': diaPagoDesde,
-#             'diaPagoHasta': diaPagoHasta,
-#             'bloquearCredito': bloquearCredito,
-#             'emitirRecibos': emitirRecibos,
-#             'aplicarIva': aplicarIva,
-#             'listarnetodto': listarnetodto,
-#             'ocultarCuenta': ocultarCuenta,
-#             'ivaEpecial': ivaEpecial,
-#             'dtoEpecial': dtoEpecial,
-#             'creditoDisponible': creditoDisponible,
-#             # 'confirm_cif': confirm_cif,
-#         }
-#         return initial
-#
-#
+
+    def get_initial(self):
+        # valores por defecto
+        unidadMedida = UnidadMedida.objects.get(codigo='1').id
+        codAproPieza = CodigoAproPieza.objects.get(codigo='X').id
+        fechaAlta = datetime.now()
+
+        initial = {
+            'stockSeguridad': 0,
+            'puntoPedido': 0,
+            'stockMinimo': 0,
+            'unidadCompra': 1,
+            'unidadVenta': 1,
+            'unidadStock': 1,
+            'multiplo': 1,
+            'unidadMedida': unidadMedida,
+            'codAproPieza': codAproPieza,
+            'fechaAlta': fechaAlta,
+        }
+        return initial
 
 
 class ArticuloUpdateView(BasicUpdateView, UpdateView):

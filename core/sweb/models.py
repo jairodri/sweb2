@@ -3,7 +3,7 @@ from core.sweb.utils import digitos_control, validar_porcentaje
 from core.models import BaseModel
 from core.sweb.mixins import ModelMixin
 from django.db.models import Q
-from datetime import datetime
+
 
 class Banco(ModelMixin, BaseModel):
     codigo = models.CharField(max_length=4, verbose_name='código banco', db_column='ban_codcsp', null=False,
@@ -276,9 +276,9 @@ class Cliente(ModelMixin, BaseModel):
     lopdfirma = models.BooleanField(verbose_name='LOPD firma', db_column='cli_lopdf', default=False, null=False, blank=False)
 
     def __str__(self):
-        if self.nombre:
-            return f'{self.codigo} - {self.nombre} - {self.apellido1} - {self.apellido2}'
-        else:
+        # if self.nombre is not None:
+        #     return f'{self.codigo} - {self.nombre} - {self.apellido1} - {self.apellido2}'
+        # else:
             return f'{self.codigo} - {self.razonSocial}'
 
     # para la paginación por servidor utilizamos este método para los filtros

@@ -797,6 +797,7 @@ class ArticuloForm(ModelForm):
                   'fechaAlta',
                   'proveedor',
                   'observaciones',
+                  'codigoCompetencia',
                   ]
         exclude = ['user_creation', 'user_updated']
 
@@ -834,7 +835,9 @@ class ArticuloForm(ModelForm):
             'fechaAlta': 'Fecha de alta',
             'proveedor': 'Proveedor',
             'observaciones': 'Observaciones',
+            'codigoCompetencia': 'Código Competencia',
         }
         widgets = {
             'observaciones': Textarea(attrs={'rows': 4}),
+            'proveedor': Select(),
         }
