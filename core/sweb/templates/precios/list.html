@@ -41,7 +41,7 @@
             {"data": "denominacion"},
             {"data": "f9"},
             {"data": "nuevaReferencia"},
-            {"data": "pvp1"},
+            {"data": "pvp"},
             {"data": "multiplo"},
             {"data": "codigoDescuento"},
             {"data": "penetracion"},
@@ -50,7 +50,8 @@
         ]
         var ibuttons = '';
         var iorder = [[0, 'asc']];
-        initdtableserver(icolumns, ibuttons, iorder)
+        var extrabuttons = true;
+        initdtableserver(icolumns, ibuttons, iorder, extrabuttons)
     </script>
 {% endblock %}
 

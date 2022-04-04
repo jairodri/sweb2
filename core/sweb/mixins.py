@@ -62,114 +62,12 @@ class BasicView(View):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
-
-class BasicListView(BasicView):
-
-    # redefinimos el post para cargar la datatable con ajax
-    def post(self, request, *args, **kwargs):
-        try:
-            action = request.POST['action']
-            # diferenciamos si la paginación es en cliente o en servidor
-            if action == 'searchdata_c':
-                datos = []
-                # recuperamos solo los campos necesarios para la paginación
-                for i in self.model.objects.all():
-                    datos.append(i.to_list())
-            elif action == 'searchdata_s':
-                datos = self.datatables_server(request)
-            else:
-                data = {'error': 'Ha ocurrido un error'}
-        except Exception as e:
-            datos = {
-                'error': str(e)
-            }
-        return JsonResponse(datos, safe=False)
-
-    # sobreescribimos el método get_context_data para añadir info al contexto
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = self.model._meta.verbose_name_plural
-        context['add_url'] = reverse_lazy(f'sweb:{self.folder}_add')
-        context['list_url'] = reverse_lazy(f'sweb:{self.folder}_list')
-        context['entity'] = self.model._meta.verbose_name
-        context['entity_plural'] = self.model._meta.verbose_name_plural
-        context['folder'] = self.folder
-        return context
-
-    def datatables_server(self, request):
+    # Paginación en servidor
+    def datatables_server(self, model, request, modal=False):
         # Recuperarmos los datos enviados por POST en la llamada ajax con el parámetro serverSide: true
-        # < QueryDict:
-        # {
-        #     'draw': ['1'],
-        #     'columns[0][data]': ['referencia'],
-        #     'columns[0][name]': [''],
-        #     'columns[0][searchable]': ['true'],
-        #     'columns[0][orderable]': ['true'],
-        #     'columns[0][search][value]': [''],
-        #     'columns[0][search][regex]': ['false'],
-        #     'columns[1][data]': ['denominacion'],
-        #     'columns[1][name]': [''],
-        #     'columns[1][searchable]': ['true'],
-        #     'columns[1][orderable]': ['true'],
-        #     'columns[1][search][value]': [''],
-        #     'columns[1][search][regex]': ['false'],
-        #     'columns[2][data]': ['f9'],
-        #     'columns[2][name]': [''],
-        #     'columns[2][searchable]': ['true'],
-        #     'columns[2][orderable]': ['true'],
-        #     'columns[2][search][value]': [''],
-        #     'columns[2][search][regex]': ['false'],
-        #     'columns[3][data]': ['nuevaReferencia'],
-        #     'columns[3][name]': [''],
-        #     'columns[3][searchable]': ['true'],
-        #     'columns[3][orderable]': ['true'],
-        #     'columns[3][search][value]': [''],
-        #     'columns[3][search][regex]': ['false'],
-        #     'columns[4][data]': ['pvp1'],
-        #     'columns[4][name]': [''],
-        #     'columns[4][searchable]': ['true'],
-        #     'columns[4][orderable]': ['true'],
-        #     'columns[4][search][value]': [''],
-        #     'columns[4][search][regex]': ['false'],
-        #     'columns[5][data]': ['multiplo'],
-        #     'columns[5][name]': [''],
-        #     'columns[5][searchable]': ['true'],
-        #     'columns[5][orderable]': ['true'],
-        #     'columns[5][search][value]': [''],
-        #     'columns[5][search][regex]': ['false'],
-        #     'columns[6][data]': ['codigoDescuento'],
-        #     'columns[6][name]': [''],
-        #     'columns[6][searchable]': ['true'],
-        #     'columns[6][orderable]': ['true'],
-        #     'columns[6][search][value]': [''],
-        #     'columns[6][search][regex]': ['false'],
-        #     'columns[7][data]': ['penetracion'],
-        #     'columns[7][name]': [''],
-        #     'columns[7][searchable]': ['true'],
-        #     'columns[7][orderable]': ['true'],
-        #     'columns[7][search][value]': [''],
-        #     'columns[7][search][regex]': ['false'],
-        #     'columns[8][data]': ['familiaMarketing'],
-        #     'columns[8][name]': [''],
-        #     'columns[8][searchable]': ['true'],
-        #     'columns[8][orderable]': ['true'],
-        #     'columns[8][search][value]': [''],
-        #     'columns[8][search][regex]': ['false'],
-        #     'columns[9][data]': ['f1'],
-        #     'columns[9][name]': [''],
-        #     'columns[9][searchable]': ['true'],
-        #     'columns[9][orderable]': ['true'],
-        #     'columns[9][search][value]': [''],
-        #     'columns[9][search][regex]': ['false'],
-        #     'order[0][column]': ['0'],
-        #     'order[0][dir]': ['asc'],
-        #     'start': ['0'],
-        #     'length': ['10'],
-        #     'search[value]': [''],
-        #     'search[regex]': ['false'],
-        #     'action': ['searchdata']
-        # } >
         datatables = request.POST
+        # print(model)
+        # print(datatables)
         draw = int(datatables.get('draw'))
         # print(f'draw: {draw}')
         start = int(datatables.get('start'))
@@ -189,9 +87,12 @@ class BasicListView(BasicView):
             order_col_name = str('-' + order_col_name)
 
         if search:
-            data_objects = self.model.to_search(self.model,value=search)
+            if modal:
+                data_objects = model.to_search_modal(model, value=search)
+            else:
+                data_objects = model.to_search(model, value=search)
         else:
-            data_objects = self.model.objects.all()
+            data_objects = model.objects.all()
         records_total = data_objects.count()
         records_filtered = records_total
         data_objects = data_objects.order_by(order_col_name)
@@ -208,7 +109,10 @@ class BasicListView(BasicView):
 
         data = []
         for i in object_list:
-            data.append(i.to_list())
+            if modal:
+                data.append(i.to_list_modal())
+            else:
+                data.append(i.to_list())
 
         return {
             'draw': draw,
@@ -216,6 +120,40 @@ class BasicListView(BasicView):
             'recordsFiltered': records_filtered,
             'data': data,
         }
+
+
+class BasicListView(BasicView):
+
+    # redefinimos el post para cargar la datatable con ajax
+    def post(self, request, *args, **kwargs):
+        try:
+            action = request.POST['action']
+            # diferenciamos si la paginación es en cliente o en servidor
+            if action == 'searchdata_c':
+                datos = []
+                # recuperamos solo los campos necesarios para la paginación
+                for i in self.model.objects.all():
+                    datos.append(i.to_list())
+            elif action == 'searchdata_s':
+                datos = self.datatables_server(self.model, request)
+            else:
+                data = {'error': 'Ha ocurrido un error'}
+        except Exception as e:
+            datos = {
+                'error': str(e)
+            }
+        return JsonResponse(datos, safe=False)
+
+    # sobreescribimos el método get_context_data para añadir info al contexto
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.model._meta.verbose_name_plural
+        context['add_url'] = reverse_lazy(f'sweb:{self.folder}_add')
+        context['list_url'] = reverse_lazy(f'sweb:{self.folder}_list')
+        context['entity'] = self.model._meta.verbose_name
+        context['entity_plural'] = self.model._meta.verbose_name_plural
+        context['folder'] = self.folder
+        return context
 
 
 class BasicCreateView(BasicView):

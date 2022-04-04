@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from decouple import config
 from core.sweb.forms import ArticuloForm
-from core.sweb.models import Articulo, UnidadMedida, CodigoAproPieza
+from core.sweb.models import Articulo, UnidadMedida, CodigoAproPieza, PrecioTarifa
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from core.sweb.mixins import BasicCreateView, BasicUpdateView, BasicDeleteView, BasicListView, BasicDetailView
 from datetime import datetime
@@ -41,6 +41,25 @@ class ArticuloCreateView(BasicCreateView, CreateView):
             'fechaAlta': fechaAlta,
         }
         return initial
+
+    # redefinimos el post para cargar la datatable con ajax
+    def post(self, request, *args, **kwargs):
+        # print(f'post: {request.POST}')
+        try:
+            tipo_ = request.POST['tipo_']
+            if tipo_ == 'listprecios':
+                action = request.POST['action']
+                if action == 'searchdata_s':
+                    datos = self.datatables_server(PrecioTarifa, request, modal=True)
+                else:
+                    return super().post(request, *args, **kwargs)
+            else:
+                return super().post(request, *args, **kwargs)
+        except Exception as e:
+            datos = {
+                'error': str(e)
+            }
+        return JsonResponse(datos, safe=False)
 
 
 class ArticuloUpdateView(BasicUpdateView, UpdateView):

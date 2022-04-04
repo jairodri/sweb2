@@ -113,7 +113,7 @@ var columnDefs = function (ibuttons) {
 }
 
 // inicializa datatable con paginación en cliente
-function initdtables(icolumns, ibuttons, iorder) {
+function initdtables(icolumns, ibuttons, iorder, extrabuttons) {
 
     var table = $('#dtable-buttons').DataTable({
         responsive: true,
@@ -267,8 +267,8 @@ function confirmdelete() {
     });
 }
 // inicializa datatable con paginación en servidor
-function initdtableserver(icolumns, ibuttons, iorder) {
-
+function initdtableserver(icolumns, ibuttons, iorder, extrabuttons, tipo_) {
+    // console.log(extrabuttons)
     var table = $('#dtable-buttons').DataTable({
         responsive: true,
         autoWidth: false,
@@ -282,6 +282,7 @@ function initdtableserver(icolumns, ibuttons, iorder) {
             type: 'POST',
             data: {
                 'action': 'searchdata_s',
+                'tipo_': tipo_,
             },
             headers: {
                 'X-CSRFToken': csrftoken
@@ -298,11 +299,14 @@ function initdtableserver(icolumns, ibuttons, iorder) {
         },
 
         initComplete: function (settings, json) {
-            var api = this.api();
-            new $.fn.dataTable.Buttons(api, {
-                buttons: vbuttons()
-            });
-            api.buttons().container().appendTo('#dt-buttons');
+            if (extrabuttons) {
+                var api = this.api();
+                new $.fn.dataTable.Buttons(api, {
+                    buttons: vbuttons()
+                });
+                api.buttons().container().appendTo('#dt-buttons');
+            }
         }
     });
+    return table;
 }

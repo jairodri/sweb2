@@ -2,13 +2,31 @@
 {% load widget_tweaks %}
 
 {% block contentform %}
+    <input type="hidden" name="tipo_" value="formbase">
     <div class="row">
-        <div class="col-sm-4">
-            <div class="form-group">
-                <label for="{{ form.referencia.name }}">{{ form.referencia.label }}<span class="text-danger"> *</span></label>
-                {{ form.referencia | add_class:'form-control' }}
+        {% if action == 'add' %}
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="{{ form.referencia.name }}">{{ form.referencia.label }}<span
+                            class="text-danger"> *</span></label>
+                    <div class="input-group">
+                        {{ form.referencia | add_class:'form-control' }}
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-secondary btn-flat btnTarifa">
+                                <i class="fas fa-search"></i> Lista Precios
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        {% else %}
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="{{ form.referencia.name }}">{{ form.referencia.label }}<span class="text-danger"> *</span></label>
+                    {{ form.referencia | add_class:'form-control' }}
+                </div>
+            </div>
+        {% endif %}
         <div class="col-sm-8">
             <div class="form-group">
                 <label for="{{ form.descripcion.name }}">{{ form.descripcion.label }}<span
@@ -250,8 +268,10 @@
 {% endblock %}
 
 {% block jscript2 %}
+    {% include 'articulos/cre_tarifa.html' %}
     <script>
         $(function () {
+            var table;
             $('[data-mask]').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/aaaa' });
             $('#fecalta').datetimepicker({
                 locale: 'es',
@@ -262,6 +282,37 @@
             $('.select2bs4').select2({
                 theme: 'bootstrap4',
                 language: 'es'
+            });
+            $('.btnTarifa').on('click', function () {
+                var icolumns = [
+                    {"data": "id"},
+                    {"data": "referencia"},
+                    {"data": "denominacion"},
+                    {"data": "pvp"},
+                ]
+                var ibuttons = '<a href="#" rel="sel" class="btn btn-light btn-xs btnSelect"><i class="far fa-hand-pointer" title="Seleccionar"></i></a> ';
+                var extrabuttons = false;
+                var iorder = [[1, 'asc']];
+                var tipo_ = 'listprecios'
+                table = initdtableserver(icolumns, ibuttons, iorder, extrabuttons, tipo_);
+                $('#tarifaModal').modal('show');
+            });
+            $('#dtable-buttons').on('click', '.btnSelect', function () {
+                var tr = table.cell($(this).closest('td, li')).index();
+                var data = table.row(tr.row).data();
+                {#console.log(data);#}
+                $('input[name="referencia"]').val(data.referencia);
+                $('input[name="descripcion"]').val(data.denominacion);
+                $('input[name="tarifa"]').val(data.pvp);
+                $('input[name="multiplo"]').val(data.multiplo);
+                $('input[name="panier"]').val(data.panier);
+                $('input[name="codigoFuncion"]').val(data.funcion);
+                $('select[name="codigoApro"]').val(data.codigoDescuento.id).change();
+                $('select[name="codigoUrgte"]').val(data.codUrgencia.id).change();
+                $('select[name="familia"]').val(data.familia.id).change();
+                $('select[name="familiaMarketing"]').val(data.familiaMarketing.id).change();
+                $('select[name="codAproPieza"]').val(data.codAproPieza.id).change();
+                $('#tarifaModal').modal('hide');
             });
          });
     </script>

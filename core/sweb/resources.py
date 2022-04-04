@@ -285,39 +285,6 @@ class DescuentoRecambiosResource(resources.ModelResource):
         )
 
 
-class PrecioTarifaResource(resources.ModelResource):
-
-    class Meta:
-        model = PrecioTarifa
-        fields = (
-            'id',
-            'referencia',
-            'denominacion',
-            'variacion',
-            'pvp',
-            'f1',
-            'f2',
-            'f3',
-            'f4',
-            'f5',
-            'f6',
-            'f8',
-            'f9',
-            'codigoDescuento',
-            'multiplo',
-            'modeloVehiculo',
-            'penetracion',
-            'nuevaReferencia',
-            'nuevaRefer2',
-            'pvp1',
-            'familiaMarketing',
-            'funcion',
-            'familia',
-            'panier',
-            'codUrgencia',
-        )
-
-
 class ForeignkeyDescuentoRecambiosWidget(widgets.ForeignKeyWidget):
 
     def clean(self, value, row=None, *args, **kwargs):
@@ -349,20 +316,78 @@ class ForeignkeyDescuentoRecambiosWidget(widgets.ForeignKeyWidget):
         return super().clean(q.id)
 
 
+class ForeignkeyFamiliaPiezaWidget(widgets.ForeignKeyWidget):
+
+    def clean(self, value, row=None, *args, **kwargs):
+        if value is None:
+            return super().clean(value)
+
+        try:
+            q = FamiliaPieza.objects.get(codigo=value)
+        except Exception as e:
+            # En el caso de que no exista, lo creamos
+            familia = FamiliaPieza()
+            familia.codigo = value
+            familia.descripcion = '...'
+            familia.save()
+            q = FamiliaPieza.objects.get(codigo=value)
+        return super().clean(q.id)
+
+
 class ForeignkeyFamiliaMarketingWidget(widgets.ForeignKeyWidget):
 
     def clean(self, value, row=None, *args, **kwargs):
-        if not value:
+        if value is None:
             return super().clean(value)
 
         try:
             q = FamiliaMarketing.objects.get(codigo=value)
-            return super().clean(q.id)
         except Exception as e:
-            # En el caso de que el código recibido no exista devolvemos null
-            # print(f'familia marketing inexistente: {value}')
-            # print(e)
-            return super().clean(None)
+            # En el caso de que no exista, lo creamos
+            familiamk = FamiliaMarketing()
+            familiamk.codigo = value
+            familiamk.descripcion = '...'
+            familiamk.save()
+            q = FamiliaMarketing.objects.get(codigo=value)
+        return super().clean(q.id)
+
+
+class PrecioTarifaResource(resources.ModelResource):
+
+    codigoDescuento = fields.Field(attribute='codigoDescuento', column_name='codigoDescuento', widget=ForeignkeyDescuentoRecambiosWidget(DescuentoRecambios, 'id'))
+    codUrgencia = fields.Field(attribute='codUrgencia', column_name='codUrgencia', widget=ForeignkeyDescuentoRecambiosWidget(DescuentoRecambios, 'id'))
+    familia = fields.Field(attribute='familia', column_name='familia', widget=ForeignkeyFamiliaPiezaWidget(FamiliaPieza, 'id'))
+    familiaMarketing = fields.Field(attribute='familiaMarketing', column_name='familiaMarketing', widget=ForeignkeyFamiliaMarketingWidget(FamiliaMarketing, 'id'))
+
+    class Meta:
+        model = PrecioTarifa
+        fields = (
+            'id',
+            'referencia',
+            'denominacion',
+            'variacion',
+            'pvp',
+            'f1',
+            'f2',
+            'f3',
+            'f4',
+            'f5',
+            'f6',
+            'f8',
+            'f9',
+            'codigoDescuento',
+            'multiplo',
+            'modeloVehiculo',
+            'penetracion',
+            'nuevaReferencia',
+            'nuevaRefer2',
+            'pvp1',
+            'familiaMarketing',
+            'funcion',
+            'familia',
+            'panier',
+            'codUrgencia',
+        )
 
 
 class ArticuloResource(resources.ModelResource):

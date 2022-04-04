@@ -420,6 +420,8 @@ class FamiliaPieza(ModelMixin, BaseModel):
         return f'{self.codigo} - {self.descripcion}'
 
     def to_list(self):
+        # item = {}
+        # if self.id is not None:
         item = {
             'id': self.id,
             'codigo': self.codigo,
@@ -508,6 +510,8 @@ class FamiliaMarketing(ModelMixin, BaseModel):
         return f'{self.codigo} - {self.descripcion}'
 
     def to_list(self):
+        # item = {}
+        # if self.id is not None:
         item = {
             'id': self.id,
             'codigo': self.codigo,
@@ -533,6 +537,8 @@ class DescuentoRecambios(ModelMixin, BaseModel):
         return f'{self.codigo} - {self.codpieza} - {self.descuento}%'
 
     def to_list(self):
+        # item = {}
+        # if self.id is not None:
         item = {
             'id': self.id,
             'codigo': self.codigo,
@@ -584,35 +590,47 @@ class PrecioTarifa(ModelMixin, BaseModel):
         ('5', 'No se sirve más'),
     ]
     f9 = models.CharField(max_length=1, verbose_name='f9', choices=C_CHOICES, default='', db_column='ptr_f9', null=True, blank=True)
-    codigoDescuento = models.CharField(max_length=2, verbose_name='Código Descuento', db_column='ptr_codito', null=True, blank=True)
+    codigoDescuento = models.ForeignKey(DescuentoRecambios, on_delete=models.PROTECT, null=True, blank=True,
+                                        db_column='ptr_codito', verbose_name='Código Descuento',
+                                        limit_choices_to={'tipo': 1}, related_name='codapro')
     multiplo = models.IntegerField(verbose_name='Múltiplo', db_column='ptr_multiplo', null=True, blank=True)
     modeloVehiculo = models.CharField(max_length=2, verbose_name='Modelo Vehículo', db_column='ptr_modveh', null=True, blank=True)
     penetracion = models.CharField(max_length=1, verbose_name='Penetración', db_column='ptr_penet', null=True, blank=True)
     nuevaReferencia = models.CharField(max_length=15, verbose_name='Nueva Referencia', db_column='ptr_newrefer', null=True, blank=True)
     nuevaRefer2 = models.CharField(max_length=15, verbose_name='Nueva Referencia 2', db_column='ptr_newrefer2', null=True, blank=True)
     pvp1 = models.DecimalField(verbose_name='pvp1', db_column='ptr_pvp1', max_digits=9, decimal_places=2, null=True, blank=True)
-    familiaMarketing = models.CharField(max_length=4, verbose_name='Familia Marketing', db_column='ptr_fmark', null=True, blank=True)
+    familiaMarketing = models.ForeignKey(FamiliaMarketing, on_delete=models.PROTECT, null=True, blank=True, db_column='ptr_fmark', verbose_name='Familia marketing')
     funcion = models.CharField(max_length=5, verbose_name='Función', db_column='ptr_funcion', null=True, blank=True)
-    familia = models.CharField(max_length=3, verbose_name='Familia', db_column='ptr_familia', null=True, blank=True)
+    familia = models.ForeignKey(FamiliaPieza, on_delete=models.PROTECT, null=True, blank=True, db_column='ptr_familia', verbose_name='Familia')
     panier = models.CharField(max_length=1, verbose_name='Panier', db_column='ptr_panier', null=True, blank=True)
-    codUrgencia = models.CharField(max_length=2, verbose_name='Código Urgencia', db_column='ptr_codurg', null=True, blank=True)
+    codUrgencia = models.ForeignKey(DescuentoRecambios, on_delete=models.PROTECT, null=True, blank=True,
+                                    db_column='ptr_codurg', verbose_name='Código Urgencia', limit_choices_to={'tipo': 2}, related_name='codurgte')
 
     def __str__(self):
         return f'{self.referencia} - {self.denominacion}'
 
     # recuperamos solo los campos necesarios para la paginación
     def to_list(self):
+        if self.codigoDescuento is None:
+            codigoDescuento = None
+        else:
+            codigoDescuento = self.codigoDescuento.codpieza
+        if self.familiaMarketing is None:
+            familiaMarketing = None
+        else:
+            familiaMarketing = self.familiaMarketing.codigo
         item = {
+            'id': self.id,
             'referencia': self.referencia,
             'denominacion': self.denominacion,
             'nuevaReferencia': self.nuevaReferencia,
-            'pvp1': self.pvp1,
+            'pvp': self.pvp,
             'multiplo': self.multiplo,
-            'codigoDescuento': self.codigoDescuento,
+            'codigoDescuento': codigoDescuento,
             'penetracion': self.penetracion,
-            'familiaMarketing': self.familiaMarketing,
+            'familiaMarketing': familiaMarketing,
             'f1': self.f1,
-            'f9': self.f9
+            'f9': self.f9,
         }
         if self.f9 is None or self.f9.strip() == '':
             item['f9'] = ''
@@ -626,18 +644,55 @@ class PrecioTarifa(ModelMixin, BaseModel):
             item['f1'] = f'{self.f1}-{self.get_f1_display()}'
         return item
 
+    # recuperamos solo los campos necesarios para la paginación modal
+    def to_list_modal(self):
+        if self.codigoDescuento is None:
+            codigoDescuento = {}
+        else:
+            codigoDescuento = self.codigoDescuento.to_list()
+        if self.codUrgencia is None:
+            codUrgencia = {}
+        else:
+            codUrgencia = self.codUrgencia.to_list()
+        if self.familia is None:
+            familia = {}
+        else:
+            familia = self.familia.to_list()
+        if self.familiaMarketing is None:
+            familiaMarketing = {}
+        else:
+            familiaMarketing = self.familiaMarketing.to_list()
+
+        codAproPieza = CodigoAproPieza.objects.get(codigo='E').to_list()
+        item = {
+            'id': self.id,
+            'referencia': self.referencia,
+            'denominacion': self.denominacion,
+            'pvp': self.pvp,
+            'multiplo': self.multiplo,
+            'codigoDescuento': codigoDescuento,
+            'codUrgencia': codUrgencia,
+            'familia': familia,
+            'familiaMarketing': familiaMarketing,
+            'panier': self.panier,
+            'funcion': self.funcion,
+            'codAproPieza': codAproPieza,
+        }
+        return item
+
     # para la paginación por servidor utilizamos este método para los filtros
     def to_search(self, value):
         return self.objects.filter(Q(referencia__icontains=value) |
                                    Q(denominacion__icontains=value) |
                                    Q(nuevaReferencia__icontains=value) |
-                                   Q(codigoDescuento__icontains=value) |
                                    Q(penetracion__icontains=value) |
-                                   Q(familiaMarketing__icontains=value) |
                                    Q(f1__icontains=value) |
                                    Q(f9__icontains=value)
-                                   # Q(pvp1__in=value) |
-                                   # Q(multiplo__in=value)
+                                   )
+
+    def to_search_modal(self, value):
+        return self.objects.filter(Q(referencia__icontains=value) |
+                                   Q(denominacion__icontains=value)
                                    )
 
     class Meta:
@@ -658,11 +713,11 @@ class Articulo(ModelMixin, BaseModel):
     precioCoste = models.DecimalField(verbose_name='Precio coste', db_column='ref_pcoste', max_digits=9, default=0, decimal_places=2, null=False, blank=False)
     proveedor = models.ForeignKey(Cliente, on_delete=models.PROTECT, null=False, blank=False, db_column='ref_proved', verbose_name='Proveedor')
     codigoPromo = models.ForeignKey(DescuentoRecambios, on_delete=models.PROTECT, null=True, blank=True,
-                                    db_column='ref_cpromo', verbose_name='Proveedor', limit_choices_to={'tipo': 3}, related_name='pedcamp')
+                                    db_column='ref_cpromo', verbose_name='Descuento promo', limit_choices_to={'tipo': 3}, related_name='pedcamp')
     codigoApro = models.ForeignKey(DescuentoRecambios, on_delete=models.PROTECT, null=False, blank=False,
-                                   db_column='ref_capro', verbose_name='Proveedor', limit_choices_to={'tipo': 1}, related_name='pedapro')
+                                   db_column='ref_capro', verbose_name='Descuento apro', limit_choices_to={'tipo': 1}, related_name='pedapro')
     codigoUrgte = models.ForeignKey(DescuentoRecambios, on_delete=models.PROTECT, null=True, blank=True,
-                                    db_column='ref_curgte', verbose_name='Proveedor', limit_choices_to={'tipo': 2}, related_name='pedurgte')
+                                    db_column='ref_curgte', verbose_name='Descuento urgente', limit_choices_to={'tipo': 2}, related_name='pedurgte')
     precioPromo = models.DecimalField(verbose_name='Precio promoción', db_column='ref_ppromo', max_digits=9, default=0, decimal_places=2, null=False, blank=False)
     unidadMedida = models.ForeignKey(UnidadMedida, on_delete=models.PROTECT, null=True, blank=True, db_column='ref_unimed', verbose_name='Unidad Medida')
     unidadCompra = models.IntegerField(verbose_name='Unidad de compra', db_column='ref_unicomp', default=1, null=True, blank=True)
