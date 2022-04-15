@@ -22,7 +22,7 @@
         {% else %}
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label for="{{ form.referencia.name }}">{{ form.referencia.label }}<span class="text-danger"> *</span></label>
+                    <label for="{{ form.referencia.name }}">{{ form.referencia.label }}</label>
                     {{ form.referencia | add_class:'form-control' }}
                 </div>
             </div>
@@ -38,6 +38,15 @@
     <div class="card card-light">
         <div class="card-header"></div>
         <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group" >
+                        <label for="{{ form.proveedor.name }}">{{ form.proveedor.label }}<span
+                        class="text-danger"> *</span></label>
+                        {{ form.proveedor | add_class:'form-control' | add_class:'select2bs4' | attr:'style="width: 100%;"' }}
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
@@ -95,7 +104,8 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label for="{{ form.ivaPieza.name }}">{{ form.ivaPieza.label }}</label>
+                        <label for="{{ form.ivaPieza.name }}">{{ form.ivaPieza.label }}<span
+                        class="text-danger"> *</span></label>
                         {{ form.ivaPieza | add_class:'form-control' }}
                     </div>
                 </div>
@@ -189,8 +199,13 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label for="{{ form.codigoFuncion.name }}">{{ form.codigoFuncion.label }}</label>
-                        {{ form.codigoFuncion | add_class:'form-control' }}
+                        {% if defclien == 'CITROEN' %}
+                            <label for="{{ form.funcionCitroen.name }}">{{ form.funcionCitroen.label }}</label>
+                            {{ form.funcionCitroen | add_class:'form-control' }}
+                        {% else %}
+                            <label for="{{ form.codigoFuncion.name }}">{{ form.codigoFuncion.label }}</label>
+                            {{ form.codigoFuncion | add_class:'form-control' }}
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -216,7 +231,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="{{ form.familiaMarketing.name }}">{{ form.familiaMarketing.label }}</label>
-                        {{ form.familiaMarketing | add_class:'form-control' | add_class:'select2bs4' }}
+                        {{ form.familiaMarketing | add_class:'form-control' | add_class:'select2bs4' | attr:'style="width: 100%;"' }}
                     </div>
                 </div>
             </div>
@@ -224,18 +239,26 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="{{ form.fechaUltimaCompra.name }}">{{ form.fechaUltimaCompra.label }}</label>
-                        {{ form.fechaUltimaCompra | add_class:'form-control' | attr:'readonly'  }}
+                        <input type="text" name="fechaUltimaCompra" class="form-control" readonly
+                               value="{{ object.fechaUltimaCompra | date:"SHORT_DATE_FORMAT" | default_if_none:'' }}">
+{#                        {{ form.fechaUltimaCompra | add_class:'form-control' | attr:'readonly'  }}#}
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="{{ form.fechaAlta.name }}">{{ form.fechaAlta.label }}</label>
+                        {% if action == 'add' %}
                         <div class="input-group date" id="fecalta" data-target-input="nearest">
                             <div class="input-group-append" data-target="#fecalta" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                             </div>
                             {{ form.fechaAlta | add_class:'form-control' | add_class:'datetimepicker-input' | attr:'data-target:#fecalta' | attr:'data-inputmask-alias:datetime' | attr:'data-inputmask-inputformat:dd/mm/yyyy' | attr:'data-mask' }}
                         </div>
+                        {% else %}
+                            <input type="text" name="fechaAlta" class="form-control" readonly
+                                 value="{{ object.fechaAlta | date:"SHORT_DATE_FORMAT" | default_if_none:'' }}">
+{#                            {{ form.fechaAlta | date:"SHORT_DATE_FORMAT" | add_class:'form-control' | attr:'readonly'  }}#}
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -245,14 +268,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group" >
-                        <label for="{{ form.proveedor.name }}">{{ form.proveedor.label }}</label>
-                        {{ form.proveedor | add_class:'form-control' | add_class:'select2bs4' | attr:'style="width: 100%;"' }}
-                    </div>
-                </div>
-            </div>
+
         </div>
         <div class="card-footer"></div>
     </div>
@@ -276,13 +292,34 @@
             $('#fecalta').datetimepicker({
                 locale: 'es',
                 format: 'L',
-                autoClose: true
+                autoClose: true,
             });
             //Initialize Select2 Elements
             $('.select2bs4').select2({
                 theme: 'bootstrap4',
                 language: 'es'
             });
+            {#$('#id_proveedor').on('change', function () {#}
+            {#    console.log((this.value));#}
+            {#    $.ajax({#}
+            {#        url: window.location.pathname,#}
+            {#        type: 'POST',#}
+            {#        data: {#}
+            {#            'action': 'proveedor_s',#}
+            {#            'tipo_': 'proveedor',#}
+            {#            'pk': this.value,#}
+            {#        },#}
+            {#        headers: {#}
+            {#            'X-CSRFToken': csrftoken#}
+            {#        },#}
+            {#        dataType: 'json',#}
+            {#    }).done(function (data) {#}
+            {#        console.log(data)#}
+            {#    }).fail(function (jqXHR, textStatus, errorThrown) {#}
+            {#        alert(textStatus + ': ' + errorThrown);#}
+            {#    }).always(function (data) {#}
+            {#    });#}
+            {#)#}
             $('.btnTarifa').on('click', function () {
                 var icolumns = [
                     {"data": "id"},
@@ -300,7 +337,7 @@
             $('#dtable-buttons').on('click', '.btnSelect', function () {
                 var tr = table.cell($(this).closest('td, li')).index();
                 var data = table.row(tr.row).data();
-                {#console.log(data);#}
+                console.log(data);
                 $('input[name="referencia"]').val(data.referencia);
                 $('input[name="descripcion"]').val(data.denominacion);
                 $('input[name="tarifa"]').val(data.pvp);

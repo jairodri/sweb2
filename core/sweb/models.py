@@ -571,8 +571,6 @@ class PrecioTarifa(ModelMixin, BaseModel):
         ('0006', 'Publicidad'),
         ('0007', 'Otras marcas'),
         ('0008', 'Desgaste'),
-        ('0006', 'Publicidad'),
-        ('0006', 'Publicidad'),
     ]
     f1 = models.CharField(max_length=5, verbose_name='f1', choices=INDICE_CHOICES, default='', db_column='ptr_f1', null=True, blank=True)
     f2 = models.CharField(max_length=5, verbose_name='f2', db_column='ptr_f2', null=True, blank=True)
@@ -713,11 +711,11 @@ class Articulo(ModelMixin, BaseModel):
     precioCoste = models.DecimalField(verbose_name='Precio coste', db_column='ref_pcoste', max_digits=9, default=0, decimal_places=2, null=False, blank=False)
     proveedor = models.ForeignKey(Cliente, on_delete=models.PROTECT, null=False, blank=False, db_column='ref_proved', verbose_name='Proveedor')
     codigoPromo = models.ForeignKey(DescuentoRecambios, on_delete=models.PROTECT, null=True, blank=True,
-                                    db_column='ref_cpromo', verbose_name='Descuento promo', limit_choices_to={'tipo': 3}, related_name='pedcamp')
+                                    db_column='ref_cpromo', verbose_name='Descuento promo', limit_choices_to={'tipo': '3'}, related_name='pedcamp')
     codigoApro = models.ForeignKey(DescuentoRecambios, on_delete=models.PROTECT, null=False, blank=False,
-                                   db_column='ref_capro', verbose_name='Descuento apro', limit_choices_to={'tipo': 1}, related_name='pedapro')
+                                   db_column='ref_capro', verbose_name='Descuento apro', limit_choices_to={'tipo': '1'}, related_name='pedapro')
     codigoUrgte = models.ForeignKey(DescuentoRecambios, on_delete=models.PROTECT, null=True, blank=True,
-                                    db_column='ref_curgte', verbose_name='Descuento urgente', limit_choices_to={'tipo': 2}, related_name='pedurgte')
+                                    db_column='ref_curgte', verbose_name='Descuento urgente', limit_choices_to={'tipo': '2'}, related_name='pedurgte')
     precioPromo = models.DecimalField(verbose_name='Precio promoción', db_column='ref_ppromo', max_digits=9, default=0, decimal_places=2, null=False, blank=False)
     unidadMedida = models.ForeignKey(UnidadMedida, on_delete=models.PROTECT, null=True, blank=True, db_column='ref_unimed', verbose_name='Unidad Medida')
     unidadCompra = models.IntegerField(verbose_name='Unidad de compra', db_column='ref_unicomp', default=1, null=True, blank=True)
@@ -862,6 +860,20 @@ class Articulo(ModelMixin, BaseModel):
         return self.objects.filter(Q(referencia__icontains=value) |
                                    Q(descripcion__icontains=value)
                                    )
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        # Datos calculados
+        self.precioCoste = self.tarifa - (self.tarifa * self.codigoApro.descuento / 100)
+        if self.codigoPromo is None:
+            self.precioPromo = 0
+        else:
+            self.precioPromo = self.tarifa - (self.tarifa * self.codigoPromo.descuento / 100)
+
+        if not self.pk:
+            # Inicializamos campos en altas
+            self.precioCosteMedio = self.precioCoste
+
+        super().save(force_insert=False, force_update=False, using=None, update_fields=None)
 
     class Meta:
         db_table = 'sirtbref'

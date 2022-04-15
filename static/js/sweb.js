@@ -191,6 +191,15 @@ function validar(entity) {
                 // telefono: {number: true},
                 // tlfmovil: {number: true},
             }
+        case 'Artículo':
+            rules = {
+                unidadCompra: {number: true, min: 0, step: 1},
+                unidadVenta: {number: true, min: 0, step: 1},
+                unidadStock: {number: true, min: 0, step: 1},
+                multiplo: {number: true, min: 0, step: 1},
+                consumoMedio: {number: true, min: 0, step: 1},
+                tarifa: {number: true, min: 0.01},
+            }
             break
         default:
             rules = {}
@@ -228,10 +237,12 @@ function sendmessage(msg) {
 }
 
 function senderror(err) {
+    // console.log(err)
     Swal.fire({
         icon: 'error',
         title: 'Comprueba estos errores',
-        text: err,
+        html: err,
+        // text: err,
         backdrop: true,
         footer: '<b>Srio</b>Web',
         // toast: true,

@@ -1,9 +1,13 @@
-from django.forms import *
+import zoneinfo
 
+from django.forms import *
 from core.sweb.mixins import CodigoBaseForm
 from core.sweb.models import *
 from core.sweb.utils import digitos_control
 from schwifty import IBAN
+from decouple import config
+from datetime import datetime
+from django.utils.timezone import get_current_timezone
 
 LIST_TABLES = [
     ('01', 'Descuentos MO'),
@@ -752,15 +756,27 @@ class DescuentoRecambiosForm(ModelForm):
 
 class ArticuloForm(ModelForm):
 
+    funcionCitroen = CharField(label='Contractual (S) / Rotación (R)', required=False, max_length=1)
+    cod_dto_proveedor = ''
+    codAproPieza_ant = None
+    bloqueo_ant = None
+    es_alta = None
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # diferenciamos add/edit
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
+            self.es_alta = False
             self.fields['referencia'].disabled = True
+            self.codAproPieza_ant = self.get_initial_for_field(self.fields['codAproPieza'], 'codAproPieza')
+            self.bloqueo_ant = self.get_initial_for_field(self.fields['bloqueo'], 'bloqueo')
+            # print(self.bloqueo_ant)
         else:
+            self.es_alta = True
             self.fields['referencia'].widget.attrs['autofocus'] = True
+            # self.fields['codigoApro'].choices = {}
 
     class Meta:
         model = Articulo
@@ -798,6 +814,9 @@ class ArticuloForm(ModelForm):
                   'proveedor',
                   'observaciones',
                   'codigoCompetencia',
+                  'bloqueoPieza',
+                  'fechaBloqueo',
+                  'bloqueo',
                   ]
         exclude = ['user_creation', 'user_updated']
 
@@ -807,7 +826,7 @@ class ArticuloForm(ModelForm):
             'tarifa': 'Precio venta público',
             'codigoPromo': 'Descuento promoción',
             'familia': 'Familia',
-            'codigoApro': 'Código descuento',
+            'codigoApro': 'Descuento aprovisionamiento',
             'unidadMedida': 'Unidad de medida',
             'codigoUrgte': 'Descuento urgente',
             'existencias': 'Existencias',
@@ -840,4 +859,244 @@ class ArticuloForm(ModelForm):
         widgets = {
             'observaciones': Textarea(attrs={'rows': 4}),
             'proveedor': Select(),
+            'codigoApro': Select(),
+            'unidadCompra': NumberInput(),
+            'unidadVenta': NumberInput(),
+            'unidadStock': NumberInput(),
+            'multiplo': NumberInput(),
+            'consumoMedio': NumberInput(),
         }
+
+    def clean_referencia(self):
+        # print('clean_referencia')
+        referencia = self.cleaned_data['referencia']
+
+        if not referencia:
+            raise ValidationError('Referncia obligatoria')
+
+        # convertimos a mayúsculas
+        referencia = referencia.upper()
+
+        # en altas comprobamos si ya existe en la tabla otro código igual
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            pass
+        else:
+            articulos = Articulo.objects.filter(referencia=referencia)
+            if articulos:
+                raise ValidationError('Ya existe un Artículo con esta Referencia: %(value)s', code='coddup', params={'value': referencia})
+
+        return referencia
+
+    def clean_descripcion(self):
+        descripcion = self.cleaned_data['descripcion']
+
+        if descripcion is None or descripcion == '':
+            raise ValidationError('Descripción es obligatoria')
+
+        return descripcion
+
+    def clean_proveedor(self):
+        # print('clean_proveedor')
+        proveedor = self.cleaned_data['proveedor']
+
+        if proveedor is None:
+            raise ValidationError('Proveedor es obligatorio')
+        else:
+            self.cod_dto_proveedor = proveedor.dtopieza
+            # print(f'dtopieza: {self.cod_dto_proveedor}')
+
+        return proveedor
+
+    def clean_existencias(self):
+        existencias = self.cleaned_data['existencias']
+
+        if existencias is None:
+            existencias = 0
+
+        return existencias
+
+    def clean_tarifa(self):
+        tarifa = self.cleaned_data['tarifa']
+
+        if tarifa > 0:
+            pass
+        else:
+            raise ValidationError('El Precio venta público debe ser mayor de 0: %(value)s', code='pvpinvalid',
+                                  params={'value': tarifa})
+        return tarifa
+
+    def clean_nuevaReferencia(self):
+        nuevaReferencia = self.cleaned_data['nuevaReferencia']
+
+        if not nuevaReferencia:
+            return nuevaReferencia
+
+        nuevaReferencia = nuevaReferencia.upper()
+
+        try:
+            nr = Articulo.objects.get(referencia=nuevaReferencia)
+        except Exception as ex:
+            raise ValidationError('Artículo inexistente:  %(value)s', code='refinex', params={'value': nuevaReferencia})
+        return nuevaReferencia
+
+    def clean_codigoApro(self):
+        # print('clean_codigoApro')
+        codigoApro = self.cleaned_data['codigoApro']
+
+        if codigoApro is None:
+            raise ValidationError('Código descuento es obligatorio')
+
+        return codigoApro
+
+    def clean_unidadMedida(self):
+        unidadMedida = self.cleaned_data['unidadMedida']
+
+        if not unidadMedida:
+            unidadMedida = UnidadMedida.objects.get(codigo='1')
+
+        return unidadMedida
+
+    def clean_ivaPieza(self):
+        ivaPieza = self.cleaned_data['ivaPieza']
+
+        if not ivaPieza:
+            raise ValidationError('Código IVA obligatorio')
+
+        return ivaPieza
+
+    def clean_unidadCompra(self):
+        unidadCompra = self.cleaned_data['unidadCompra']
+
+        if unidadCompra is None:
+            unidadCompra = 1
+        elif unidadCompra < 1:
+            raise ValidationError('Unidad de compra debe ser mayor de 0')
+
+        return unidadCompra
+
+    def clean_unidadVenta(self):
+        unidadVenta = self.cleaned_data['unidadVenta']
+
+        if unidadVenta is None:
+            unidadVenta = 1
+        elif unidadVenta < 1:
+            raise ValidationError('Unidad de venta debe ser mayor de 0')
+
+        return unidadVenta
+
+    def clean_codigoContable(self):
+        codigoContable = self.cleaned_data['codigoContable']
+
+        if not codigoContable:
+            codigoContable = CodigoContable.objects.get(codigo='01')
+
+        return codigoContable
+
+    def clean_unidadStock(self):
+        unidadStock = self.cleaned_data['unidadStock']
+
+        if unidadStock is None:
+            unidadStock = 1
+        elif unidadStock < 1:
+            raise ValidationError('Unidad de stock debe ser mayor de 0')
+
+        return unidadStock
+
+    def clean_multiplo(self):
+        multiplo = self.cleaned_data['multiplo']
+
+        if multiplo is None:
+            multiplo = 1
+        elif multiplo < 1:
+            raise ValidationError('Múltiplo debe ser mayor de 0')
+
+        return multiplo
+
+    def clean_consumoMedio(self):
+        consumoMedio = self.cleaned_data['consumoMedio']
+
+        if consumoMedio is None:
+            consumoMedio = 0
+
+        return consumoMedio
+
+    def clean_codigoFuncion(self):
+        codigoFuncion = self.cleaned_data['codigoFuncion']
+
+        if not codigoFuncion:
+            return codigoFuncion
+
+        codigoFuncion = codigoFuncion.upper()
+        return codigoFuncion
+
+    def clean_codigoObsoleto(self):
+        codigoObsoleto = self.cleaned_data['codigoObsoleto']
+
+        if codigoObsoleto is None:
+            codigoObsoleto = '0'
+
+        return codigoObsoleto
+
+    def clean_fechaAlta(self):
+        fechaAlta = self.cleaned_data['fechaAlta']
+
+        if fechaAlta is None:
+            fechaAlta = datetime.now()
+
+        return fechaAlta
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        # print(self.data)
+        # print(self.cleaned_data)
+        funcionCitroen = cleaned_data['funcionCitroen']
+        codigoFuncion = cleaned_data['codigoFuncion']
+        # print(funcionCitroen)
+        if config('DEFCLIEN') == 'CITROEN':
+            if funcionCitroen is None or funcionCitroen == '':
+                pass
+            elif funcionCitroen.upper() != 'S' and funcionCitroen.upper() != 'R':
+                raise ValidationError("Marcar Pieza Stock Contractual - 'S' ó Marcar Pieza Gran Rotación - 'R'")
+            else:
+                cleaned_data['funcionCitroen'] = funcionCitroen.upper()
+                cleaned_data['codigoFuncion'] = funcionCitroen.upper()
+
+        # Validamos que el código de pieza del proveedor corresponda al código elegido en los descuentos
+        codigoApro = self.cleaned_data['codigoApro']
+        if codigoApro is not None and codigoApro.codigo != self.cod_dto_proveedor:
+            raise ValidationError('Código descuento no es válido para el código pieza del proveedor:  %(value)s', code='coddtoko', params={'value': self.cod_dto_proveedor})
+        codigoPromo = self.cleaned_data['codigoPromo']
+        if codigoPromo is not None and codigoPromo.codigo != self.cod_dto_proveedor:
+            raise ValidationError('Código descuento promoción no es válido para el código pieza del proveedor:  %(value)s', code='coddtoko', params={'value': self.cod_dto_proveedor})
+        codigoUrgte = self.cleaned_data['codigoUrgte']
+        if codigoUrgte is not None and codigoUrgte.codigo != self.cod_dto_proveedor:
+            raise ValidationError('Código descuento urgente no es válido para el código pieza del proveedor:  %(value)s', code='coddtoko', params={'value': self.cod_dto_proveedor})
+
+        # En las modificaciones comprobamos si se ha cambiado el código aprovisionamiento
+        if not self.es_alta:
+            codAproPieza = cleaned_data['codAproPieza']
+            bloqueoPieza = cleaned_data['bloqueoPieza']
+            fechaBloqueo = cleaned_data['fechaBloqueo']
+
+            if self.codAproPieza_ant != codAproPieza.id:
+                if self.codAproPieza_ant is None:
+                    bloqueoPieza = None
+                    fechaBloqueo = None
+                else:
+                    bloqueoPieza = '*'
+                    fechaBloqueo = datetime.now(tz=get_current_timezone())
+
+                cleaned_data['bloqueoPieza'] = bloqueoPieza
+                cleaned_data['fechaBloqueo'] = fechaBloqueo
+
+        # No se puede modificar una pieza bloqueada para inventario
+        if not self.es_alta:
+            if self.bloqueo_ant:
+                raise ValidationError('Artículo pendiente de inventario')
+
+        print(cleaned_data)
+        return cleaned_data
+
+
+

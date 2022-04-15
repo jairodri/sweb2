@@ -215,4 +215,6 @@ urlpatterns = [
     path(f'{ArticuloListView.folder}/list/', ArticuloListView.as_view(), name=f'{ArticuloListView.folder}_list'),
     path(f'{ArticuloCreateView.folder}/add/', ArticuloCreateView.as_view(), name=f'{ArticuloCreateView.folder}_add'),
     path(f'{ArticuloUpdateView.folder}/edit/<int:pk>/', ArticuloUpdateView.as_view(), name=f'{ArticuloUpdateView.folder}_edit'),
+    path(f'{ArticuloDeleteView.folder}/delete/<int:pk>/', ArticuloDeleteView.as_view(), name=f'{ArticuloDeleteView.folder}_delete'),
+    path(f'{ArticuloDetailView.folder}/detail/<int:pk>/', ArticuloDetailView.as_view(), name=f'{ArticuloDetailView.folder}_detail'),
 ]

@@ -107,11 +107,11 @@
             var errors = '';
             {% for field in form %}
                 {% for error in field.errors %}
-                    errors += '- {{ error }}\n';
+                    errors += '- {{ error }} <br>';
                 {% endfor %}
             {% endfor %}
             {% for error in form.non_field_errors %}
-                errors += '- {{ error }}\n';
+                errors += '- {{ error }} <br>';
             {% endfor %}
             senderror(errors);
         {% endif %}
