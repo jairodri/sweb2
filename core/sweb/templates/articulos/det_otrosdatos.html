@@ -1,0 +1,199 @@
+<!-- Modal -->
+<div class="modal fade" id="otrosDatosModal" tabindex="-1" role="dialog" aria-labelledby="otrosDatosModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h5 class="modal-title" id="otrosDatosModalLabel"><i class="fas fa-info"></i> Otros Datos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="container-fluid">
+              <div class="row">
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="referencia">Referencia</label>
+                          <input type="text" name="referencia" class="form-control" readonly value="{{ object.referencia }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-8">
+                      <div class="form-group">
+                          <label for="descripcion">Descripción</label>
+                          <input type="text" name="descripcion" class="form-control" readonly value="{{ object.descripcion }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="codigoApro">Descuento Aprovisionamiento</label>
+                          <input type="text" name="codigoApro" class="form-control" readonly value="{{ object.codigoApro | default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="codigoUrgte">Descuento Urgente</label>
+                          <input type="text" name="codigoUrgte" class="form-control" readonly value="{{ object.codigoUrgte | default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="familia">Familia</label>
+                          <input type="text" name="familia" class="form-control" readonly value="{{ object.familia | default_if_none:'' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="fechaAlta">Fecha de alta</label>
+                          <input type="text" name="fechaAlta" class="form-control" readonly value="{{ object.fechaAlta | date:"SHORT_DATE_FORMAT" |default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="codigoObsoleto">Código de Obsoleto</label>
+                          <input type="text" name="codigoObsoleto" class="form-control" readonly value="{{ object.codigoObsoleto | default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="familiaMarketing">Código Marketing</label>
+                          <input type="text" name="familiaMarketing" class="form-control" readonly value="{{ object.familiaMarketing | default_if_none:'' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="fechaUltimoInventario">Fecha Último inventario</label>
+                          <input type="text" name="fechaUltimoInventario" class="form-control" readonly value="{{ object.fechaUltimoInventario | date:"SHORT_DATE_FORMAT" |default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="difinventario">Diferencia Inventario</label>
+                          <input type="text" name="difinventario" class="form-control" readonly value="{{ object.difinventario | default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="nuevaReferencia">Ref. que la sustituye</label>
+                          <input type="text" name="nuevaReferencia" class="form-control" readonly value="{{ object.nuevaReferencia | default_if_none:'' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="ivaPieza">Código IVA</label>
+                          <input type="text" name="ivaPieza" class="form-control" readonly value="{{ object.ivaPieza |default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="unidadesVendidasMes">Unidades vendidas mes</label>
+                          <input type="text" name="unidadesVendidasMes" class="form-control" readonly value="{{ object.unidadesVendidasMes | default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="unidadesVendidasAno">Unidades vendidas año</label>
+                          <input type="text" name="unidadesVendidasAno" class="form-control" readonly value="{{ object.unidadesVendidasAno | default_if_none:'' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="codigoContable">Código Contable</label>
+                          <input type="text" name="codigoContable" class="form-control" readonly value="{{ object.codigoContable |default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="unidadesVendidasAnoAnt">Uds. vendidas año anterior</label>
+                          <input type="text" name="unidadesVendidasAnoAnt" class="form-control" readonly value="{{ object.unidadesVendidasAnoAnt | default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="unidadesVendidas12m">Uds. vendidas 12 meses</label>
+                          <input type="text" name="unidadesVendidas12m" class="form-control" readonly value="{{ object.unidadesVendidas12m | default_if_none:'' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="fechaBloqueo">Fecha de bloqueo</label>
+                          <input type="text" name="fechaBloqueo" class="form-control" readonly value="{{ object.fechaBloqueo | date:"SHORT_DATE_FORMAT" |default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="codAproPieza">Código Aprov. pieza</label>
+                          <input type="text" name="codAproPieza" class="form-control" readonly value="{{ object.codAproPieza | default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="stockinicialano">Stock inicial año</label>
+                          <input type="text" name="stockinicialano" class="form-control" readonly value="{{ object.stockinicialano | default_if_none:'' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="codigoAbc">Código ABC</label>
+                          <input type="text" name="codigoAbc" class="form-control" readonly value="{{ object.codigoAbc |default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="marca">Código Marca</label>
+                          <input type="text" name="marca" class="form-control" readonly value="{{ object.marca | default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="codigoModelo">Código Modelo</label>
+                          <input type="text" name="codigoModelo" class="form-control" readonly value="{{ object.codigoModelo | default_if_none:'' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="codigoCompetencia">Código Competencia</label>
+                          <input type="text" name="codigoCompetencia" class="form-control" readonly value="{{ object.get_codigoCompetencia_display |default_if_none:'' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                        {% if defclien == 'CITROEN' %}
+                            <label for="funcionCitroen">Contractual (S) / Rotación (R)</label>
+                            <input type="text" name="funcionCitroen" class="form-control" readonly value="{{ object.codigoFuncion |default_if_none:'' }}">
+                        {% else %}
+                            <label for="codigoFuncion">Código Función</label>
+                            <input type="text" name="codigoFuncion" class="form-control" readonly value="{{ object.codigoFuncion |default_if_none:'' }}">
+                        {% endif %}
+                    </div>
+                </div>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="panier">Panier</label>
+                          <input type="text" name="panier" class="form-control" readonly value="{{ object.panier | default_if_none:'' }}">
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

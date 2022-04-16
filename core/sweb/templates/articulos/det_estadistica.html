@@ -1,0 +1,334 @@
+<!-- Modal -->
+<div class="modal fade" id="estadisticaModal" tabindex="-1" role="dialog" aria-labelledby="estadisticaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h5 class="modal-title" id="estadisticaModalLabel"><i class="fas fa-chart-line"></i> Datos Estadísticos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="container-fluid">
+              <div class="row">
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="referencia">Referencia</label>
+                          <input type="text" name="referencia" class="form-control" readonly value="{{ object.referencia }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-8">
+                      <div class="form-group">
+                          <label for="descripcion">Descripción</label>
+                          <input type="text" name="descripcion" class="form-control" readonly value="{{ object.descripcion }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesVendidasm1">Uni. vendidas mes 1</label>
+                          <input type="text" name="unidadesVendidasm1" class="form-control" readonly value="{{ object.unidadesVendidasm1 | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeVtasMesPvp">Importe vtas. mes pvp</label>
+                          <input type="text" name="importeVtasMesPvp" class="form-control" readonly value="{{ object.importeVtasMesPvp | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeVtasMesCoste">Importe vtas. mes coste</label>
+                          <input type="text" name="importeVtasMesCoste" class="form-control" readonly value="{{ object.importeVtasMesCoste | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeDtoMes">Importe Dtos. mes</label>
+                          <input type="text" name="importeDtoMes" class="form-control" readonly value="{{ object.importeDtoMes | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesVendidasm2">Uni. vendidas mes 2</label>
+                          <input type="text" name="unidadesVendidasm2" class="form-control" readonly value="{{ object.unidadesVendidasm2 | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeVtasAnoPvp">Importe vtas. año pvp</label>
+                          <input type="text" name="importeVtasAnoPvp" class="form-control" readonly value="{{ object.importeVtasAnoPvp | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeVtasAnoCoste">Importe vtas. año coste</label>
+                          <input type="text" name="importeVtasAnoCoste" class="form-control" readonly value="{{ object.importeVtasAnoCoste | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeDtoAno">Importe Dtos. año</label>
+                          <input type="text" name="importeDtoAno" class="form-control" readonly value="{{ object.importeDtoAno | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesVendidasm3">Uni. vendidas mes 3</label>
+                          <input type="text" name="unidadesVendidasm3" class="form-control" readonly value="{{ object.unidadesVendidasm3 | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeVtasAnoAntPvp">Imp. vtas. año ant. pvp</label>
+                          <input type="text" name="importeVtasAnoAntPvp" class="form-control" readonly value="{{ object.importeVtasAnoAntPvp | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeVtasAnoAntCoste">Imp. vtas. año ant. coste</label>
+                          <input type="text" name="importeVtasAnoAntCoste" class="form-control" readonly value="{{ object.importeVtasAnoAntCoste | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="reserva">Reserva</label>
+                          <input type="text" name="reserva" class="form-control" readonly value="{{ object.reserva | default_if_none:'0' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesVendidasm4">Uni. vendidas mes 4</label>
+                          <input type="text" name="unidadesVendidasm4" class="form-control" readonly value="{{ object.unidadesVendidasm4 | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesCompradasMes">Uni. compradas mes</label>
+                          <input type="text" name="unidadesCompradasMes" class="form-control" readonly value="{{ object.unidadesCompradasMes | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesCompradasAno">Uni. compradas año</label>
+                          <input type="text" name="unidadesCompradasAno" class="form-control" readonly value="{{ object.unidadesCompradasAno | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesCompradasAnoAnt">Uni. compradas año ant.</label>
+                          <input type="text" name="unidadesCompradasAnoAnt" class="form-control" readonly value="{{ object.unidadesCompradasAnoAnt | default_if_none:'0' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesVendidasm5">Uni. vendidas mes 5</label>
+                          <input type="text" name="unidadesVendidasm5" class="form-control" readonly value="{{ object.unidadesVendidasm5 | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeComprasMes">Importe compras mes</label>
+                          <input type="text" name="importeComprasMes" class="form-control" readonly value="{{ object.importeComprasMes | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeComprasAno">Importe compras año</label>
+                          <input type="text" name="importeComprasAno" class="form-control" readonly value="{{ object.importeComprasAno | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeComprasAnoAnt">Imp. compras año ant.</label>
+                          <input type="text" name="importeComprasAnoAnt" class="form-control" readonly value="{{ object.importeComprasAnoAnt | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesVendidasm6">Uni. vendidas mes 6</label>
+                          <input type="text" name="unidadesVendidasm6" class="form-control" readonly value="{{ object.unidadesVendidasm6 | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesSalTallerMes">Uni. sal. taller mes</label>
+                          <input type="text" name="unidadesSalTallerMes" class="form-control" readonly value="{{ object.unidadesSalTallerMes | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="otrasEntradasMes">Otras entradas mes</label>
+                          <input type="text" name="otrasEntradasMes" class="form-control" readonly value="{{ object.otrasEntradasMes | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="otrasSalidasMes">Otras salidas mes</label>
+                          <input type="text" name="otrasSalidasMes" class="form-control" readonly value="{{ object.otrasSalidasMes | default_if_none:'0' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesVendidasm7">Uni. vendidas mes 7</label>
+                          <input type="text" name="unidadesVendidasm7" class="form-control" readonly value="{{ object.unidadesVendidasm7 | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesSalTallerAno">Uni. sal. taller año</label>
+                          <input type="text" name="unidadesSalTallerAno" class="form-control" readonly value="{{ object.unidadesSalTallerAno | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="otrasEntradasAno">Otras entradas año</label>
+                          <input type="text" name="otrasEntradasAno" class="form-control" readonly value="{{ object.otrasEntradasAno | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="otrasSalidasAno">Otras salidas año</label>
+                          <input type="text" name="otrasSalidasAno" class="form-control" readonly value="{{ object.otrasSalidasAno | default_if_none:'0' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesVendidasm8">Uni. vendidas mes 8</label>
+                          <input type="text" name="unidadesVendidasm8" class="form-control" readonly value="{{ object.unidadesVendidasm8 | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeSalTallerMes">Imp. sal. taller mes</label>
+                          <input type="text" name="importeSalTallerMes" class="form-control" readonly value="{{ object.importeSalTallerMes | default_if_none:'0,0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeOtrasEntmes">Imp. otras ent. mes</label>
+                          <input type="text" name="importeOtrasEntmes" class="form-control" readonly value="{{ object.importeOtrasEntmes | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeOtrasSalmes">Imp. otras sal. mes</label>
+                          <input type="text" name="importeOtrasSalmes" class="form-control" readonly value="{{ object.importeOtrasSalmes | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesVendidasm9">Uni. vendidas mes 9</label>
+                          <input type="text" name="unidadesVendidasm9" class="form-control" readonly value="{{ object.unidadesVendidasm9 | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeSalTallerAno">Imp. sal. taller año</label>
+                          <input type="text" name="importeSalTallerAno" class="form-control" readonly value="{{ object.importeSalTallerAno | default_if_none:'0,0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeOtrasEntano">Imp. otras ent. año</label>
+                          <input type="text" name="importeOtrasEntano" class="form-control" readonly value="{{ object.importeOtrasEntano | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="importeOtrasSalano">Imp. otras sal. año</label>
+                          <input type="text" name="importeOtrasSalano" class="form-control" readonly value="{{ object.importeOtrasSalano | default_if_none:'0,00' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesVendidasm10">Uni. vendidas mes 10</label>
+                          <input type="text" name="unidadesVendidasm10" class="form-control" readonly value="{{ object.unidadesVendidasm10 | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="stockMinimo">Stock Mínimo</label>
+                          <input type="text" name="stockMinimo" class="form-control" readonly value="{{ object.stockMinimo | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="stockSeguridad">Stock de Seguridad</label>
+                          <input type="text" name="stockSeguridad" class="form-control" readonly value="{{ object.stockSeguridad | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="puntoPedido">Punto de Pedido</label>
+                          <input type="text" name="puntoPedido" class="form-control" readonly value="{{ object.puntoPedido | default_if_none:'0' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesVendidasm11">Uni. vendidas mes 11</label>
+                          <input type="text" name="unidadesVendidasm11" class="form-control" readonly value="{{ object.unidadesVendidasm11 | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="demandaNoServidaDia">Demanda no serv. día</label>
+                          <input type="text" name="demandaNoServidaDia" class="form-control" readonly value="{{ object.demandaNoServidaDia | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="demandaNoServidaMes">Demanda no serv. mes</label>
+                          <input type="text" name="demandaNoServidaMes" class="form-control" readonly value="{{ object.demandaNoServidaMes | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="demandaNoServidaAno">Demanda no serv. año</label>
+                          <input type="text" name="demandaNoServidaAno" class="form-control" readonly value="{{ object.demandaNoServidaAno | default_if_none:'0' }}">
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="unidadesVendidasm12">Uni. vendidas mes 12</label>
+                          <input type="text" name="unidadesVendidasm12" class="form-control" readonly value="{{ object.unidadesVendidasm12 | default_if_none:'0' }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="consumoMedio">Consumo medio</label>
+                          <input type="text" name="consumoMedio" class="form-control" readonly value="{{ object.consumoMedio | default_if_none:'0' }}">
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
