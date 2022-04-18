@@ -1099,4 +1099,18 @@ class ArticuloForm(ModelForm):
         return cleaned_data
 
 
+class TasaCodigoForm(ModelForm):
+
+    class Meta:
+        model = TasaCodigo
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codcontable': 'Código contable',
+            'descripcion': 'Descripción',
+            'precio': 'Precio',
+            'descuento': 'Descuento'
+        }
+        widgets = {
+        }
 

@@ -281,6 +281,11 @@
 {% endblock %}
 
 {% block otrosbotones %}
+    {% if object.codigoContable.codigo == '02' or object.codigoContable.codigo == '03' %}
+    <button type="button" class="btn btn-info btn-flat" data-toggle="modal" data-target="#tasasModal">
+        <i class="fas fa-receipt"></i> Tasas
+    </button>
+    {% endif %}
 {% endblock %}
 
 {% block jscript2 %}

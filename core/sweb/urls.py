@@ -17,6 +17,7 @@ from core.sweb.views.fmarketing.views import *
 from core.sweb.views.descuentosrec.views import *
 from core.sweb.views.precios.views import *
 from core.sweb.views.articulos.views import *
+from core.sweb.views.codigotasa.views import *
 
 app_name = 'sweb'
 
@@ -217,4 +218,10 @@ urlpatterns = [
     path(f'{ArticuloUpdateView.folder}/edit/<int:pk>/', ArticuloUpdateView.as_view(), name=f'{ArticuloUpdateView.folder}_edit'),
     path(f'{ArticuloDeleteView.folder}/delete/<int:pk>/', ArticuloDeleteView.as_view(), name=f'{ArticuloDeleteView.folder}_delete'),
     path(f'{ArticuloDetailView.folder}/detail/<int:pk>/', ArticuloDetailView.as_view(), name=f'{ArticuloDetailView.folder}_detail'),
+
+    # Descuentos MO
+    path(f'{TasaCodigoListView.folder}/list/', TasaCodigoListView.as_view(), name=f'{TasaCodigoListView.folder}_list'),
+    path(f'{TasaCodigoCreateView.folder}/add/', TasaCodigoCreateView.as_view(), name=f'{TasaCodigoCreateView.folder}_add'),
+    path(f'{TasaCodigoUpdateView.folder}/edit/<int:pk>/', TasaCodigoUpdateView.as_view(), name=f'{TasaCodigoUpdateView.folder}_edit'),
+    path(f'{TasaCodigoDeleteView.folder}/delete/<int:pk>/', TasaCodigoDeleteView.as_view(), name=f'{TasaCodigoDeleteView.folder}_delete'),
 ]

@@ -1,0 +1,27 @@
+{% extends 'form.html' %}
+
+{% block contentform %}
+    <div class="form-group ">
+        <label for="codcontable">Código contable</label>
+        <input type="text" name="codcontable" class="form-control" readonly value="{{ object.codcontable }}">
+    </div>
+    <div class="form-group ">
+        <label for="descripcion">Descripción</label>
+        <input type="text" name="descripcion" class="form-control" readonly value="{{ object.descripcion }}">
+    </div>
+    <div class="form-group ">
+        <label for="precio">Precio</label>
+        <input type="text" name="precio" class="form-control" readonly value="{{ object.precio }}">
+    </div>
+    <div class="form-group ">
+        <label for="descuento">Descuento</label>
+        <input type="text" name="descuento" class="form-control" readonly value="{{ object.descuento | default_if_none:'' }}">
+    </div>
+{% endblock %}
+
+{% block jscript2 %}
+    <script>
+        confirmdelete();
+    </script>
+{% endblock %}
+

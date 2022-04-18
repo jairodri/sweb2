@@ -629,6 +629,7 @@ class PrecioTarifa(ModelMixin, BaseModel):
             'familiaMarketing': familiaMarketing,
             'f1': self.f1,
             'f9': self.f9,
+            'f2': self.f2,
         }
         if self.f9 is None or self.f9.strip() == '':
             item['f9'] = ''
@@ -640,6 +641,10 @@ class PrecioTarifa(ModelMixin, BaseModel):
             item['f1'] = self.f1
         else:
             item['f1'] = f'{self.f1}-{self.get_f1_display()}'
+        if self.f2 is None or self.f2.strip() == '':
+            item['f2'] = ''
+        else:
+            item['f2'] = f' (Seg. {self.f2})'
         return item
 
     # recuperamos solo los campos necesarios para la paginación modal
@@ -745,8 +750,7 @@ class Articulo(ModelMixin, BaseModel):
     familia = models.ForeignKey(FamiliaPieza, on_delete=models.PROTECT, null=True, blank=True, db_column='ref_familia', verbose_name='Familia pieza')
     marca = models.ForeignKey(Marca, on_delete=models.PROTECT, null=True, blank=True, db_column='ref_marca', verbose_name='Marca')
     codigoContable = models.ForeignKey(CodigoContable, on_delete=models.PROTECT, null=True, blank=True,
-                                       db_column='ref_cconta', verbose_name='Código Contable',
-                                       limit_choices_to={'codigo': '01'})
+                                       db_column='ref_cconta', verbose_name='Código Contable')
     COD_COMPETENCIA_CHOICES = [
         ('00', 'Competitiva'),
         ('01', 'No Competitiva'),
@@ -880,3 +884,56 @@ class Articulo(ModelMixin, BaseModel):
         verbose_name = 'Artículo'
         verbose_name_plural = 'Artículos'
         ordering = ['referencia']
+
+
+class Tasa(ModelMixin, BaseModel):
+    referencia = models.OneToOneField(Articulo, on_delete=models.CASCADE, unique=True, null=False, blank=False, db_column='tas_refer', verbose_name='Referencia')
+    denominacion = models.CharField(max_length=100, verbose_name='Denominación tasa', db_column='tas_denom', null=True, blank=True)
+    precio = models.DecimalField(verbose_name='Precio', db_column='tas_precio', max_digits=9, default=0,
+                                 decimal_places=2, null=False, blank=False)
+    descuento = models.DecimalField(verbose_name='Descuento', db_column='tas_descuento', max_digits=5,
+                                    decimal_places=2, null=True, blank=True, validators=[validar_porcentaje])
+
+    def __str__(self):
+        return f'{self.referencia.referencia} - {self.denominacion} - {self.precio} - {self.descuento}%'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'referencia': self.referencia.referencia,
+            'denominacion': self.denominacion,
+            'precio': self.precio,
+            'descuento': self.descuento,
+        }
+        return item
+
+    class Meta:
+        db_table = 'sirtbtas'
+        verbose_name = 'Tasa'
+        verbose_name_plural = 'Tasas'
+
+
+class TasaCodigo(ModelMixin, BaseModel):
+    codcontable = models.ForeignKey(CodigoContable, on_delete=models.CASCADE, null=False, blank=False, db_column='tsc_codigo', verbose_name='Código contable')
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='tsc_descrip', null=False, blank=False)
+    precio = models.DecimalField(verbose_name='Precio', db_column='tsc_precio', max_digits=9, decimal_places=2, null=False, blank=False)
+    descuento = models.DecimalField(verbose_name='Descuento', db_column='tsc_descuento', max_digits=5,
+                                    decimal_places=2, null=True, blank=True, validators=[validar_porcentaje])
+
+    def __str__(self):
+        return f'{self.codcontable.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codcontable': f'{self.codcontable.codigo} - {self.codcontable.descripcion}',
+            'descripcion': self.descripcion,
+            'precio': self.precio,
+            'descuento': self.descuento,
+        }
+        return item
+
+    class Meta:
+        db_table = 'sirtbtsc'
+        verbose_name = 'Código Tasa'
+        verbose_name_plural = 'Códigos Tasas'
