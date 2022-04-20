@@ -1,0 +1,73 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!-- Modal -->
+<div class="modal fade" id="tasaModal" tabindex="-1" role="dialog" aria-labelledby="tasaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="tasaModalLabel"><i class="fas fa-receipt"></i> Tasas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="idformmodal" method="post" action="." enctype="multipart/form-data">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="container-fluid">
+                        <input type="hidden" name="tipo_" value="formtasa">
+                        <input type="hidden" name="action2" value="edittasa">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="referencia">Referencia</label>
+                                    <input type="text" name="referencia" class="form-control" readonly
+                                           value="{{ object.referencia }}">
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="form-group">
+                                    <label for="descripcion">Descripción</label>
+                                    <input type="text" name="descripcion" class="form-control" readonly
+                                           value="{{ object.descripcion | default_if_none:'' }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-light">
+                            <div class="card-header">
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="codigoContable">Código Contable</label>
+                                    <input type="text" name="codigoContable" class="form-control" readonly
+                                           value="{{ object.codigoContable |default_if_none:'' }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ formtasa.denominacion.name }}">{{ formtasa.denominacion.label }}</label>
+                                    {{ formtasa.denominacion | add_class:'form-control' | attr:'readonly'}}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ formtasa.precio.name }}">{{ formtasa.precio.label }}</label>
+                                    {{ formtasa.precio | add_class:'form-control' }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ formtasa.descuento.name }}">{{ formtasa.descuento.label }}</label>
+                                    {{ formtasa.descuento | add_class:'form-control' }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ formtasa.codigoTasa.name }}">{{ formtasa.codigoTasa.label }}</label>
+                                    {{ formtasa.codigoTasa | add_class:'form-control' }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

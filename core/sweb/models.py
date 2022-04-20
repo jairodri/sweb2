@@ -921,7 +921,7 @@ class TasaCodigo(ModelMixin, BaseModel):
                                     decimal_places=2, null=True, blank=True, validators=[validar_porcentaje])
 
     def __str__(self):
-        return f'{self.codcontable.codigo} - {self.descripcion}'
+        return f'{self.descripcion}'
 
     def to_list(self):
         item = {
@@ -937,3 +937,26 @@ class TasaCodigo(ModelMixin, BaseModel):
         db_table = 'sirtbtsc'
         verbose_name = 'Código Tasa'
         verbose_name_plural = 'Códigos Tasas'
+
+
+class TasaNeumatico(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=2, verbose_name='Código', db_column='tsn_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='tsn_descrip', null=False, blank=False)
+    precio = models.DecimalField(verbose_name='Precio', db_column='tsn_precio', max_digits=9, decimal_places=2, null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+            'precio': self.precio,
+        }
+        return item
+
+    class Meta:
+        db_table = 'sirtbtsn'
+        verbose_name = 'Tasa Neumático'
+        verbose_name_plural = 'Tasas Neumáticos'

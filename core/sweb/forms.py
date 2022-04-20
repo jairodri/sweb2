@@ -1114,3 +1114,45 @@ class TasaCodigoForm(ModelForm):
         widgets = {
         }
 
+
+class TasaNeumaticoForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = TasaNeumatico
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+            'precio': 'Precio'
+        }
+        widgets = {
+        }
+
+
+class TasaForm(ModelForm):
+
+    codigoTasa = ModelChoiceField(queryset=TasaCodigo.objects.all(), required=False, label='Seleccione Tasa')
+
+    class Meta:
+        model = Tasa
+        fields = ['referencia',
+                  'denominacion',
+                  'precio',
+                  'descuento',
+                  ]
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'referencia': 'Referencia',
+            'denominacion': 'Tasa',
+            'precio': 'Precio',
+            'descuento': 'Descuento',
+        }
+        widgets = {
+
+        }
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        print(cleaned_data)
+        return cleaned_data

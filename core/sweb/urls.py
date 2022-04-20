@@ -18,6 +18,7 @@ from core.sweb.views.descuentosrec.views import *
 from core.sweb.views.precios.views import *
 from core.sweb.views.articulos.views import *
 from core.sweb.views.codigotasa.views import *
+from core.sweb.views.tasaneum.views import *
 
 app_name = 'sweb'
 
@@ -219,9 +220,15 @@ urlpatterns = [
     path(f'{ArticuloDeleteView.folder}/delete/<int:pk>/', ArticuloDeleteView.as_view(), name=f'{ArticuloDeleteView.folder}_delete'),
     path(f'{ArticuloDetailView.folder}/detail/<int:pk>/', ArticuloDetailView.as_view(), name=f'{ArticuloDetailView.folder}_detail'),
 
-    # Descuentos MO
+    # Códigos de Tasa
     path(f'{TasaCodigoListView.folder}/list/', TasaCodigoListView.as_view(), name=f'{TasaCodigoListView.folder}_list'),
     path(f'{TasaCodigoCreateView.folder}/add/', TasaCodigoCreateView.as_view(), name=f'{TasaCodigoCreateView.folder}_add'),
     path(f'{TasaCodigoUpdateView.folder}/edit/<int:pk>/', TasaCodigoUpdateView.as_view(), name=f'{TasaCodigoUpdateView.folder}_edit'),
     path(f'{TasaCodigoDeleteView.folder}/delete/<int:pk>/', TasaCodigoDeleteView.as_view(), name=f'{TasaCodigoDeleteView.folder}_delete'),
+
+    # Tasa Neumático
+    path(f'{TasaNeumaticoListView.folder}/list/', TasaNeumaticoListView.as_view(), name=f'{TasaNeumaticoListView.folder}_list'),
+    path(f'{TasaNeumaticoCreateView.folder}/add/', TasaNeumaticoCreateView.as_view(), name=f'{TasaNeumaticoCreateView.folder}_add'),
+    path(f'{TasaNeumaticoUpdateView.folder}/edit/<int:pk>/', TasaNeumaticoUpdateView.as_view(), name=f'{TasaNeumaticoUpdateView.folder}_edit'),
+    path(f'{TasaNeumaticoDeleteView.folder}/delete/<int:pk>/', TasaNeumaticoDeleteView.as_view(), name=f'{TasaNeumaticoDeleteView.folder}_delete'),
 ]

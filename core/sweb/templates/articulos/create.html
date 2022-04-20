@@ -282,7 +282,7 @@
 
 {% block otrosbotones %}
     {% if object.codigoContable.codigo == '02' or object.codigoContable.codigo == '03' %}
-    <button type="button" class="btn btn-info btn-flat" data-toggle="modal" data-target="#tasasModal">
+    <button type="button" class="btn btn-info btn-flat btnTasas">
         <i class="fas fa-receipt"></i> Tasas
     </button>
     {% endif %}
@@ -290,6 +290,7 @@
 
 {% block jscript2 %}
     {% include 'articulos/cre_tarifa.html' %}
+    {% include 'articulos/cre_tasas.html' %}
     <script>
         $(function () {
             var table;
@@ -355,6 +356,33 @@
                 $('select[name="familiaMarketing"]').val(data.familiaMarketing.id).change();
                 $('select[name="codAproPieza"]').val(data.codAproPieza.id).change();
                 $('#tarifaModal').modal('hide');
+            });
+            $('.btnTasas').on('click', function () {
+                $.ajax({
+                    url: window.location.pathname,
+                    type: 'POST',
+                    data: {
+                        'action2': 'inittasa',
+                        'tipo_': 'formtasa',
+                    },
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    dataType: 'json',
+                }).done(function (data) {
+                    console.log(data)
+                    if(data.hasOwnProperty('error')) {
+                        senderror(data.error)
+                    } else {
+                        $('input[name="denominacion"]').val(data.denominacion);
+                        $('input[name="precio"]').val(data.precio);
+                        $('input[name="descuento"]').val(data.descuento);
+                        $('#tasaModal').modal('show');
+                    }
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    {#alert(textStatus + ': ' + errorThrown);#}
+                }).always(function (data) {
+                });
             });
          });
     </script>

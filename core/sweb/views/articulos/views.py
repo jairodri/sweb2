@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from decouple import config
-from core.sweb.forms import ArticuloForm
-from core.sweb.models import Articulo, UnidadMedida, CodigoAproPieza, PrecioTarifa, CodigoIva, CodigoContable
+from core.sweb.forms import ArticuloForm, TasaForm
+from core.sweb.models import Articulo, UnidadMedida, CodigoAproPieza, PrecioTarifa, CodigoIva, CodigoContable, Tasa, TasaCodigo
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from core.sweb.mixins import BasicCreateView, BasicUpdateView, BasicDeleteView, BasicListView, BasicDetailView
 from datetime import datetime
@@ -98,19 +98,56 @@ class ArticuloUpdateView(BasicUpdateView, UpdateView):
     form_class = ArticuloForm
     template_name = f'{folder}/create.html'
     success_url = reverse_lazy(f'sweb:{folder}_list')
+    formTasa = TasaForm()
     end_message_success = 'modificado'
 
     def get_initial(self):
+
+        # Inicializamos el campo del form de tasa con filtrando por código contable
+        codcontable = self.get_object().codigoContable
+        self.formTasa.fields['codigoTasa'].queryset = TasaCodigo.objects.filter(codcontable=codcontable)
+
         initial = {
             'funcionCitroen': self.get_object().codigoFuncion,
         }
         return initial
+
+    # redefinimos el post para cargar la datatable con ajax
+    def post(self, request, *args, **kwargs):
+        datos = {}
+        try:
+            tipo_ = request.POST['tipo_']
+            if tipo_ == 'formtasa':
+                action2 = request.POST['action2']
+                if action2 == 'inittasa':
+                    pk = kwargs['pk']
+                    tasas = Tasa.objects.filter(referencia=pk)
+                    if tasas.count() == 0:
+                        datos = {
+                            'denominacion': '',
+                            'precio': 0,
+                            'descuento': 0,
+                        }
+                    else:
+                        datos = {
+                            'denominacion': tasas[0].denominacion,
+                            'precio': tasas[0].precio,
+                            'descuento': tasas[0].descuento,
+                        }
+            else:
+                return super().post(request, *args, **kwargs)
+        except Exception as e:
+            datos = {
+                'error': str(e)
+            }
+        return JsonResponse(datos, safe=False)
 
     # sobreescribimos el método get_context_data para añadir info al contexto
     # en este caso la info de defclien
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['defclien'] = config('DEFCLIEN')
+        context['formtasa'] = self.formTasa
         return context
 
 

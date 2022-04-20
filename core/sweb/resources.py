@@ -548,32 +548,43 @@ class ArticuloResource(resources.ModelResource):
         )
 
 
-class TasaChoicesWidget(widgets.Widget):
-
-    def clean(self, value, row=None, *args, **kwargs):
-        if value is None:
-            return super().clean(value)
-        print(value)
-        if value.startswith('APORTA'):
-            codigo = '00'
-        elif value.startswith('A.A.'):
-            codigo = '01'
-        else:
-            codigo = None
-        return super().clean(codigo)
+# class TasaChoicesWidget(widgets.Widget):
+#
+#     def clean(self, value, row=None, *args, **kwargs):
+#         if value is None:
+#             return super().clean(value)
+#         print(value)
+#         if value.startswith('APORTA'):
+#             codigo = '00'
+#         elif value.startswith('A.A.'):
+#             codigo = '01'
+#         else:
+#             codigo = None
+#         return super().clean(codigo)
 
 
 class TasaResource(resources.ModelResource):
 
     referencia = fields.Field(attribute='referencia', column_name='referencia', widget=ForeignKeyWidget(Articulo, field='referencia'))
-    denomtasa = fields.Field(attribute='denomtasa', column_name='denomtasa', widget=TasaChoicesWidget())
 
     class Meta:
         model = Tasa
         fields = (
             'id',
             'referencia',
-            'denomtasa',
+            'denominacion',
             'precio',
             'descuento',
+        )
+
+
+class TasaNeumaticoResource(resources.ModelResource):
+
+    class Meta:
+        model = TasaNeumatico
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+            'precio',
         )
