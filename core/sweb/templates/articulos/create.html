@@ -294,7 +294,7 @@
     <script>
         $(function () {
             var table;
-            $('[data-mask]').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/aaaa' });
+            $('[data-mask]').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/aaaa'});
             $('#fecalta').datetimepicker({
                 locale: 'es',
                 format: 'L',
@@ -343,7 +343,7 @@
             $('#dtable-buttons').on('click', '.btnSelect', function () {
                 var tr = table.cell($(this).closest('td, li')).index();
                 var data = table.row(tr.row).data();
-                console.log(data);
+                {#console.log(data);#}
                 $('input[name="referencia"]').val(data.referencia);
                 $('input[name="descripcion"]').val(data.denominacion);
                 $('input[name="tarifa"]').val(data.pvp);
@@ -370,13 +370,15 @@
                     },
                     dataType: 'json',
                 }).done(function (data) {
-                    console.log(data)
-                    if(data.hasOwnProperty('error')) {
+                    {#console.log(data)#}
+                    if (data.hasOwnProperty('error')) {
                         senderror(data.error)
                     } else {
                         $('input[name="denominacion"]').val(data.denominacion);
                         $('input[name="precio"]').val(data.precio);
                         $('input[name="descuento"]').val(data.descuento);
+                        // Inicializamos a 0 el índice del combobox para no mantener lo anterior
+                        $('select[name="codigoTasa"]').prop("selectedIndex", 0);
                         $('#tasaModal').modal('show');
                     }
                 }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -384,7 +386,57 @@
                 }).always(function (data) {
                 });
             });
-         });
+            $('#id_codigoTasa').on('change', function (e) {
+                var codigotasa = $( "#id_codigoTasa option:selected" ).text();
+                {#console.log(codigotasa)#}
+                var denominacion = codigotasa.substring(0, codigotasa.indexOf('- PVP:'))
+                {#console.log(denominacion)#}
+                var precio = codigotasa.substring(codigotasa.indexOf('- PVP:')+7, codigotasa.indexOf('- Dto:')-1)
+                precio = parseFloat(precio)
+                {#console.log(precio)#}
+                var descuento = codigotasa.substring(codigotasa.indexOf('- Dto:')+7)
+                if (descuento !== "") {
+                    descuento = parseFloat(descuento)
+                } else {
+                    $('input[name="descuento"]').prop('readonly', true)
+                }
+                {#console.log(descuento)#}
+                $('input[name="denominacion"]').val(denominacion).change();
+                $('input[name="precio"]').val(precio).change();
+                $('input[name="descuento"]').val(descuento).change();
+            });
+            $('#idformmodal').on('submit', function (e) {
+                e.preventDefault();
+                var formtasa = $('#idformmodal');
+                console.log(formtasa)
+                $.ajax({
+                    url: window.location.pathname,
+                    type: 'POST',
+                    data: {
+                        'action2': 'edittasa',
+                        'tipo_': 'formtasa',
+                        'denominacion': formtasa[0]['denominacion'].value,
+                        'precio': formtasa[0]['precio'].value,
+                        'descuento': formtasa[0]['descuento'].value,
+                    },
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    dataType: 'json',
+                }).done(function (data) {
+                    window.location.reload();
+                    if (data.hasOwnProperty('error')) {
+                        senderror(data.error)
+                    } else {
+                        sendmessage('Tasa actualizada');
+                        $('#tasaModal').modal('hide');
+                    }
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert(textStatus + ': ' + errorThrown);
+                }).always(function (data) {
+                });
+            });
+        });
     </script>
     <script type="application/javascript">
         validar('{{ entity }}');

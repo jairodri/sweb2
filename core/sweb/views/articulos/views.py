@@ -114,26 +114,49 @@ class ArticuloUpdateView(BasicUpdateView, UpdateView):
 
     # redefinimos el post para cargar la datatable con ajax
     def post(self, request, *args, **kwargs):
+        print(request.POST)
         datos = {}
         try:
             tipo_ = request.POST['tipo_']
             if tipo_ == 'formtasa':
+                pk = kwargs['pk']
                 action2 = request.POST['action2']
                 if action2 == 'inittasa':
-                    pk = kwargs['pk']
-                    tasas = Tasa.objects.filter(referencia=pk)
-                    if tasas.count() == 0:
+                    try:
+                        tasa = Tasa.objects.get(referencia=pk)
+                        datos = {
+                            'denominacion': tasa.denominacion,
+                            'precio': tasa.precio,
+                            'descuento': tasa.descuento,
+                        }
+                    except Exception as exc:
                         datos = {
                             'denominacion': '',
                             'precio': 0,
                             'descuento': 0,
                         }
+                elif action2 == 'edittasa':
+                    denominacion = request.POST['denominacion']
+                    precio = request.POST['precio']
+                    descuento = request.POST['descuento']
+                    # print(f'{denominacion} - {precio} - {descuento}')
+                    try:
+                        tasa = Tasa.objects.get(referencia=pk)
+                    except Exception as exc:
+                        tasa = Tasa()
+                        articulo = Articulo.objects.get(id=pk)
+                        tasa.referencia = articulo
+                    tasa.denominacion = denominacion
+                    tasa.precio = float(precio)
+                    if descuento.strip() == '':
+                        descuento = None
                     else:
-                        datos = {
-                            'denominacion': tasas[0].denominacion,
-                            'precio': tasas[0].precio,
-                            'descuento': tasas[0].descuento,
-                        }
+                        descuento = float(descuento)
+                    tasa.descuento = descuento
+                    tasa.save()
+                    datos = {
+                        'message': 'Tasa actualizada'
+                    }
             else:
                 return super().post(request, *args, **kwargs)
         except Exception as e:

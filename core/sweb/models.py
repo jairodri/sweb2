@@ -921,7 +921,11 @@ class TasaCodigo(ModelMixin, BaseModel):
                                     decimal_places=2, null=True, blank=True, validators=[validar_porcentaje])
 
     def __str__(self):
-        return f'{self.descripcion}'
+        if self.descuento is None:
+            dto = ''
+        else:
+            dto = str(self.descuento)
+        return f'{self.descripcion} - PVP: {self.precio} - Dto: {dto}'
 
     def to_list(self):
         item = {
