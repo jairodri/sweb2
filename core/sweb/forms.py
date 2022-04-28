@@ -1132,7 +1132,8 @@ class TasaNeumaticoForm(CodigoBaseForm, ModelForm):
 
 class TasaForm(ModelForm):
 
-    codigoTasa = ModelChoiceField(queryset=TasaCodigo.objects.all(), required=True, label='Seleccione Tasa')
+    codigoTasa = ModelChoiceField(queryset=TasaCodigo.objects.all(), required=False, label='Seleccione Tasa')
+    tasaNeumatico = ModelChoiceField(queryset=TasaNeumatico.objects.all(), required=False, label='Seleccione Tasa')
 
     class Meta:
         model = Tasa
@@ -1152,7 +1153,4 @@ class TasaForm(ModelForm):
             'precio': NumberInput(attrs={'required': True}),
         }
 
-    def clean(self):
-        cleaned_data = self.cleaned_data
-        print(cleaned_data)
-        return cleaned_data
+

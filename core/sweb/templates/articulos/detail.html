@@ -240,6 +240,12 @@
         <i class="fas fa-chart-line"></i> Datos Estadísticos
     </button>
     {% include 'articulos/det_estadistica.html' %}
+    {% if tasa is not None %}
+    <button type="button" class="btn btn-info btn-flat" data-toggle="modal" data-target="#tasasModal">
+        <i class="fas fa-receipt"></i> Tasas
+    </button>
+    {% endif %}
+    {% include 'articulos/det_tasas.html' %}
 {% endblock %}
 
 {% block jscript2 %}

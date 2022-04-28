@@ -949,7 +949,7 @@ class TasaNeumatico(ModelMixin, BaseModel):
     precio = models.DecimalField(verbose_name='Precio', db_column='tsn_precio', max_digits=9, decimal_places=2, null=False, blank=False)
 
     def __str__(self):
-        return f'{self.codigo} - {self.descripcion}'
+        return f'{self.codigo} - {self.descripcion} - PVP: {self.precio}'
 
     def to_list(self):
         item = {

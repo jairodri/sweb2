@@ -1,0 +1,58 @@
+<!-- Modal -->
+<div class="modal fade" id="tasasModal" tabindex="-1" role="dialog" aria-labelledby="tasasModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h5 class="modal-title" id="tasasModalLabel"><i class="fas fa-receipt"></i> Tasas</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="container-fluid">
+              <div class="row">
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="referencia">Referencia</label>
+                          <input type="text" name="referencia" class="form-control" readonly value="{{ object.referencia }}">
+                      </div>
+                  </div>
+                  <div class="col-sm-8">
+                      <div class="form-group">
+                          <label for="descripcion">Descripción</label>
+                          <input type="text" name="descripcion" class="form-control" readonly value="{{ object.descripcion | default_if_none:''}}">
+                      </div>
+                  </div>
+              </div>
+              <div class="card card-light">
+                  <div class="card-header"></div>
+                  <div class="card-body">
+                      <div class="form-group">
+                          <label for="codigoContable">Código Contable</label>
+                          <input type="text" name="codigoContable" class="form-control" readonly value="{{ object.codigoContable |default_if_none:'' }}">
+                      </div>
+                      <div class="form-group">
+                          <label for="denominacion">Tasa</label>
+                          <input type="text" name="denominacion" class="form-control" readonly value="{{ tasa.denominacion |default_if_none:'' }}">
+                      </div>
+                      <div class="form-group">
+                          <label for="precio">Precio</label>
+                          <input type="text" name="precio" class="form-control" readonly value="{{ tasa.precio |default_if_none:'' }}">
+                      </div>
+                      {% if tasa.descuento is not None %}
+                      <div class="form-group">
+                          <label for="descuento">Descuento</label>
+                          <input type="text" name="descuento" class="form-control" readonly value="{{ tasa.descuento |default_if_none:'' }}">
+                      </div>
+                      {% endif %}
+                  </div>
+                  <div class="card-footer"></div>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -67,14 +67,6 @@ class ArticuloCreateView(BasicCreateView, CreateView):
                     datos = self.datatables_server(PrecioTarifa, request, modal=True)
                 else:
                     return super().post(request, *args, **kwargs)
-            # elif tipo_ == 'proveedor':
-            #     action = request.POST['action']
-            #     if action == 'proveedor_s':
-            #         pk = request.POST['pk']
-            #         datos = Cliente.objects.values('dtopieza').get(pk=pk)
-            #         codigoApro = DescuentoRecambios.objects.filter(tipo='1', codigo=datos['dtopieza'])
-            #         datos['codigoApro'] = codigoApro
-            #         print(datos)
             else:
                 return super().post(request, *args, **kwargs)
         except Exception as e:
@@ -114,7 +106,7 @@ class ArticuloUpdateView(BasicUpdateView, UpdateView):
 
     # redefinimos el post para cargar la datatable con ajax
     def post(self, request, *args, **kwargs):
-        print(request.POST)
+        # print(request.POST)
         datos = {}
         try:
             tipo_ = request.POST['tipo_']
@@ -128,12 +120,22 @@ class ArticuloUpdateView(BasicUpdateView, UpdateView):
                             'denominacion': tasa.denominacion,
                             'precio': tasa.precio,
                             'descuento': tasa.descuento,
+                            'nuevo': False,
                         }
                     except Exception as exc:
+                        codigo = request.POST['codigoContable']
+                        denominacion = ''
+                        if codigo == '03':
+                            try:
+                                tasaCodigo = TasaCodigo.objects.get(codcontable__codigo__iexact=codigo)
+                                denominacion = tasaCodigo.descripcion
+                            except Exception as e:
+                                print('Error en acceso a TasaCodigo')
                         datos = {
-                            'denominacion': '',
+                            'denominacion': denominacion,
                             'precio': 0,
-                            'descuento': 0,
+                            'descuento': None,
+                            'nuevo': True,
                         }
                 elif action2 == 'edittasa':
                     denominacion = request.POST['denominacion']
@@ -157,6 +159,14 @@ class ArticuloUpdateView(BasicUpdateView, UpdateView):
                     datos = {
                         'message': 'Tasa actualizada'
                     }
+                elif action2 == 'dltetasa':
+                    datos = {}
+                    try:
+                        tasa = Tasa.objects.get(referencia=pk)
+                        tasa.delete()
+                    except Exception as exc:
+                        # print('Error al borrar Tasa')
+                        datos['error'] = 'Error al borrar Tasa'
             else:
                 return super().post(request, *args, **kwargs)
         except Exception as e:
@@ -213,6 +223,16 @@ class ArticuloDetailView(BasicDetailView, DetailView):
         except Exception as ex:
             precioTarifa = None
 
+        tasa = None
+        codigocont = self.object.codigoContable.codigo
+        if codigocont == '02' or codigocont == '03':
+            try:
+                tasa = Tasa.objects.get(referencia=self.object.id)
+                tasa = tasa.to_list()
+            except Exception as ex:
+                tasa = None
+
         context['precioTarifa'] = precioTarifa
+        context['tasa'] = tasa
         context['defclien'] = config('DEFCLIEN')
         return context

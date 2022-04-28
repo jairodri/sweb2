@@ -305,27 +305,6 @@
                 theme: 'bootstrap4',
                 language: 'es'
             });
-            {#$('#id_proveedor').on('change', function () {#}
-            {#    console.log((this.value));#}
-            {#    $.ajax({#}
-            {#        url: window.location.pathname,#}
-            {#        type: 'POST',#}
-            {#        data: {#}
-            {#            'action': 'proveedor_s',#}
-            {#            'tipo_': 'proveedor',#}
-            {#            'pk': this.value,#}
-            {#        },#}
-            {#        headers: {#}
-            {#            'X-CSRFToken': csrftoken#}
-            {#        },#}
-            {#        dataType: 'json',#}
-            {#    }).done(function (data) {#}
-            {#        console.log(data)#}
-            {#    }).fail(function (jqXHR, textStatus, errorThrown) {#}
-            {#        alert(textStatus + ': ' + errorThrown);#}
-            {#    }).always(function (data) {#}
-            {#    });#}
-            {#)#}
             $('.btnTarifa').on('click', function () {
                 var icolumns = [
                     {"data": "id"},
@@ -358,12 +337,15 @@
                 $('#tarifaModal').modal('hide');
             });
             $('.btnTasas').on('click', function () {
+                var codcont = $('input[name="codigoContable"]').val().substring(0, 2);
+                {#console.log(codcont)#}
                 $.ajax({
                     url: window.location.pathname,
                     type: 'POST',
                     data: {
                         'action2': 'inittasa',
                         'tipo_': 'formtasa',
+                        'codigoContable': codcont,
                     },
                     headers: {
                         'X-CSRFToken': csrftoken
@@ -374,11 +356,31 @@
                     if (data.hasOwnProperty('error')) {
                         senderror(data.error)
                     } else {
+                        console.log(data)
                         $('input[name="denominacion"]').val(data.denominacion);
                         $('input[name="precio"]').val(data.precio);
                         $('input[name="descuento"]').val(data.descuento);
-                        // Inicializamos a 0 el índice del combobox para no mantener lo anterior
-                        $('select[name="codigoTasa"]').prop("selectedIndex", 0);
+                        $('input[name="precio"]').prop('readonly', true);
+                        $('input[name="descuento"]').prop('readonly', true);
+                        // Si bo hay Tasa creada deshabilitamos el botón de Borrar
+                        if (data.nuevo) {
+                            $('#id_borrarTasa').attr('disabled','disabled');
+                        }
+                        // Según el código contable deshabilitamos el combobox que no corresponde
+                        if (codcont === '02') {
+                            // Inicializamos a 0 el índice del combobox para no mantener lo anterior
+                            $('select[name="codigoTasa"]').prop("selectedIndex", 0);
+                            $('select[name="codigoTasa"]').prop("required", true);
+                            $('#id_tasaNeumatico').parents('.form-group').hide();
+                        } else {
+                            // Código contable '03'
+                            // Inicializamos a 0 el índice del combobox para no mantener lo anterior
+                            $('select[name="tasaNeumatico"]').prop("selectedIndex", 0);
+                            $('select[name="tasaNeumatico"]').prop("required", true);
+                            $('#id_descuento').parents('.form-group').hide();
+                            $('#id_codigoTasa').parents('.form-group').hide();
+                        }
+
                         $('#tasaModal').modal('show');
                     }
                 }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -389,21 +391,28 @@
             $('#id_codigoTasa').on('change', function (e) {
                 var codigotasa = $( "#id_codigoTasa option:selected" ).text();
                 {#console.log(codigotasa)#}
-                var denominacion = codigotasa.substring(0, codigotasa.indexOf('- PVP:'))
-                {#console.log(denominacion)#}
-                var precio = codigotasa.substring(codigotasa.indexOf('- PVP:')+7, codigotasa.indexOf('- Dto:')-1)
-                precio = parseFloat(precio)
-                {#console.log(precio)#}
-                var descuento = codigotasa.substring(codigotasa.indexOf('- Dto:')+7)
+                var denominacion = codigotasa.substring(0, codigotasa.indexOf('- PVP:'));
+                var precio = codigotasa.substring(codigotasa.indexOf('- PVP:')+7, codigotasa.indexOf('- Dto:')-1);
+                precio = parseFloat(precio);
+                var descuento = codigotasa.substring(codigotasa.indexOf('- Dto:')+7);
+                $('input[name="precio"]').prop('readonly', false);
                 if (descuento !== "") {
                     descuento = parseFloat(descuento)
+                    $('input[name="descuento"]').prop('readonly', false)
                 } else {
                     $('input[name="descuento"]').prop('readonly', true)
                 }
-                {#console.log(descuento)#}
                 $('input[name="denominacion"]').val(denominacion).change();
                 $('input[name="precio"]').val(precio).change();
                 $('input[name="descuento"]').val(descuento).change();
+            });
+            $('#id_tasaNeumatico').on('change', function (e) {
+                var tasaNeumatico = $( "#id_tasaNeumatico option:selected" ).text();
+                console.log(tasaNeumatico)
+                var precio = tasaNeumatico.substring(tasaNeumatico.indexOf('- PVP:')+7);
+                precio = parseFloat(precio);
+                $('input[name="precio"]').prop('readonly', false);
+                $('input[name="precio"]').val(precio).change();
             });
             $('#idformmodal').on('submit', function (e) {
                 e.preventDefault();
@@ -434,6 +443,48 @@
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     alert(textStatus + ': ' + errorThrown);
                 }).always(function (data) {
+                });
+            });
+            $('.btnBorrarTasa').on('click', function () {
+                {#console.log('Borrar Tasa')#}
+                Swal.fire({
+                    title: 'Se va a borrar esta Tasa',
+                    text: '¿Estás seguro?',
+                    icon: 'warning',
+                    backdrop: true,
+                    footer: '<b>Srio</b>Web',
+                    showCancelButton: true,
+                    confirmButtonText: 'Borrar',
+                    cancelButtonText: 'Cancelar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log('Tasa borrada')
+                        $.ajax({
+                            url: window.location.pathname,
+                            type: 'POST',
+                            data: {
+                                'action2': 'dltetasa',
+                                'tipo_': 'formtasa',
+                            },
+                            headers: {
+                                'X-CSRFToken': csrftoken
+                            },
+                            dataType: 'json',
+                        }).done(function (data) {
+                            window.location.reload();
+                            if (data.hasOwnProperty('error')) {
+                                senderror(data.error)
+                            } else {
+                                sendmessage('Tasa borrada');
+                                $('#tasaModal').modal('hide');
+                            }
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            alert(textStatus + ': ' + errorThrown);
+                        }).always(function (data) {
+                        });
+                    }
                 });
             });
         });
