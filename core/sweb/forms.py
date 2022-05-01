@@ -765,6 +765,12 @@ class ArticuloForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields['proveedor'].queryset = Cliente.objects.none()
+        if 'proveedor' in self.data:
+            self.fields['proveedor'].queryset = Cliente.objects.all()
+        elif self.instance.pk:
+            self.fields['proveedor'].queryset = Cliente.objects.all().filter(pk=self.instance.proveedor.pk)
+
         # diferenciamos add/edit
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
@@ -858,7 +864,7 @@ class ArticuloForm(ModelForm):
         }
         widgets = {
             'observaciones': Textarea(attrs={'rows': 4}),
-            'proveedor': Select(),
+            # 'proveedor': Select(),
             'codigoApro': Select(),
             'unidadCompra': NumberInput(),
             'unidadVenta': NumberInput(),

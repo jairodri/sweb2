@@ -3,6 +3,7 @@
 
 {% block contentform %}
     <input type="hidden" name="tipo_" value="formbase">
+    <input type="hidden" name="action2" value="">
     <div class="row">
         {% if action == 'add' %}
             <div class="col-sm-4">
@@ -43,7 +44,7 @@
                     <div class="form-group" >
                         <label for="{{ form.proveedor.name }}">{{ form.proveedor.label }}<span
                         class="text-danger"> *</span></label>
-                        {{ form.proveedor | add_class:'form-control' | add_class:'select2bs4' | attr:'style="width: 100%;"' }}
+                        {{ form.proveedor | add_class:'form-control' | attr:'style="width: 100%;"' }}
                     </div>
                 </div>
             </div>
@@ -303,7 +304,37 @@
             //Initialize Select2 Elements
             $('.select2bs4').select2({
                 theme: 'bootstrap4',
-                language: 'es'
+                language: 'es',
+            });
+            $('#id_proveedor').select2({
+                theme: 'bootstrap4',
+                language: 'es',
+                placeholder: 'Seleccione un proveedor',
+                minimumInputLength: 1,
+                allowClear: true,
+                ajax: {
+                    url: window.location.pathname,
+                    dataType: 'json',
+                    type: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    data: function (params) {
+                        var query = {
+                            'term': params.term,
+                            'action2': 'select2',
+                            'tipo_': 'formbase',
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {id: item.id, text: item.text};
+                            })
+                        };
+                    },
+                 }
             });
             $('.btnTarifa').on('click', function () {
                 var icolumns = [

@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from decouple import config
 from core.sweb.forms import ArticuloForm, TasaForm
-from core.sweb.models import Articulo, UnidadMedida, CodigoAproPieza, PrecioTarifa, CodigoIva, CodigoContable, Tasa, TasaCodigo
+from core.sweb.models import Articulo, UnidadMedida, CodigoAproPieza, PrecioTarifa, CodigoIva, CodigoContable, Tasa, TasaCodigo, Cliente
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from core.sweb.mixins import BasicCreateView, BasicUpdateView, BasicDeleteView, BasicListView, BasicDetailView
 from datetime import datetime
@@ -55,7 +55,7 @@ class ArticuloCreateView(BasicCreateView, CreateView):
         }
         return initial
 
-    # redefinimos el post para cargar la datatable con ajax
+    # redefinimos el post para las operaciones con ajax
     def post(self, request, *args, **kwargs):
         # print(f'post: {request.POST}')
         datos = {}
@@ -65,6 +65,16 @@ class ArticuloCreateView(BasicCreateView, CreateView):
                 action = request.POST['action']
                 if action == 'searchdata_s':
                     datos = self.datatables_server(PrecioTarifa, request, modal=True)
+                else:
+                    return super().post(request, *args, **kwargs)
+            elif tipo_ == 'formbase':
+                action2 = request.POST['action2']
+                if action2 == 'select2':
+                    term = request.POST['term']
+                    proveedores = Cliente.to_search_select(Cliente, term)
+                    datos = []
+                    for i in proveedores:
+                        datos.append(i.to_list_select())
                 else:
                     return super().post(request, *args, **kwargs)
             else:
@@ -104,7 +114,7 @@ class ArticuloUpdateView(BasicUpdateView, UpdateView):
         }
         return initial
 
-    # redefinimos el post para cargar la datatable con ajax
+    # redefinimos el post para las operaciones con ajax
     def post(self, request, *args, **kwargs):
         # print(request.POST)
         datos = {}
@@ -167,6 +177,16 @@ class ArticuloUpdateView(BasicUpdateView, UpdateView):
                     except Exception as exc:
                         # print('Error al borrar Tasa')
                         datos['error'] = 'Error al borrar Tasa'
+            elif tipo_ == 'formbase':
+                action2 = request.POST['action2']
+                if action2 == 'select2':
+                    term = request.POST['term']
+                    proveedores = Cliente.to_search_select(Cliente, term)
+                    datos = []
+                    for i in proveedores:
+                        datos.append(i.to_list_select())
+                else:
+                    return super().post(request, *args, **kwargs)
             else:
                 return super().post(request, *args, **kwargs)
         except Exception as e:

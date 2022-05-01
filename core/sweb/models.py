@@ -292,6 +292,12 @@ class Cliente(ModelMixin, BaseModel):
                                    Q(provincia__icontains=value)
                                    )
 
+    # para la paginación por servidor utilizamos este método para los filtros
+    def to_search_select(self, value):
+        return self.objects.filter(Q(codigo__icontains=value) |
+                                   Q(razonSocial__icontains=value)
+                                   )
+
     def to_list(self):
         item = {
             'id': self.id,
@@ -302,6 +308,13 @@ class Cliente(ModelMixin, BaseModel):
             'tlfmovil': self.tlfmovil,
             'poblacion': self.poblacion,
             'provincia': self.provincia,
+        }
+        return item
+
+    def to_list_select(self):
+        item = {
+            'id': self.id,
+            'text': f'{self.codigo} - {self.razonSocial}',
         }
         return item
 
