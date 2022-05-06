@@ -369,9 +369,11 @@
             });
             $('.btnTasas').on('click', function () {
                 var codcont = $('input[name="codigoContable"]').val().substring(0, 2);
-                {#console.log(codcont)#}
+                {#console.log(window.location.pathname)#}
+                {#var miurl = 'http://sirioweb.eu.pythonanywhere.com/sweb/articulos/edit/8732/';#}
                 $.ajax({
                     url: window.location.pathname,
+                    {#url: miurl,#}
                     type: 'POST',
                     data: {
                         'action2': 'inittasa',

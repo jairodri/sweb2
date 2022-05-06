@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Libs
+    'corsheaders',
     'widget_tweaks',
     'import_export',
     # Mis Apps
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # cabeceras para CORS
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -156,3 +158,19 @@ SESSION_COOKIE_AGE = 5000
 
 # Para utilizar database transactions en import y que sea más seguro
 IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+# Opciones para CORS
+CORS_ALLOWED_ORIGINS = [
+    # "http://localhost:8000",
+]
+CORS_ORIGIN_WHITELIST = [
+    # "http://localhost:8000",
+]
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_METHODS = [
+    "GET",
+    "OPTIONS",
+    "POST",
+    "PUT",
+]
+
