@@ -161,10 +161,10 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 # Opciones para CORS
 CORS_ALLOWED_ORIGINS = [
-    # "http://localhost:8000",
+    "http://127.0.0.1:8000",
 ]
 CORS_ORIGIN_WHITELIST = [
-    # "http://localhost:8000",
+    "http://127.0.0.1:8000",
 ]
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_METHODS = [
@@ -173,4 +173,9 @@ CORS_ALLOW_METHODS = [
     "POST",
     "PUT",
 ]
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000",]
+CSRF_COOKIE_HTTPONLY = False
+
 

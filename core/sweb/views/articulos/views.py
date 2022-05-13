@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from decouple import config
 from core.sweb.forms import ArticuloForm, TasaForm
-from core.sweb.models import Articulo, UnidadMedida, CodigoAproPieza, PrecioTarifa, CodigoIva, CodigoContable, Tasa, TasaCodigo, Cliente
+from core.sweb.models import Articulo, UnidadMedida, CodigoAproPieza, PrecioTarifa, CodigoIva, CodigoContable, Tasa, TasaCodigo, Cliente, FamiliaMarketing
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from core.sweb.mixins import BasicCreateView, BasicUpdateView, BasicDeleteView, BasicListView, BasicDetailView
 from datetime import datetime
@@ -71,10 +71,16 @@ class ArticuloCreateView(BasicCreateView, CreateView):
                 action2 = request.POST['action2']
                 if action2 == 'select2':
                     term = request.POST['term']
-                    proveedores = Cliente.to_search_select(Cliente, term)
+                    field = request.POST['field']
                     datos = []
-                    for i in proveedores:
-                        datos.append(i.to_list_select())
+                    if field == 'proveedor':
+                        proveedores = Cliente.to_search_select(Cliente, term)
+                        for i in proveedores:
+                            datos.append(i.to_list_select())
+                    elif field == 'familiaMarketing':
+                        fmarketing = FamiliaMarketing.to_search_select(FamiliaMarketing, term)
+                        for i in fmarketing:
+                            datos.append(i.to_list_select())
                 else:
                     return super().post(request, *args, **kwargs)
             else:
@@ -181,10 +187,16 @@ class ArticuloUpdateView(BasicUpdateView, UpdateView):
                 action2 = request.POST['action2']
                 if action2 == 'select2':
                     term = request.POST['term']
-                    proveedores = Cliente.to_search_select(Cliente, term)
+                    field = request.POST['field']
                     datos = []
-                    for i in proveedores:
-                        datos.append(i.to_list_select())
+                    if field == 'proveedor':
+                        proveedores = Cliente.to_search_select(Cliente, term)
+                        for i in proveedores:
+                            datos.append(i.to_list_select())
+                    elif field == 'familiaMarketing':
+                        fmarketing = FamiliaMarketing.to_search_select(FamiliaMarketing, term)
+                        for i in fmarketing:
+                            datos.append(i.to_list_select())
                 else:
                     return super().post(request, *args, **kwargs)
             else:

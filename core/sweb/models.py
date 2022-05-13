@@ -292,7 +292,7 @@ class Cliente(ModelMixin, BaseModel):
                                    Q(provincia__icontains=value)
                                    )
 
-    # para la paginación por servidor utilizamos este método para los filtros
+    # para la paginación por select2
     def to_search_select(self, value):
         return self.objects.filter(Q(codigo__icontains=value) |
                                    Q(razonSocial__icontains=value)
@@ -522,6 +522,12 @@ class FamiliaMarketing(ModelMixin, BaseModel):
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
 
+    # para la paginación por select2
+    def to_search_select(self, value):
+        return self.objects.filter(Q(codigo__icontains=value) |
+                                   Q(descripcion__icontains=value)
+                                   )
+
     def to_list(self):
         # item = {}
         # if self.id is not None:
@@ -529,6 +535,13 @@ class FamiliaMarketing(ModelMixin, BaseModel):
             'id': self.id,
             'codigo': self.codigo,
             'descripcion': self.descripcion,
+        }
+        return item
+
+    def to_list_select(self):
+        item = {
+            'id': self.id,
+            'text': f'{self.codigo} - {self.descripcion}',
         }
         return item
 

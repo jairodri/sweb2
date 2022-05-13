@@ -1101,7 +1101,7 @@ class ArticuloForm(ModelForm):
             if self.bloqueo_ant:
                 raise ValidationError('Artículo pendiente de inventario')
 
-        print(cleaned_data)
+        # print(cleaned_data)
         return cleaned_data
 
 
