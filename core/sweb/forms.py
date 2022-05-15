@@ -757,27 +757,40 @@ class DescuentoRecambiosForm(ModelForm):
 class ArticuloForm(ModelForm):
 
     funcionCitroen = CharField(label='Contractual (S) / Rotación (R)', required=False, max_length=1)
+    nr = CharField(label='1 - Cambio Dígitos, 2 - Cambio Técnico', required=False, max_length=1, widget=HiddenInput(attrs={'id': 'id_nr'}))
+    traspasarCosteMedio = BooleanField(label='Traspasar Precio Coste Medio', required=False, widget=HiddenInput(attrs={'id': 'traspasarCosteMedio'}))
     cod_dto_proveedor = ''
     codAproPieza_ant = None
     bloqueo_ant = None
+    nuevaref_ant = None
     es_alta = None
+    referencia_nueva = False
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['proveedor'].queryset = Cliente.objects.none()
+        self.fields['familiaMarketing'].queryset = FamiliaMarketing.objects.none()
+
         if 'proveedor' in self.data:
             self.fields['proveedor'].queryset = Cliente.objects.all()
         elif self.instance.pk:
             self.fields['proveedor'].queryset = Cliente.objects.all().filter(pk=self.instance.proveedor.pk)
+
+        if 'familiaMarketing' in self.data:
+            self.fields['familiaMarketing'].queryset = FamiliaMarketing.objects.all()
+        elif self.instance.pk and self.instance.familiaMarketing:    # La familia marketing no es obligatoria de modo que preguntamos primero si está relleno
+            self.fields['familiaMarketing'].queryset = FamiliaMarketing.objects.all().filter(pk=self.instance.familiaMarketing.pk)
 
         # diferenciamos add/edit
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
             self.es_alta = False
             self.fields['referencia'].disabled = True
+            self.fields['existencias'].disabled = True
             self.codAproPieza_ant = self.get_initial_for_field(self.fields['codAproPieza'], 'codAproPieza')
             self.bloqueo_ant = self.get_initial_for_field(self.fields['bloqueo'], 'bloqueo')
+            self.nuevaref_ant = self.get_initial_for_field(self.fields['nuevaReferencia'], 'nuevaReferencia')
             # print(self.bloqueo_ant)
         else:
             self.es_alta = True
@@ -1052,10 +1065,42 @@ class ArticuloForm(ModelForm):
 
         return fechaAlta
 
+    def validar_nueva_referencia(self):
+        # Comprobamos primero si está el campo referencia sustituida, puesto que hubo una validación anterior
+        try:
+            nuevaReferencia = self.cleaned_data['nuevaReferencia']
+        except KeyError:
+            # si no hay campo no continuamos con la validación
+            return
+
+        if nuevaReferencia is None:
+            return
+
+        if nuevaReferencia == self.nuevaref_ant:
+            return
+
+        if config('DEFSUST') != 'S':
+            return
+
+        nr = self.cleaned_data['nr']
+        if nr == '1' or nr == '2':
+            self.referencia_nueva = True
+            self.fields['nr'].widget = widgets.HiddenInput(attrs={'id': 'id_nr'})
+            self.fields['nr'].required = False
+        else:
+            self.fields['nr'].widget = widgets.TextInput(attrs={'id': 'id_nr', 'maxlength': '1'})
+            self.fields['nr'].required = False
+            self.fields['traspasarCosteMedio'].widget = widgets.CheckboxInput(attrs={'id': 'traspasarCosteMedio'})
+            self.fields['traspasarCosteMedio'].required = False
+            raise ValidationError('Seleccione: 1 - Cambio Dígitos, 2 - Cambio Técnico')
+
+
     def clean(self):
         cleaned_data = self.cleaned_data
-        # print(self.data)
         # print(self.cleaned_data)
+
+        self.validar_nueva_referencia()
+
         funcionCitroen = cleaned_data['funcionCitroen']
         codigoFuncion = cleaned_data['codigoFuncion']
         # print(funcionCitroen)
@@ -1103,6 +1148,233 @@ class ArticuloForm(ModelForm):
 
         # print(cleaned_data)
         return cleaned_data
+
+    def procesar_nueva_referencia(self, articulo, articulo_nuevo):
+        nr = self.cleaned_data['nr']
+        traspasarCosteMedio = self.cleaned_data['traspasarCosteMedio']
+        # print(f'nr: {nr}')
+        # print(f'traspasarCosteMedio: {traspasarCosteMedio}')
+
+        # Actualizamos datos de la nueva referencia
+        if nr == '1':
+            articulo_nuevo.unidadCompra = articulo.unidadCompra
+            articulo_nuevo.unidadVenta = articulo.unidadVenta
+            articulo_nuevo.multiplo = articulo.multiplo
+            articulo_nuevo.unidadMedida = articulo.unidadMedida
+            articulo_nuevo.unidadStock = articulo.unidadStock
+            articulo_nuevo.codigoObsoleto = articulo.codigoObsoleto
+            articulo_nuevo.entradasMes = articulo.entradasMes
+            articulo_nuevo.salidasMes = articulo.salidasMes
+            articulo_nuevo.fechaUltMovimiento = articulo.fechaUltMovimiento
+            articulo_nuevo.stockSeguridad = articulo.stockSeguridad
+            articulo_nuevo.stockMinimo = articulo.stockMinimo
+            articulo_nuevo.puntoPedido = articulo.puntoPedido
+            articulo_nuevo.consumoMedio = articulo.consumoMedio
+            articulo_nuevo.codigoContable = articulo.codigoContable
+            articulo_nuevo.codAproPieza = articulo.codAproPieza
+            articulo_nuevo.codigoAbc = articulo.codigoAbc
+            articulo_nuevo.marca = articulo.marca
+            articulo_nuevo.difinventario = articulo.difinventario
+            articulo_nuevo.fechaUltimoInventario = articulo.fechaUltimoInventario
+            articulo_nuevo.entradasAcumuladas = articulo.entradasAcumuladas
+            articulo_nuevo.salidasAcumuladas = articulo.salidasAcumuladas
+            articulo_nuevo.codigoModelo = articulo.codigoModelo
+            articulo_nuevo.unidadesVendidasMes = articulo.unidadesVendidasMes
+            articulo_nuevo.unidadesVendidasm1 = articulo.unidadesVendidasm1
+            articulo_nuevo.unidadesVendidasm2 = articulo.unidadesVendidasm2
+            articulo_nuevo.unidadesVendidasm3 = articulo.unidadesVendidasm3
+            articulo_nuevo.unidadesVendidasm4 = articulo.unidadesVendidasm4
+            articulo_nuevo.unidadesVendidasm5 = articulo.unidadesVendidasm5
+            articulo_nuevo.unidadesVendidasm6 = articulo.unidadesVendidasm6
+            articulo_nuevo.unidadesVendidasAno = articulo.unidadesVendidasAno
+            articulo_nuevo.unidadesVendidasAnoAnt = articulo.unidadesVendidasAnoAnt
+            articulo_nuevo.importeVtasMesPvp = articulo.importeVtasMesPvp
+            articulo_nuevo.importeVtasMesCoste = articulo.importeVtasMesCoste
+            articulo_nuevo.importeDtoMes = articulo.importeDtoMes
+            articulo_nuevo.importeVtasAnoPvp = articulo.importeVtasAnoPvp
+            articulo_nuevo.importeVtasAnoCoste = articulo.importeVtasAnoCoste
+            articulo_nuevo.importeDtoAno = articulo.importeDtoAno
+            articulo_nuevo.importeVtasAnoAntPvp = articulo.importeVtasAnoAntPvp
+            articulo_nuevo.importeVtasAnoAntCoste = articulo.importeVtasAnoAntCoste
+            articulo_nuevo.unidadesCompradasMes = articulo.unidadesCompradasMes
+            articulo_nuevo.unidadesCompradasAno = articulo.unidadesCompradasAno
+            articulo_nuevo.unidadesCompradasAnoAnt = articulo.unidadesCompradasAnoAnt
+            articulo_nuevo.importeComprasMes = articulo.importeComprasMes
+            articulo_nuevo.importeComprasAno = articulo.importeComprasAno
+            articulo_nuevo.importeComprasAnoAnt = articulo.importeComprasAnoAnt
+            articulo_nuevo.unidadesSalTallerMes = articulo.unidadesSalTallerMes
+            articulo_nuevo.unidadesSalTallerAno = articulo.unidadesSalTallerAno
+            articulo_nuevo.importeSalTallerMes = articulo.importeSalTallerMes
+            articulo_nuevo.importeSalTallerAno = articulo.importeSalTallerAno
+            articulo_nuevo.existencias = articulo_nuevo.existencias + articulo.existencias
+            articulo_nuevo.otrasSalidasMes = articulo.otrasSalidasMes
+            articulo_nuevo.otrasSalidasAno = articulo.otrasSalidasAno
+            articulo_nuevo.otrasEntradasMes = articulo.otrasEntradasMes
+            articulo_nuevo.otrasEntradasAno = articulo.otrasEntradasAno
+            articulo_nuevo.importeOtrasSalmes = articulo.importeOtrasSalmes
+            articulo_nuevo.importeOtrasSalano = articulo.importeOtrasSalano
+            articulo_nuevo.importeOtrasEntmes = articulo.importeOtrasEntmes
+            articulo_nuevo.importeOtrasEntano = articulo.importeOtrasEntano
+            articulo_nuevo.stockinicialano = articulo.stockinicialano
+            articulo_nuevo.demandaNoServidaMes = articulo.demandaNoServidaMes
+            articulo_nuevo.demandaNoServidaAno = articulo.demandaNoServidaAno
+            articulo_nuevo.demandaNoServidaDia = articulo.demandaNoServidaDia
+            articulo_nuevo.ns = articulo.ns
+            articulo_nuevo.negativo = articulo.negativo
+            articulo_nuevo.imprimir = articulo.imprimir
+            articulo_nuevo.unidadesVendidasm7 = articulo.unidadesVendidasm7
+            articulo_nuevo.unidadesVendidasm8 = articulo.unidadesVendidasm8
+            articulo_nuevo.unidadesVendidasm9 = articulo.unidadesVendidasm9
+            articulo_nuevo.unidadesVendidasm10 = articulo.unidadesVendidasm10
+            articulo_nuevo.unidadesVendidasm11 = articulo.unidadesVendidasm11
+            articulo_nuevo.unidadesVendidasm12 = articulo.unidadesVendidasm12
+            articulo_nuevo.unidadesVendidas12m = articulo.unidadesVendidas12m
+            articulo_nuevo.unidadesDq = articulo.unidadesDq
+            articulo_nuevo.unidadesDq1 = articulo.unidadesDq1
+            articulo_nuevo.unidadesDq2 = articulo.unidadesDq2
+            articulo_nuevo.unidadesDq3 = articulo.unidadesDq3
+            articulo_nuevo.unidadesDq4 = articulo.unidadesDq4
+            articulo_nuevo.unidadesDq5 = articulo.unidadesDq5
+            articulo_nuevo.unidadesDq6 = articulo.unidadesDq6
+            articulo_nuevo.unidadesDq7 = articulo.unidadesDq7
+            articulo_nuevo.unidadesDq8 = articulo.unidadesDq8
+            articulo_nuevo.unidadesDq9 = articulo.unidadesDq9
+            articulo_nuevo.unidadesDq10 = articulo.unidadesDq10
+            articulo_nuevo.unidadesDq11 = articulo.unidadesDq11
+            articulo_nuevo.unidadesDq12 = articulo.unidadesDq12
+            articulo_nuevo.stockMinimoP = articulo.stockMinimoP
+            articulo_nuevo.stockSeguridadP = articulo.stockSeguridadP
+            articulo_nuevo.puntoPedidoP = articulo.puntoPedidoP
+            articulo_nuevo.consumoP = articulo.consumoP
+            articulo_nuevo.familia = articulo.familia
+            articulo_nuevo.fechaUltimaCompra = articulo.fechaUltimaCompra
+            articulo_nuevo.unidadesUltimaCompra = articulo.unidadesUltimaCompra
+            articulo_nuevo.unidadesUltimaVenta = articulo.unidadesUltimaVenta
+            articulo_nuevo.bloqueoPieza = articulo.bloqueoPieza
+            articulo_nuevo.fechaBloqueo = articulo.fechaBloqueo
+            articulo_nuevo.unidadesDqx = articulo.unidadesDqx
+            articulo_nuevo.unidadesDq1x = articulo.unidadesDq1x
+            articulo_nuevo.unidadesDq2x = articulo.unidadesDq2x
+            articulo_nuevo.unidadesDq3x = articulo.unidadesDq3x
+            articulo_nuevo.unidadesDq4x = articulo.unidadesDq4x
+            articulo_nuevo.unidadesDq5x = articulo.unidadesDq5x
+            articulo_nuevo.unidadesDq6x = articulo.unidadesDq6x
+            articulo_nuevo.unidadesDq7x = articulo.unidadesDq7x
+            articulo_nuevo.unidadesDq8x = articulo.unidadesDq8x
+        elif nr == '2':
+            articulo_nuevo.existencias = articulo_nuevo.existencias + articulo.existencias
+            articulo_nuevo.codAproPieza = CodigoAproPieza.objects.get(codigo='E')
+
+        if traspasarCosteMedio:
+            articulo_nuevo.precioCosteMedio = articulo.precioCosteMedio
+
+        articulo_nuevo.save()
+
+        # Ahora actualizamos datos de la referencia actual
+        articulo.existencias = 0
+        articulo.codAproPieza = CodigoAproPieza.objects.get(codigo='F')
+        if nr == '1':
+            articulo.entradasMes = 0
+            articulo.salidasMes = 0
+            articulo.entradasAcumuladas = 0
+            articulo.salidasAcumuladas = 0
+            articulo.unidadesVendidasMes = 0
+            articulo.unidadesVendidasMes1 = 0
+            articulo.unidadesVendidasMes2 = 0
+            articulo.unidadesVendidasMes3 = 0
+            articulo.unidadesVendidasMes4 = 0
+            articulo.unidadesVendidasMes5 = 0
+            articulo.unidadesVendidasMes6 = 0
+            articulo.unidadesVendidasMes7 = 0
+            articulo.unidadesVendidasMes8 = 0
+            articulo.unidadesVendidasMes9 = 0
+            articulo.unidadesVendidasMes10 = 0
+            articulo.unidadesVendidasMes11 = 0
+            articulo.unidadesVendidasMes12 = 0
+            articulo.unidadesVendidasAno = 0
+            articulo.unidadesVendidasAnoAnt = 0
+            articulo.importeVtasMesPvp = 0
+            articulo.importeVtasMesCoste = 0
+            articulo.importeDtoMes = 0
+            articulo.importeVtasAnoPvp = 0
+            articulo.importeVtasAnoCoste = 0
+            articulo.importeDtoAno = 0
+            articulo.importeVtasAnoAntPvp = 0
+            articulo.importeVtasAnoAntCoste = 0
+            articulo.unidadesCompradasMes = 0
+            articulo.unidadesCompradasAno = 0
+            articulo.unidadesCompradasAnoAnt = 0
+            articulo.importeComprasMes = 0
+            articulo.importeComprasAno = 0
+            articulo.importeComprasAnoAnt = 0
+            articulo.unidadesSalTallerMes = 0
+            articulo.unidadesSalTallerAno = 0
+            articulo.importeSalTallerMes = 0
+            articulo.importeSalTallerAno = 0
+            articulo.otrasSalidasMes = 0
+            articulo.otrasSalidasAno = 0
+            articulo.otrasEntradasMes = 0
+            articulo.otrasEntradasAno = 0
+            articulo.importeOtrasSalmes = 0
+            articulo.importeOtrasSalano = 0
+            articulo.importeOtrasEntmes = 0
+            articulo.importeOtrasEntano = 0
+            articulo.demandaNoServidaDia = 0
+            articulo.demandaNoServidaMes = 0
+            articulo.demandaNoServidaAno = 0
+            articulo.unidadesVendidas12m = 0
+            articulo.unidadesDq = 0
+            articulo.unidadesDq1 = 0
+            articulo.unidadesDq2 = 0
+            articulo.unidadesDq3 = 0
+            articulo.unidadesDq4 = 0
+            articulo.unidadesDq5 = 0
+            articulo.unidadesDq6 = 0
+            articulo.unidadesDq7 = 0
+            articulo.unidadesDq8 = 0
+            articulo.unidadesDq9 = 0
+            articulo.unidadesDq10 = 0
+            articulo.unidadesDq11 = 0
+            articulo.unidadesDq12 = 0
+            articulo.consumoP = 0
+            articulo.unidadesUltimaCompra = 0
+            articulo.unidadesUltimaVenta = 0
+            articulo.unidadesDqx = 0
+            articulo.unidadesDq1x = 0
+            articulo.unidadesDq2x = 0
+            articulo.unidadesDq3x = 0
+            articulo.unidadesDq4x = 0
+            articulo.unidadesDq5x = 0
+            articulo.unidadesDq6x = 0
+            articulo.unidadesDq7x = 0
+            articulo.unidadesDq8x = 0
+
+        return articulo
+
+    def save(self, commit=True):
+        # print(f'save en forms.py')
+        articulo = super().save(commit=False)
+
+        # Datos calculados
+        articulo.precioCoste = articulo.tarifa - (articulo.tarifa * articulo.codigoApro.descuento / 100)
+        if articulo.codigoPromo is None:
+            articulo.precioPromo = 0
+        else:
+            articulo.precioPromo = articulo.tarifa - (articulo.tarifa * articulo.codigoPromo.descuento / 100)
+
+        if self.es_alta:
+            # Inicializamos campos en altas
+            articulo.precioCosteMedio = articulo.precioCoste
+
+        if self.referencia_nueva:
+            nuevaReferencia = self.cleaned_data['nuevaReferencia']
+            articulo_nuevo = Articulo.objects.get(referencia=nuevaReferencia)
+            articulo = self.procesar_nueva_referencia(articulo, articulo_nuevo)
+
+        if commit:
+            articulo.save()
+
+        return articulo
 
 
 class TasaCodigoForm(ModelForm):

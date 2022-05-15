@@ -6,6 +6,7 @@ from core.sweb.models import Articulo, UnidadMedida, CodigoAproPieza, PrecioTari
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from core.sweb.mixins import BasicCreateView, BasicUpdateView, BasicDeleteView, BasicListView, BasicDetailView
 from datetime import datetime
+from django.contrib import messages
 
 
 class ArticuloListView(BasicListView, ListView):
@@ -239,6 +240,24 @@ class ArticuloDeleteView(BasicDeleteView, DeleteView):
         context['defclien'] = config('DEFCLIEN')
         return context
 
+    def form_valid(self, form):
+        # print(f'ArticuloDeleteView')
+        # Validaciones a realizar antes de eliminar el artículo
+        articulo = self.get_object()
+        hay_error = False
+        if articulo.bloqueo:
+            messages.error(self.request, 'Artículo pendiente de inventario')
+            hay_error = True
+        if articulo.existencias != 0:
+            messages.error(self.request, 'Artículo con existencias')
+            hay_error = True
+        if articulo.pedidosPendientes != 0:
+            messages.error(self.request, 'Artículo con pedidos pendientes')
+            hay_error = True
+        if hay_error:
+            return self.render_to_response(context=self.get_context_data())
+        else:
+            return super().form_valid(form)
 
 class ArticuloDetailView(BasicDetailView, DetailView):
     folder = 'articulos'

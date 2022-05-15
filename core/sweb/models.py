@@ -891,19 +891,20 @@ class Articulo(ModelMixin, BaseModel):
                                    Q(descripcion__icontains=value)
                                    )
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        # Datos calculados
-        self.precioCoste = self.tarifa - (self.tarifa * self.codigoApro.descuento / 100)
-        if self.codigoPromo is None:
-            self.precioPromo = 0
-        else:
-            self.precioPromo = self.tarifa - (self.tarifa * self.codigoPromo.descuento / 100)
-
-        if not self.pk:
-            # Inicializamos campos en altas
-            self.precioCosteMedio = self.precioCoste
-
-        super().save(force_insert=False, force_update=False, using=None, update_fields=None)
+    # def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    #     print(f'save en models.py')
+    #     # # Datos calculados
+    #     # self.precioCoste = self.tarifa - (self.tarifa * self.codigoApro.descuento / 100)
+    #     # if self.codigoPromo is None:
+    #     #     self.precioPromo = 0
+    #     # else:
+    #     #     self.precioPromo = self.tarifa - (self.tarifa * self.codigoPromo.descuento / 100)
+    #
+    #     # if not self.pk:
+    #     #     # Inicializamos campos en altas
+    #     #     self.precioCosteMedio = self.precioCoste
+    #
+    #     super().save(force_insert=False, force_update=False, using=None, update_fields=None)
 
     class Meta:
         db_table = 'sirtbref'

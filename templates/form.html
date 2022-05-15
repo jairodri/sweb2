@@ -116,13 +116,17 @@
             senderror(errors);
         {% endif %}
         {% if messages %}
+            var mensajes = ''
             {% for msg in messages %}
                 {% if msg.level == 40 %}
-                senderror('{{ msg }}');
+                    mensajes += '- {{ msg }} <br>';
                 {% else %}
-                sendmessage('{{ msg }}');
+                    sendmessage('{{ msg }}');
                 {% endif %}
             {% endfor %}
+            if (mensajes !== '') {
+                senderror(mensajes);
+            }
         {% endif %}
     </script>
 

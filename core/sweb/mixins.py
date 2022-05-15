@@ -206,6 +206,7 @@ class BasicDeleteView(BasicView):
         return context
 
     def form_valid(self, form):
+        # print(f'BasicDeleteView')
         # Reescribimos form_valid para controlar los ProtectedError
         try:
             self.object.delete()
