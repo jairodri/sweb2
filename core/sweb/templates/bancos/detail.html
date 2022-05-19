@@ -109,5 +109,16 @@
     </div>
 {% endblock %}
 
+{% block otrosbotones %}
+    {% if prev_pk %}
+        <a class="btn btn-secondary" href="/sweb/{{ folder }}/detail/{{ prev_pk }}/" role="button"><i
+                class="fas fa-angle-left"></i> Anterior</a>
+    {% endif %}
+    {% if next_pk %}
+        <a class="btn btn-secondary" href="/sweb/{{ folder }}/detail/{{ next_pk }}/" role="button"><i
+                class="fas fa-angle-right"></i> Siguiente</a>
+    {% endif %}
+{% endblock %}
+
 {% block jscript2 %}
 {% endblock %}

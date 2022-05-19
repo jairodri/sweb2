@@ -60,6 +60,9 @@ class BasicView(View):
     # utilizamos un decorador para añadir la funcionalidad de control de autenticación
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
+        # print(f'request: {request}')
+        # print(f'args: {args}')
+        # print(f'kwargs: {kwargs}')
         return super().dispatch(request, *args, **kwargs)
 
     # Paginación en servidor
@@ -85,6 +88,10 @@ class BasicView(View):
         # print(f'order_col_name: {order_col_name}')
         if order_dir == "desc":
             order_col_name = str('-' + order_col_name)
+
+        # guardamos info en sesión para la vista de detalle, botones Anterior y Siguiente
+        request.session['search'] = search
+        request.session['order_col_name'] = order_col_name
 
         if search:
             if modal:
@@ -219,6 +226,16 @@ class BasicDeleteView(BasicView):
 
 
 class BasicDetailView(BasicView):
+
+    def get_queryset(self):
+        search = self.request.session.get('search')
+        order_col_name = self.request.session.get('order_col_name')
+        if search is not None:
+            data_objects = self.model.to_search(self.model, value=search)
+        else:
+            data_objects = self.model.objects.all()
+        data_objects = data_objects.order_by(order_col_name)
+        return data_objects
 
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):

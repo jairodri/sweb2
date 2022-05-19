@@ -232,6 +232,12 @@
 {% endblock %}
 
 {% block otrosbotones %}
+    {% if prev_pk %}
+    <a class="btn btn-secondary" href="/sweb/{{ folder }}/detail/{{ prev_pk }}/" role="button"><i class="fas fa-angle-left"></i> Anterior</a>
+    {% endif %}
+    {% if next_pk %}
+    <a class="btn btn-secondary" href="/sweb/{{ folder }}/detail/{{ next_pk }}/" role="button"><i class="fas fa-angle-right"></i> Siguiente</a>
+    {% endif %}
     <button type="button" class="btn btn-info btn-flat" data-toggle="modal" data-target="#otrosDatosModal">
         <i class="fas fa-info"></i> Otros Datos
     </button>
@@ -246,6 +252,7 @@
     </button>
     {% endif %}
     {% include 'articulos/det_tasas.html' %}
+
 {% endblock %}
 
 {% block jscript2 %}
