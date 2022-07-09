@@ -21,6 +21,7 @@ from core.sweb.views.codigotasa.views import *
 from core.sweb.views.tasaneum.views import *
 from core.sweb.views.gamas.views import *
 from core.sweb.views.modelos.views import *
+from core.sweb.views.concesionarios.views import *
 
 app_name = 'sweb'
 
@@ -246,4 +247,10 @@ urlpatterns = [
     path(f'{ModeloCreateView.folder}/add/', ModeloCreateView.as_view(), name=f'{ModeloCreateView.folder}_add'),
     path(f'{ModeloUpdateView.folder}/edit/<int:pk>/', ModeloUpdateView.as_view(), name=f'{ModeloUpdateView.folder}_edit'),
     path(f'{ModeloDeleteView.folder}/delete/<int:pk>/', ModeloDeleteView.as_view(), name=f'{ModeloDeleteView.folder}_delete'),
+
+    # Concesionarios
+    path(f'{ConcesionarioListView.folder}/list/', ConcesionarioListView.as_view(), name=f'{ConcesionarioListView.folder}_list'),
+    path(f'{ConcesionarioCreateView.folder}/add/', ConcesionarioCreateView.as_view(), name=f'{ConcesionarioCreateView.folder}_add'),
+    path(f'{ConcesionarioUpdateView.folder}/edit/<int:pk>/', ConcesionarioUpdateView.as_view(), name=f'{ConcesionarioUpdateView.folder}_edit'),
+    path(f'{ConcesionarioDeleteView.folder}/delete/<int:pk>/', ConcesionarioDeleteView.as_view(), name=f'{ConcesionarioDeleteView.folder}_delete'),
 ]

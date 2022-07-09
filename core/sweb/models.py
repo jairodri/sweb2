@@ -1049,3 +1049,29 @@ class Modelo(ModelMixin, BaseModel):
         verbose_name = 'Modelo Vehículo'
         verbose_name_plural = 'Modelos Vehículos'
         ordering = ['codigo']
+
+
+class Concesionario(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=6, verbose_name='Código', db_column='cnc_codigo', unique=True,
+                              null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='cnc_descrip',
+                                   null=False, blank=False)
+    compostaje = models.IntegerField(verbose_name='Compostaje', db_column='cbc_compostaje', null=False, blank=False, default=0)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion} - {self.compostaje}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+            'compostaje': self.compostaje,
+        }
+        return item
+
+    class Meta:
+        db_table = 'sirtbcnc'
+        verbose_name = 'Concesionario Garantías'
+        verbose_name_plural = 'Concesionarios Garantías'
+        ordering = ['codigo']

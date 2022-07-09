@@ -611,3 +611,15 @@ class ModeloResource(resources.ModelResource):
             'codigo',
             'descripcion',
         )
+
+
+class ConcesionarioResource(resources.ModelResource):
+
+    class Meta:
+        model = Concesionario
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+            'compostaje',
+        )
