@@ -1432,3 +1432,34 @@ class TasaForm(ModelForm):
         }
 
 
+class GamaForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = Gama
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+            'objetivo': 'Objetivo'
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }
+
+
+class ModeloForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = Modelo
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }

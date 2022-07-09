@@ -999,3 +999,53 @@ class TasaNeumatico(ModelMixin, BaseModel):
         db_table = 'sirtbtsn'
         verbose_name = 'Tasa Neumático'
         verbose_name_plural = 'Tasas Neumáticos'
+
+
+class Gama(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=2, verbose_name='Código', db_column='gam_codigo', unique=True,
+                              null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='gam_descrip',
+                                   null=False, blank=False)
+    objetivo = models.IntegerField(verbose_name='Objetivo', db_column='gam_objetivo', null=False, blank=False, default=0)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion} - {self.objetivo}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+            'objetivo': self.objetivo,
+        }
+        return item
+
+    class Meta:
+        db_table = 'sirtbgam'
+        verbose_name = 'Gama Vehículo'
+        verbose_name_plural = 'Gamas Vehículos'
+        ordering = ['codigo']
+
+
+class Modelo(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=6, verbose_name='Código', db_column='mod_codigo', unique=True,
+                              null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='mod_descrip',
+                                   null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+        }
+        return item
+
+    class Meta:
+        db_table = 'sirtbmod'
+        verbose_name = 'Modelo Vehículo'
+        verbose_name_plural = 'Modelos Vehículos'
+        ordering = ['codigo']

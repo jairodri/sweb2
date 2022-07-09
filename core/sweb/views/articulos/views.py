@@ -1,6 +1,9 @@
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from decouple import config
+from django.views.generic.detail import BaseDetailView
+from reportlab.lib.colors import HexColor
+
 from core.sweb.forms import ArticuloForm, TasaForm
 from core.sweb.models import Articulo, UnidadMedida, CodigoAproPieza, PrecioTarifa, CodigoIva, CodigoContable, Tasa, TasaCodigo, Cliente, FamiliaMarketing
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
@@ -8,12 +11,27 @@ from core.sweb.mixins import BasicCreateView, BasicUpdateView, BasicDeleteView, 
 from datetime import datetime
 from django.contrib import messages
 from django.db.models import Q
+import io
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from reportlab.platypus import Paragraph, Table, TableStyle
+from reportlab.lib.units import cm
+from reportlab.lib import colors
 
 
 class ArticuloListView(BasicListView, ListView):
     folder = 'articulos'
     model = Articulo
     template_name = f'{folder}/list.html'
+
+    # sobreescribimos el método get_context_data para añadir info al contexto
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['itasas_url'] = reverse_lazy(f'sweb:{self.folder}_itasas')
+        return context
 
 
 class ArticuloCreateView(BasicCreateView, CreateView):
@@ -335,9 +353,100 @@ class ArticuloDetailView(BasicDetailView, DetailView):
         return context
 
 
+class ArticuloInformeTasasView(BaseDetailView):
 
+    folder = 'articulos'
 
+    def get(self, request, *args, **kwargs):
+        # Create a file-like buffer to receive PDF data.
+        buffer = io.BytesIO()
 
+        # Create the PDF object, using the buffer as its "file."
+        p = canvas.Canvas(buffer, pagesize=A4)
+        p.setTitle('Informe de Tasas')
+        p.setAuthor('SirioWeb')
+        p.setSubject('Informe de Tasas')
 
+        width_page, height_page = A4
+        print(f'width_page: {width_page} - height_page {height_page}')
+        margen_ancho = 30
+        end_header = height_page*0.8
 
+        # for font in p.getAvailableFonts():
+        #     print(font)
 
+        styles = getSampleStyleSheet()
+        # print(styles.byName)
+
+        # Header
+        p.setLineWidth(.3)
+
+        papp = '<font name=helvetica size=14 color="#007bff"><b>Sirio</b>Web</font>'
+        para = Paragraph(papp, style=styles["Normal"])
+        para.wrapOn(p, width_page, height_page)
+        para.drawOn(p, margen_ancho, 800)
+
+        # p.setFont('Helvetica-Bold', 20)
+        # p.drawString(margen_ancho, 800, 'Sirio')
+        # p.setFont('Helvetica', 20)
+        # p.drawString(margen_ancho+45, 800, 'Web')
+
+        p.setFont('Helvetica', 12)
+        p.drawString(480, 800, '21/05/2022')
+        p.drawString(margen_ancho, 780, config('DEFEMPRE'))
+
+        config('DEFCLIEN')
+        p.setFont('Helvetica', 12)
+        p.drawString(margen_ancho, end_header+9, 'Informe de Tasas')
+
+        # p.line(margen_ancho, end_header, width_page-margen_ancho, end_header)
+
+        # Table
+
+        # styleBH = styles['Normal']
+        # styleBH.alignment = TA_LEFT
+        # styleBH.fontSize = 10
+        # styleBH.color
+
+        tblstyle = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), HexColor(0x007bff)),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('FONT', (0, 1), (-1, -1), 'Helvetica'),
+            # ('FONTSIZE', (0, 0), (-1, 0), 14),
+            ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ])
+
+        # referencia = Paragraph('Referencia')
+        referencia = Paragraph('<font name=helvetica size=10 color=white><b>Referencia</b></font>')
+        # denominacion = Paragraph('Denominación', styleBH)
+        denominacion = Paragraph('<font name=helvetica size=10 color=white><b>Denominación</b></font>')
+        pvp = Paragraph('<font name=helvetica size=10 color=white><b>P.V.P.</b></font>')
+        dto = Paragraph('<font name=helvetica size=10 color=white><b>Dto.</b></font>')
+
+        data = []
+        data.append([referencia, denominacion, pvp, dto])
+
+        # Table body
+        # styleN = styles['BodyText']
+        # styleN.alignment = TA_LEFT
+        # styleN.fontSize = 8
+
+        high = 650
+        for tasa in Tasa.objects.all():
+            this_tasa = [tasa.referencia.referencia, tasa.denominacion, tasa.precio, tasa.descuento]
+            data.append(this_tasa)
+            high -= 18
+
+        tabla = Table(data, colWidths=[4*cm, 8*cm, 3*cm, 3*cm], style=tblstyle)
+        # table.setStyle(tblstyle)
+        tabla.wrapOn(p, width_page, height_page)
+        tabla.drawOn(p, margen_ancho, high)
+
+        # Close the PDF object cleanly, and we're done.
+        p.showPage()
+        p.save()
+
+        # FileResponse sets the Content-Disposition header so that browsers
+        # present the option to save the file.
+        buffer.seek(0)
+        return FileResponse(buffer, as_attachment=True, filename='infTasas.pdf')

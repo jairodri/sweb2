@@ -19,6 +19,8 @@ from core.sweb.views.precios.views import *
 from core.sweb.views.articulos.views import *
 from core.sweb.views.codigotasa.views import *
 from core.sweb.views.tasaneum.views import *
+from core.sweb.views.gamas.views import *
+from core.sweb.views.modelos.views import *
 
 app_name = 'sweb'
 
@@ -219,6 +221,7 @@ urlpatterns = [
     path(f'{ArticuloUpdateView.folder}/edit/<int:pk>/', ArticuloUpdateView.as_view(), name=f'{ArticuloUpdateView.folder}_edit'),
     path(f'{ArticuloDeleteView.folder}/delete/<int:pk>/', ArticuloDeleteView.as_view(), name=f'{ArticuloDeleteView.folder}_delete'),
     path(f'{ArticuloDetailView.folder}/detail/<int:pk>/', ArticuloDetailView.as_view(), name=f'{ArticuloDetailView.folder}_detail'),
+    path(f'{ArticuloInformeTasasView.folder}/itasas/', ArticuloInformeTasasView.as_view(), name=f'{ArticuloInformeTasasView.folder}_itasas'),
 
     # Códigos de Tasa
     path(f'{TasaCodigoListView.folder}/list/', TasaCodigoListView.as_view(), name=f'{TasaCodigoListView.folder}_list'),
@@ -231,4 +234,16 @@ urlpatterns = [
     path(f'{TasaNeumaticoCreateView.folder}/add/', TasaNeumaticoCreateView.as_view(), name=f'{TasaNeumaticoCreateView.folder}_add'),
     path(f'{TasaNeumaticoUpdateView.folder}/edit/<int:pk>/', TasaNeumaticoUpdateView.as_view(), name=f'{TasaNeumaticoUpdateView.folder}_edit'),
     path(f'{TasaNeumaticoDeleteView.folder}/delete/<int:pk>/', TasaNeumaticoDeleteView.as_view(), name=f'{TasaNeumaticoDeleteView.folder}_delete'),
+
+    # Gamas
+    path(f'{GamaListView.folder}/list/', GamaListView.as_view(), name=f'{GamaListView.folder}_list'),
+    path(f'{GamaCreateView.folder}/add/', GamaCreateView.as_view(), name=f'{GamaCreateView.folder}_add'),
+    path(f'{GamaUpdateView.folder}/edit/<int:pk>/', GamaUpdateView.as_view(), name=f'{GamaUpdateView.folder}_edit'),
+    path(f'{GamaDeleteView.folder}/delete/<int:pk>/', GamaDeleteView.as_view(), name=f'{GamaDeleteView.folder}_delete'),
+
+    # Modelos
+    path(f'{ModeloListView.folder}/list/', ModeloListView.as_view(), name=f'{ModeloListView.folder}_list'),
+    path(f'{ModeloCreateView.folder}/add/', ModeloCreateView.as_view(), name=f'{ModeloCreateView.folder}_add'),
+    path(f'{ModeloUpdateView.folder}/edit/<int:pk>/', ModeloUpdateView.as_view(), name=f'{ModeloUpdateView.folder}_edit'),
+    path(f'{ModeloDeleteView.folder}/delete/<int:pk>/', ModeloDeleteView.as_view(), name=f'{ModeloDeleteView.folder}_delete'),
 ]

@@ -80,6 +80,14 @@ class TasaNeumaticoAdmin(ImportExportModelAdmin):
     resource_class = TasaNeumaticoResource
 
 
+class GamaAdmin(ImportExportModelAdmin):
+    resource_class = GamaResource
+
+
+class ModeloAdmin(ImportExportModelAdmin):
+    resource_class = ModeloResource
+
+
 # Register your models here.
 # Para que se muestren en el panel administrador del servidor
 admin.site.register(Banco, BancoAdmin)
@@ -102,6 +110,8 @@ admin.site.register(Articulo, ArticuloAdmin)
 admin.site.register(Tasa, TasaAdmin)
 admin.site.register(TasaCodigo)
 admin.site.register(TasaNeumatico, TasaNeumaticoAdmin)
+admin.site.register(Gama, GamaAdmin)
+admin.site.register(Modelo, ModeloAdmin)
 
 
 

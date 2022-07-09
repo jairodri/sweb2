@@ -128,6 +128,12 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
+                                    <a href="{% url 'sweb:gamas_list' %}" class="nav-link">
+                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <p>013 Gamas Vehículos</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="{% url 'sweb:familiapieza_list' %}" class="nav-link">
                                         <i class="far fa-dot-circle nav-icon"></i>
                                         <p>014 Familias</p>
@@ -155,6 +161,12 @@
                                     <a href="{% url 'sweb:marcas_list' %}" class="nav-link">
                                         <i class="far fa-dot-circle nav-icon"></i>
                                         <p>019 Marcas</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'sweb:modelos_list' %}" class="nav-link">
+                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <p>024 Modelos Vehículos</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -214,7 +226,27 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-header"><i class="fas fa-wrench"></i> Taller</li>
+                <li class="nav-header">
+                    <i class="fas fa-wrench"></i> Taller
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-circle"></i>
+                        <p>
+                            Vehículos
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'sweb:articulos_list' %}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Gestión de Vehículos</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 <li class="nav-header"><i class="fas fa-file-invoice-dollar"></i> Facturas</li>
                 <li class="nav-header"><i class="fas fa-receipt"></i> Recibos</li>
                 <li class="nav-item">

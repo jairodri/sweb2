@@ -588,3 +588,26 @@ class TasaNeumaticoResource(resources.ModelResource):
             'descripcion',
             'precio',
         )
+
+
+class GamaResource(resources.ModelResource):
+
+    class Meta:
+        model = Gama
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+            'objetivo',
+        )
+
+
+class ModeloResource(resources.ModelResource):
+
+    class Meta:
+        model = Modelo
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )
