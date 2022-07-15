@@ -1055,6 +1055,19 @@ class Modelo(ModelMixin, BaseModel):
         }
         return item
 
+    def to_list_select(self):
+        item = {
+            'id': self.id,
+            'text': f'{self.codigo} - {self.descripcion}',
+        }
+        return item
+
+    # para la paginación por select2
+    def to_search_select(self, value):
+        return self.objects.filter(Q(codigo__icontains=value) |
+                                   Q(descripcion__icontains=value)
+                                   )
+
     class Meta:
         db_table = 'sirtbmod'
         verbose_name = 'Modelo Vehículo'
@@ -1080,6 +1093,19 @@ class Concesionario(ModelMixin, BaseModel):
             'compostaje': self.compostaje,
         }
         return item
+
+    def to_list_select(self):
+        item = {
+            'id': self.id,
+            'text': f'{self.codigo} - {self.descripcion}',
+        }
+        return item
+
+    # para la paginación por select2
+    def to_search_select(self, value):
+        return self.objects.filter(Q(codigo__icontains=value) |
+                                   Q(descripcion__icontains=value)
+                                   )
 
     class Meta:
         db_table = 'sirtbcnc'

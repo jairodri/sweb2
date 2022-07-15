@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from core.sweb.forms import VehiculoForm
-from core.sweb.models import Vehiculo, Cliente
+from core.sweb.models import Vehiculo, Cliente, Concesionario, Modelo
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from core.sweb.mixins import BasicCreateView, BasicUpdateView, BasicDeleteView, BasicListView, BasicDetailView
 from django.db.models import Q
@@ -37,6 +37,14 @@ class VehiculoCreateView(BasicCreateView, CreateView):
                         clientes = Cliente.to_search_select(Cliente, term)
                         for i in clientes:
                             datos.append(i.to_list_select_veh())
+                    elif field == 'concesionario':
+                        concesionarios = Concesionario.to_search_select(Concesionario, term)
+                        for i in concesionarios:
+                            datos.append(i.to_list_select())
+                    elif field == 'modelo':
+                        modelos = Modelo.to_search_select(Modelo, term)
+                        for i in modelos:
+                            datos.append(i.to_list_select())
                 else:
                     return super().post(request, *args, **kwargs)
             else:
@@ -72,6 +80,14 @@ class VehiculoUpdateView(BasicUpdateView, UpdateView):
                         clientes = Cliente.to_search_select(Cliente, term)
                         for i in clientes:
                             datos.append(i.to_list_select_veh())
+                    elif field == 'concesionario':
+                        concesionarios = Concesionario.to_search_select(Concesionario, term)
+                        for i in concesionarios:
+                            datos.append(i.to_list_select())
+                    elif field == 'modelo':
+                        modelos = Modelo.to_search_select(Modelo, term)
+                        for i in modelos:
+                            datos.append(i.to_list_select())
                 else:
                     return super().post(request, *args, **kwargs)
             else:

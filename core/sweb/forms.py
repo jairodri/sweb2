@@ -1491,10 +1491,23 @@ class VehiculoForm(ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['cliente'].queryset = Cliente.objects.none()
+        self.fields['concesionario'].queryset = Concesionario.objects.none()
+        self.fields['modelo'].queryset = Concesionario.objects.none()
+
         if 'cliente' in self.data:
             self.fields['cliente'].queryset = Cliente.objects.all()
         elif self.instance.pk:
             self.fields['cliente'].queryset = Cliente.objects.all().filter(pk=self.instance.cliente.pk)
+
+        if 'concesionario' in self.data:
+            self.fields['concesionario'].queryset = Concesionario.objects.all()
+        elif self.instance.pk:
+            self.fields['concesionario'].queryset = Concesionario.objects.all().filter(pk=self.instance.concesionario.pk)
+
+        if 'modelo' in self.data:
+            self.fields['modelo'].queryset = Modelo.objects.all()
+        elif self.instance.pk:
+            self.fields['modelo'].queryset = Modelo.objects.all().filter(pk=self.instance.modelo.pk)
 
         # En Vehículos dejamos Matrícula y Bastidor modificables
         # diferenciamos add/edit
