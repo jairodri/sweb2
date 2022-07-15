@@ -70,7 +70,7 @@ class BasicView(View):
         # Recuperarmos los datos enviados por POST en la llamada ajax con el parámetro serverSide: true
         datatables = request.POST
         # print(model)
-        # print(datatables)
+        # print(f'datatables: {datatables}')
         draw = int(datatables.get('draw'))
         # print(f'draw: {draw}')
         start = int(datatables.get('start'))
@@ -84,6 +84,7 @@ class BasicView(View):
         order_dir = datatables.get('order[0][dir]')
         # print(f'order dir: {order_dir}')
         order_col = 'columns[' + str(order_idx) + '][data]'
+        # print(f'order_col: {order_col}')
         order_col_name = datatables.get(order_col)
         # print(f'order_col_name: {order_col_name}')
         if order_dir == "desc":
@@ -100,9 +101,13 @@ class BasicView(View):
                 data_objects = model.to_search(model, value=search)
         else:
             data_objects = model.objects.all()
+        # print(f'data_objects: {data_objects}')
         records_total = data_objects.count()
+        # print(f'records_total: {records_total}')
         records_filtered = records_total
+        # print(f'records_filtered: {records_filtered}')
         data_objects = data_objects.order_by(order_col_name)
+        # print(f'data_objects: {data_objects}')
 
         page_number = int(start / length) + 1
         # print(f'page_number: {page_number}')
@@ -113,14 +118,14 @@ class BasicView(View):
             object_list = paginator.page(1).object_list
         except EmptyPage:
             object_list = paginator.page(paginator.num_pages).object_list
-
+        # print(f'object_list: {object_list}')
         data = []
         for i in object_list:
             if modal:
                 data.append(i.to_list_modal())
             else:
                 data.append(i.to_list())
-
+        # print(f'data: {data}')
         return {
             'draw': draw,
             'recordsTotal': records_total,
@@ -235,6 +240,7 @@ class BasicDetailView(BasicView):
         else:
             data_objects = self.model.objects.all()
         data_objects = data_objects.order_by(order_col_name)
+        # print(data_objects)
         return data_objects
 
     # sobreescribimos el método get_context_data para añadir info al contexto

@@ -1,0 +1,226 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <input type="hidden" name="tipo_" value="formbase">
+    <input type="hidden" name="action2" value="">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="{{ form.matricula.name }}">{{ form.matricula.label }}<span
+                            class="text-danger"> *</span></label>
+                {{ form.matricula | add_class:'form-control' }}
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="{{ form.vin.name }}">{{ form.vin.label }}<span
+                            class="text-danger"> *</span></label>
+                {{ form.vin | add_class:'form-control' }}
+            </div>
+        </div>
+    </div>
+    <div class="card card-light">
+        <div class="card-header"></div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="{{ form.cliente.name }}">{{ form.cliente.label }}<span
+                                class="text-danger"> *</span></label>
+                        {{ form.cliente | add_class:'form-control' | attr:'style="width: 100%;"' }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.marca.name }}">{{ form.marca.label }}<span
+                                class="text-danger"> *</span></label>
+                        {{ form.marca | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.gama.name }}">{{ form.gama.label }}<span
+                                class="text-danger"> *</span></label>
+                        {{ form.gama | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.modelo.name }}">{{ form.modelo.label }}<span
+                                class="text-danger"> *</span></label>
+                        {{ form.modelo | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.kilometros.name }}">{{ form.kilometros.label }}</label>
+                        {{ form.kilometros | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.freparacion.name }}">{{ form.freparacion.label }}</label>
+                        {{ form.freparacion | add_class:'form-control' | attr:'readonly'}}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.ireparacion.name }}">{{ form.ireparacion.label }}</label>
+                        {{ form.ireparacion | add_class:'form-control' | attr:'readonly'}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.concesionario.name }}">{{ form.concesionario.label }}<span
+                                class="text-danger"> *</span></label>
+                        {{ form.concesionario | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.fechaVenta.name }}">{{ form.fechaVenta.label }}</label>
+                        <div class="input-group date" id="fecventa" data-target-input="nearest">
+                            <div class="input-group-append" data-target="#fecventa" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                            {{ form.fechaVenta | add_class:'form-control' | add_class:'datetimepicker-input' | attr:'data-target:#fecalta' | attr:'data-inputmask-alias:datetime' | attr:'data-inputmask-inputformat:dd/mm/yyyy' | attr:'data-mask' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.fechaFinGarantia.name }}">{{ form.fechaFinGarantia.label }}</label>
+                        <div class="input-group date" id="ffingar" data-target-input="nearest">
+                            <div class="input-group-append" data-target="#ffingar" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                            {{ form.fechaFinGarantia | add_class:'form-control' | add_class:'datetimepicker-input' | attr:'data-target:#fecalta' | attr:'data-inputmask-alias:datetime' | attr:'data-inputmask-inputformat:dd/mm/yyyy' | attr:'data-mask' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="{{ form.norgpr.name }}">{{ form.norgpr.label }}</label>
+                        {{ form.norgpr | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <div class="form-group">
+                        <label for="{{ form.aorgpr.name }}">{{ form.aorgpr.label }}</label>
+                        {{ form.aorgpr | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+    <div class="card card-light">
+        <div class="card-header">
+            <h6 class="card-title">Códigos</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="{{ form.arranque.name }}">{{ form.arranque.label }}</label>
+                        {{ form.arranque | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="{{ form.llave.name }}">{{ form.llave.label }}</label>
+                        {{ form.llave | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="{{ form.mando.name }}">{{ form.mando.label }}</label>
+                        {{ form.mando | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="{{ form.radio.name }}">{{ form.radio.label }}</label>
+                        {{ form.radio | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+    <div class="form-group">
+        <label for="{{ form.notas.name }}">{{ form.notas.label }}</label>
+        {{ form.notas | add_class:'form-control' }}
+    </div>
+
+{% endblock %}
+
+{% block otrosbotones %}
+{% endblock %}
+
+{% block jscript2 %}
+    <script>
+    $(function () {
+        var table;
+        $('[data-mask]').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/aaaa'});
+        $('#fecventa').datetimepicker({
+            locale: 'es',
+            format: 'L',
+            autoClose: true,
+        });
+        $('#ffingar').datetimepicker({
+            locale: 'es',
+            format: 'L',
+            autoClose: true,
+        });
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4',
+            language: 'es',
+        });
+        $('#id_cliente').select2({
+            theme: 'bootstrap4',
+            language: 'es',
+            placeholder: 'Seleccione un cliente',
+            minimumInputLength: 1,
+            allowClear: true,
+            ajax: {
+                url: window.location.pathname,
+                dataType: 'json',
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                data: function (params) {
+                    var query = {
+                        'term': params.term,
+                        'action2': 'select2',
+                        'tipo_': 'formbase',
+                        'field': 'cliente',
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {id: item.id, text: item.text};
+                        })
+                    };
+                },
+             }
+        });
+    });
+</script>
+    <script type="application/javascript">
+        validar('{{ entity }}');
+    </script>
+{% endblock %}

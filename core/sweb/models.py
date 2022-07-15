@@ -326,6 +326,17 @@ class Cliente(ModelMixin, BaseModel):
         }
         return item
 
+    def to_list_select_veh(self):
+        stelefono = ''
+        if self.telefono is not None:
+            stelefono = ' - Teléfono: ' + self.telefono
+
+        item = {
+            'id': self.id,
+            'text': f'{self.codigo} - {self.razonSocial}{stelefono}',
+        }
+        return item
+
     class Meta:
         db_table = 'sirtbcli'
         verbose_name = 'Cliente'
@@ -1009,7 +1020,7 @@ class Gama(ModelMixin, BaseModel):
     objetivo = models.IntegerField(verbose_name='Objetivo', db_column='gam_objetivo', null=False, blank=False, default=0)
 
     def __str__(self):
-        return f'{self.codigo} - {self.descripcion} - {self.objetivo}'
+        return f'{self.codigo} - {self.descripcion}'
 
     def to_list(self):
         item = {
@@ -1059,7 +1070,7 @@ class Concesionario(ModelMixin, BaseModel):
     compostaje = models.IntegerField(verbose_name='Compostaje', db_column='cbc_compostaje', null=False, blank=False, default=0)
 
     def __str__(self):
-        return f'{self.codigo} - {self.descripcion} - {self.compostaje}'
+        return f'{self.codigo} - {self.descripcion}'
 
     def to_list(self):
         item = {
@@ -1075,3 +1086,70 @@ class Concesionario(ModelMixin, BaseModel):
         verbose_name = 'Concesionario Garantías'
         verbose_name_plural = 'Concesionarios Garantías'
         ordering = ['codigo']
+
+
+class Vehiculo(ModelMixin, BaseModel):
+    matricula = models.CharField(max_length=10, verbose_name='matrícula', db_column='veh_matri', null=True, blank=True)
+    vin = models.CharField(max_length=17, verbose_name='vin', db_column='veh_vin', null=True, blank=True)
+    cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, null=False, blank=False, db_column='veh_cliente', verbose_name='cliente')
+    marca = models.ForeignKey(Marca, on_delete=models.PROTECT, null=True, blank=True, db_column='veh_marca', verbose_name='marca')
+    gama = models.ForeignKey(Gama, on_delete=models.PROTECT, null=False, blank=False, db_column='veh_gama', verbose_name='gama')
+    modelo = models.ForeignKey(Modelo, on_delete=models.PROTECT, null=False, blank=False, db_column='veh_modelo', verbose_name='modelo')
+    concesionario = models.ForeignKey(Concesionario, on_delete=models.PROTECT, null=False, blank=False, db_column='veh_conces', verbose_name='concesionario')
+    kilometros = models.IntegerField(verbose_name='kilometros', db_column='veh_kmts', null=True, blank=True)
+    fechaVenta = models.DateTimeField(verbose_name='Fecha venta', db_column='veh_fventa', null=True, blank=True)
+    fechaFinGarantia = models.DateTimeField(verbose_name='Fecha fin garantía', db_column='veh_ffingar', null=True, blank=True)
+    notas = models.TextField(verbose_name='notas', db_column='veh_notas', null=True, blank=True)
+    norgpr = models.CharField(max_length=5, verbose_name='norgpr', db_column='veh_norgpr', null=True, blank=True)
+    aorgpr = models.CharField(max_length=2, verbose_name='aorgpr', db_column='veh_aorgpr', null=True, blank=True)
+    arranque = models.CharField(max_length=8, verbose_name='arranque', db_column='veh_arranq', null=True, blank=True)
+    llave = models.CharField(max_length=10, verbose_name='llave', db_column='veh_llave', null=True, blank=True)
+    mando = models.CharField(max_length=8, verbose_name='mando', db_column='veh_mando', null=True, blank=True)
+    radio = models.CharField(max_length=8, verbose_name='radio', db_column='veh_radio', null=True, blank=True)
+    fechaItv = models.DateTimeField(verbose_name='Fecha ITV', db_column='veh_fecitv', null=True, blank=True)
+    neumatico = models.CharField(max_length=15, verbose_name='neumatico', db_column='veh_neumat', null=True, blank=True)
+    fechaNeumatico = models.DateTimeField(verbose_name='Fecha Neumático', db_column='veh_fneuma', null=True, blank=True)
+    opPreventiva = models.BooleanField(verbose_name='operación preventiva', db_column='veh_opprev', default=False, null=False, blank=False)
+
+    def __str__(self):
+        return f'| {self.matricula} | {self.vin}'
+
+    def to_list(self):
+        # print(f'id: {self.id}')
+        # si el vehículo tiene un código marca con nulo no se puede extraer la descipción y peta el datatable
+        # al intentar ordenar por algún campo que en la primera página obtenga ese nulo
+        if self.marca is None:
+            marca_d = ''
+        else:
+            marca_d = self.marca.descripcion
+        # Para los nombres de los campos que son foreing key (Cliente, Marca, Modelo)
+        # definimos también el campo por el que queremos ordenar el datatable
+        item = {
+            'id': self.id,
+            'matricula': self.matricula,
+            'vin': self.vin,
+            'cliente__codigo': self.cliente.codigo,
+            # 'marca': self.marca.descripcion,
+            'marca__descripcion': marca_d,
+            'modelo__descripcion': self.modelo.descripcion,
+        }
+        # print(f'item: {item}')
+        return item
+
+    # para la paginación por servidor utilizamos este método para los filtros
+    def to_search(self, value):
+        return self.objects.filter(Q(matricula__icontains=value) |
+                                   Q(vin__icontains=value) |
+                                   Q(cliente__codigo__icontains=value) |
+                                   Q(marca__descripcion__icontains=value) |
+                                   Q(modelo__descripcion__icontains=value)
+                                   )
+
+    class Meta:
+        db_table = 'sirtbveh'
+        verbose_name = 'Vehículo'
+        verbose_name_plural = 'Vehículos'
+        # constraint para que la combinación de matrícula y vin no pueda repetirse
+        unique_together = ['matricula', 'vin']
+        ordering = ['matricula', 'vin']
+

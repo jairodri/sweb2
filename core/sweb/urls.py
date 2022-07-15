@@ -22,6 +22,7 @@ from core.sweb.views.tasaneum.views import *
 from core.sweb.views.gamas.views import *
 from core.sweb.views.modelos.views import *
 from core.sweb.views.concesionarios.views import *
+from core.sweb.views.vehiculos.views import *
 
 app_name = 'sweb'
 
@@ -253,4 +254,11 @@ urlpatterns = [
     path(f'{ConcesionarioCreateView.folder}/add/', ConcesionarioCreateView.as_view(), name=f'{ConcesionarioCreateView.folder}_add'),
     path(f'{ConcesionarioUpdateView.folder}/edit/<int:pk>/', ConcesionarioUpdateView.as_view(), name=f'{ConcesionarioUpdateView.folder}_edit'),
     path(f'{ConcesionarioDeleteView.folder}/delete/<int:pk>/', ConcesionarioDeleteView.as_view(), name=f'{ConcesionarioDeleteView.folder}_delete'),
+
+    # Vehículos
+    path(f'{VehiculoListView.folder}/list/', VehiculoListView.as_view(), name=f'{VehiculoListView.folder}_list'),
+    path(f'{VehiculoCreateView.folder}/add/', VehiculoCreateView.as_view(), name=f'{VehiculoCreateView.folder}_add'),
+    path(f'{VehiculoUpdateView.folder}/edit/<int:pk>/', VehiculoUpdateView.as_view(), name=f'{VehiculoUpdateView.folder}_edit'),
+    path(f'{VehiculoDeleteView.folder}/delete/<int:pk>/', VehiculoDeleteView.as_view(), name=f'{VehiculoDeleteView.folder}_delete'),
+    path(f'{VehiculoDetailView.folder}/detail/<int:pk>/', VehiculoDetailView.as_view(), name=f'{VehiculoDetailView.folder}_detail'),
 ]

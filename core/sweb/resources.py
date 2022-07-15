@@ -623,3 +623,93 @@ class ConcesionarioResource(resources.ModelResource):
             'descripcion',
             'compostaje',
         )
+
+
+class ForeignkeyModeloWidget(widgets.ForeignKeyWidget):
+
+    def clean(self, value, row=None, *args, **kwargs):
+        defecto = '000000'
+        if value is None:
+            return super().clean(value)
+
+        try:
+            q = Modelo.objects.get(codigo=value)
+        except Exception as e:
+            # En el caso de que no exista, utilizamos valor por defecto
+            q = Modelo.objects.get(codigo=defecto)
+        return super().clean(q.id)
+
+
+class ForeignkeyGamaWidget(widgets.ForeignKeyWidget):
+
+    def clean(self, value, row=None, *args, **kwargs):
+        if value is None:
+            return super().clean(value)
+
+        try:
+            q = Gama.objects.get(codigo=value)
+        except Exception as e:
+            # En el caso de que no exista, lo creamos
+            gama = Gama()
+            gama.codigo = value
+            gama.descripcion = '...'
+            gama.save()
+            q = Gama.objects.get(codigo=value)
+        return super().clean(q.id)
+
+
+class ForeignkeyMarcaWidget(widgets.ForeignKeyWidget):
+
+    def clean(self, value, row=None, *args, **kwargs):
+        if value is None:
+            return super().clean(value)
+
+        try:
+            q = Marca.objects.get(codigo=value)
+        except Exception as e:
+            # En el caso de que no exista, lo creamos
+            marca = Marca()
+            marca.codigo = value
+            marca.descripcion = '...'
+            marca.save()
+            q = Marca.objects.get(codigo=value)
+        return super().clean(q.id)
+
+
+class VehiculoResource(resources.ModelResource):
+    cliente = fields.Field(attribute='cliente', column_name='cliente', widget=ForeignKeyWidget(Cliente, field='codigo'))
+    marca = fields.Field(attribute='marca', column_name='marca', widget=ForeignkeyMarcaWidget(Marca, 'id'))
+    gama = fields.Field(attribute='gama', column_name='gama', widget=ForeignkeyGamaWidget(Gama, 'id'))
+    modelo = fields.Field(attribute='modelo', column_name='modelo', widget=ForeignkeyModeloWidget(Modelo, 'id'))
+    concesionario = fields.Field(attribute='concesionario', column_name='concesionario', widget=ForeignKeyWidget(Concesionario, field='codigo'))
+    fechaVenta = fields.Field(attribute='fechaVenta', column_name='fechaVenta', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
+    fechaFinGarantia = fields.Field(attribute='fechaFinGarantia', column_name='fechaFinGarantia', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
+    fechaItv = fields.Field(attribute='fechaItv', column_name='fechaItv', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
+    fechaNeumatico = fields.Field(attribute='fechaNeumatico', column_name='fechaNeumatico', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
+
+    class Meta:
+        model = Vehiculo
+        fields = (
+            'id',
+            'matricula',
+            'vin',
+            'cliente',
+            'marca',
+            'gama',
+            'modelo',
+            'concesionario',
+            'kilometros',
+            'fechaVenta',
+            'fechaFinGarantia',
+            'notas',
+            'norgpr',
+            'aorgpr',
+            'arranque',
+            'llave',
+            'mando',
+            'radio',
+            'fechaItv',
+            'neumatico',
+            'fechaNeumatico',
+            'opPreventiva',
+        )

@@ -1,0 +1,160 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="matricula">Matrícula</label>
+                <input type="text" name="matricula" class="form-control" readonly value="{{ object.matricula |default_if_none:'' }}">
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="vin">Nº Bastidor</label>
+                <input type="text" name="vin" class="form-control" readonly value="{{ object.vin |default_if_none:'' }}">
+            </div>
+        </div>
+    </div>
+    <div class="card card-light">
+        <div class="card-header"></div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="cliente">Cliente</label>
+                        <input type="text" name="cliente" class="form-control" readonly value="{{ object.cliente }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="marca">Marca</label>
+                        <input type="text" name="marca" class="form-control" readonly value="{{ object.marca |default_if_none:''}}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="gama">Gama</label>
+                        <input type="text" name="gama" class="form-control" readonly value="{{ object.gama }}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="modelo">Modelo</label>
+                        <input type="text" name="modelo" class="form-control" readonly value="{{ object.modelo }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="kilometros">Kilometraje</label>
+                        <input type="text" name="kilometros" class="form-control" readonly value="{{ object.kilometros }}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="freparacion">Fecha Reparación</label>
+                        <input type="text" name="freparacion" class="form-control" readonly value="{{ object.freparacion }}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="ireparacion">Importe Reparación</label>
+                        <input type="text" name="ireparacion" class="form-control" readonly value="{{ object.ireparacion }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="concesionario">Concesionario Vendedor</label>
+                        <input type="text" name="concesionario" class="form-control" readonly value="{{ object.concesionario }}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="fechaVenta">Fecha de Venta</label>
+                        <input type="text" name="fechaVenta" class="form-control" readonly value="{{ object.fechaVenta | date:"SHORT_DATE_FORMAT" |default_if_none:'' }}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="fechaFinGarantia">Fecha Fin Garantía</label>
+                        <input type="text" name="fechaFinGarantia" class="form-control" readonly value="{{ object.fechaFinGarantia | date:"SHORT_DATE_FORMAT" |default_if_none:'' }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="norgpr">Nº ORG PR</label>
+                        <input type="text" name="norgpr" class="form-control" readonly value="{{ object.norgpr |default_if_none:''}}">
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <div class="form-group">
+                        <label for="aorgpr">A.O.PR</label>
+                        <input type="text" name="aorgpr" class="form-control" readonly value="{{ object.aorgpr |default_if_none:''}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+    <div class="card card-light">
+        <div class="card-header">
+            <h6 class="card-title">Códigos</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="arranque">Arranque</label>
+                        <input type="text" name="arranque" class="form-control" readonly value="{{ object.arranque |default_if_none:''}}">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="llave">Llave</label>
+                        <input type="text" name="llave" class="form-control" readonly value="{{ object.llave |default_if_none:''}}">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="mando">Mando</label>
+                        <input type="text" name="mando" class="form-control" readonly value="{{ object.mando |default_if_none:''}}">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="radio">Radio</label>
+                        <input type="text" name="radio" class="form-control" readonly value="{{ object.radio |default_if_none:''}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+    <div class="form-group">
+        <label for="{{ form.notas.name }}">{{ form.notas.label }}</label>
+        {{ form.notas | add_class:'form-control' }}
+        <label for="notas">Notas</label>
+        <input type="text" name="notas" class="form-control" readonly value="{{ object.notas |default_if_none:'' }}">
+    </div>
+
+{% endblock %}
+
+{% block otrosbotones %}
+    {% if prev_pk %}
+    <a class="btn btn-secondary" href="/sweb/{{ folder }}/detail/{{ prev_pk }}/" role="button"><i class="fas fa-angle-left"></i> Anterior</a>
+    {% endif %}
+    {% if next_pk %}
+    <a class="btn btn-secondary" href="/sweb/{{ folder }}/detail/{{ next_pk }}/" role="button"><i class="fas fa-angle-right"></i> Siguiente</a>
+    {% endif %}
+{% endblock %}
+
+{% block jscript2 %}
+{% endblock %}

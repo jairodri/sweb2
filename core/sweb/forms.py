@@ -9,22 +9,22 @@ from decouple import config
 from datetime import datetime
 from django.utils.timezone import get_current_timezone
 
-LIST_TABLES = [
-    ('01', 'Descuentos MO'),
-    ('02', 'Tipos de Cliente'),
-    ('03', 'Formas de Pago'),
-    ('04', 'Bancos'),
-    ('05', 'Clientes/Proveedores'),
-]
-
-
-class ImportarForm(Form):
-    lista_tablas = CharField(widget=Select(choices=LIST_TABLES))
-    fichero_tabla = FileField()
-
-    def clean(self):
-        cleaned_data = self.cleaned_data
-        # print(cleaned_data)
+# LIST_TABLES = [
+#     ('01', 'Descuentos MO'),
+#     ('02', 'Tipos de Cliente'),
+#     ('03', 'Formas de Pago'),
+#     ('04', 'Bancos'),
+#     ('05', 'Clientes/Proveedores'),
+# ]
+#
+#
+# class ImportarForm(Form):
+#     lista_tablas = CharField(widget=Select(choices=LIST_TABLES))
+#     fichero_tabla = FileField()
+#
+#     def clean(self):
+#         cleaned_data = self.cleaned_data
+#         # print(cleaned_data)
 
 
 class FormaDePagoForm(CodigoBaseForm, ModelForm):
@@ -1480,3 +1480,168 @@ class ConcesionarioForm(CodigoBaseForm, ModelForm):
             'codigo': TextInput(attrs={'required': True}),
             'descripcion': TextInput(attrs={'required': True}),
         }
+
+
+class VehiculoForm(ModelForm):
+
+    freparacion = CharField(label='Fecha Reparación', required=False)
+    ireparacion = CharField(label='Importe Reparación', required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['cliente'].queryset = Cliente.objects.none()
+        if 'cliente' in self.data:
+            self.fields['cliente'].queryset = Cliente.objects.all()
+        elif self.instance.pk:
+            self.fields['cliente'].queryset = Cliente.objects.all().filter(pk=self.instance.cliente.pk)
+
+        # En Vehículos dejamos Matrícula y Bastidor modificables
+        # diferenciamos add/edit
+        # instance = getattr(self, 'instance', None)
+        # if instance and instance.pk:
+        #     # Puede que la matrícula o el vin no estén rellenos
+        #     # Por tanto, solo deshabilitamos el campo si está relleno
+        #     matricula = self.instance.matricula
+        #     vin = self.instance.vin
+        #     # print(f'Matrícula: {matricula}')
+        #     # print(f'VIN: {vin}')
+        #     if matricula is not None:
+        #         self.fields['matricula'].disabled = True
+        #     if vin is not None:
+        #         self.fields['vin'].disabled = True
+        # else:
+        self.fields['matricula'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = Vehiculo
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'matricula': 'Matrícula',
+            'vin': 'Nº Bastidor',
+            'cliente': 'Cliente',
+            'marca': 'Marca',
+            'gama': 'Gama',
+            'modelo': 'Modelo',
+            'concesionario': 'Concesionario Vendedor',
+            'kilometros': 'Kilometraje',
+            'fechaVenta': 'Fecha de Venta',
+            'fechaFinGarantia': 'Fecha Fin Garantía',
+            'notas': 'Notas',
+            'norgpr': 'Nº ORG PR',
+            'aorgpr': 'A.O.PR',
+            'arranque': 'Arranque',
+            'llave': 'Llave',
+            'mando': 'Mando',
+            'radio': 'Radio',
+        }
+        widgets = {
+            'notas': Textarea(attrs={'rows': 4}),
+            'marca': Select(attrs={'required': True}),
+        }
+
+    def clean_matricula(self):
+        matricula = self.cleaned_data['matricula']
+        if not matricula:
+            return matricula
+
+        matricula = matricula.upper()
+
+        # comprobamos si ya existe en la tabla otro código igual
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            # print(f'id: {instance.pk}')
+            vehiculos = Vehiculo.objects.filter(matricula=matricula).exclude(pk=instance.pk)
+        else:
+            vehiculos = Vehiculo.objects.filter(matricula=matricula)
+        if vehiculos:
+            raise ValidationError('Ya existe un Vehículo con esta Matrícula: %(value)s', code='coddup', params={'value': matricula})
+
+        return matricula
+
+    def clean_vin(self):
+        vin = self.cleaned_data['vin']
+        if not vin:
+            return vin
+
+        vin = vin.upper()
+
+        # comprobamos si ya existe en la tabla otro código igual
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            # print(f'id: {instance.pk}')
+            vehiculos = Vehiculo.objects.filter(vin=vin).exclude(pk=instance.pk)
+        else:
+            vehiculos = Vehiculo.objects.filter(vin=vin)
+        if vehiculos:
+            raise ValidationError('Ya existe un Vehículo con este Bastidor: %(value)s', code='coddup', params={'value': vin})
+
+        return vin
+
+    def clean_cliente(self):
+        cliente = self.cleaned_data['cliente']
+
+        if cliente is None:
+            raise ValidationError('Cliente es obligatorio')
+
+        return cliente
+
+    def clean_marca(self):
+        marca = self.cleaned_data['marca']
+
+        if marca is None:
+            raise ValidationError('Marca es obligatoria')
+
+        return marca
+
+    def clean_gama(self):
+        gama = self.cleaned_data['gama']
+
+        if gama is None:
+            raise ValidationError('Gama es obligatoria')
+
+        return gama
+
+    def clean_modelo(self):
+        modelo = self.cleaned_data['modelo']
+
+        if modelo is None:
+            raise ValidationError('Modelo es obligatorio')
+
+        return modelo
+
+    def clean_concesionario(self):
+        concesionario = self.cleaned_data['concesionario']
+
+        if concesionario is None:
+            raise ValidationError('Concesionario Vendedor es obligatorio')
+
+        return concesionario
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        print(self.cleaned_data)
+
+        # NORGPR es obligatorio si la marca es Citroen
+        try:
+            norgpr = cleaned_data['norgpr']
+            marca = cleaned_data['marca']
+            if norgpr is None and str(marca).find('CITROEN') != -1:
+                raise ValidationError('Nº ORG PR es obligatorio para vehículos Citroen')
+        except KeyError:
+            # si no hay campo no continuamos con la validación
+            pass
+
+        # Los campos Matrícula y VIN no pueden estar los dos vacíos
+        # Comprobamos primero si está el campo, puesto que hubo una validación anterior
+        try:
+            matricula = cleaned_data['matricula']
+            vin = cleaned_data['vin']
+            if matricula is None and vin is None:
+                raise ValidationError('Matrícula o Bastidor obligatorios')
+        except KeyError:
+            # si no hay campo no continuamos con la validación
+            pass
+
+        return cleaned_data
