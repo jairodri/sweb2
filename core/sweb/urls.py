@@ -23,6 +23,8 @@ from core.sweb.views.gamas.views import *
 from core.sweb.views.modelos.views import *
 from core.sweb.views.concesionarios.views import *
 from core.sweb.views.vehiculos.views import *
+from core.sweb.views.tiposor.views import *
+from core.sweb.views.catoper.views import *
 
 app_name = 'sweb'
 
@@ -261,4 +263,17 @@ urlpatterns = [
     path(f'{VehiculoUpdateView.folder}/edit/<int:pk>/', VehiculoUpdateView.as_view(), name=f'{VehiculoUpdateView.folder}_edit'),
     path(f'{VehiculoDeleteView.folder}/delete/<int:pk>/', VehiculoDeleteView.as_view(), name=f'{VehiculoDeleteView.folder}_delete'),
     path(f'{VehiculoDetailView.folder}/detail/<int:pk>/', VehiculoDetailView.as_view(), name=f'{VehiculoDetailView.folder}_detail'),
+
+    # Tipos de Órdenes de Reparación
+    path(f'{TipoOrdenReparacionListView.folder}/list/', TipoOrdenReparacionListView.as_view(), name=f'{TipoOrdenReparacionListView.folder}_list'),
+    path(f'{TipoOrdenReparacionCreateView.folder}/add/', TipoOrdenReparacionCreateView.as_view(), name=f'{TipoOrdenReparacionCreateView.folder}_add'),
+    path(f'{TipoOrdenReparacionUpdateView.folder}/edit/<int:pk>/', TipoOrdenReparacionUpdateView.as_view(), name=f'{TipoOrdenReparacionUpdateView.folder}_edit'),
+    path(f'{TipoOrdenReparacionDeleteView.folder}/delete/<int:pk>/', TipoOrdenReparacionDeleteView.as_view(), name=f'{TipoOrdenReparacionDeleteView.folder}_delete'),
+
+    # Categorías de Operarios
+    path(f'{CategoriaOperarioListView.folder}/list/', CategoriaOperarioListView.as_view(), name=f'{CategoriaOperarioListView.folder}_list'),
+    path(f'{CategoriaOperarioCreateView.folder}/add/', CategoriaOperarioCreateView.as_view(), name=f'{CategoriaOperarioCreateView.folder}_add'),
+    path(f'{CategoriaOperarioUpdateView.folder}/edit/<int:pk>/', CategoriaOperarioUpdateView.as_view(), name=f'{CategoriaOperarioUpdateView.folder}_edit'),
+    path(f'{CategoriaOperarioDeleteView.folder}/delete/<int:pk>/', CategoriaOperarioDeleteView.as_view(), name=f'{CategoriaOperarioDeleteView.folder}_delete'),
+
 ]

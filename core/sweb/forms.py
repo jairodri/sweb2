@@ -1658,3 +1658,37 @@ class VehiculoForm(ModelForm):
             pass
 
         return cleaned_data
+
+
+class TipoOrdenReparacionForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = TipoOrdenReparacion
+        fields = '__all__'
+        # excluimos los campos de auditoría
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'minlength': 1, 'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }
+
+
+class CategoriaOperarioForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = CategoriaOperario
+        fields = '__all__'
+        # excluimos los campos de auditoría
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'minlength': 1, 'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }

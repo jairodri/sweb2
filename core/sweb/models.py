@@ -1045,7 +1045,8 @@ class Modelo(ModelMixin, BaseModel):
                                    null=False, blank=False)
 
     def __str__(self):
-        return f'{self.codigo} - {self.descripcion}'
+        # Elimianmos espacios de la descripción del modelo que está almacenada con cierta estructura
+        return f'{self.codigo} - {self.descripcion.lstrip()}'
 
     def to_list(self):
         item = {
@@ -1179,3 +1180,46 @@ class Vehiculo(ModelMixin, BaseModel):
         unique_together = ['matricula', 'vin']
         ordering = ['matricula', 'vin']
 
+
+class TipoOrdenReparacion(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=1, verbose_name='Código', db_column='tor_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='tor_descrip', null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+        }
+        return item
+
+    class Meta:
+        db_table = 'sirtbtor'
+        verbose_name = 'Tipo Orden Reparación'
+        verbose_name_plural = 'Tipos de Órdenes Reparación'
+        ordering = ['codigo']
+
+
+class CategoriaOperario(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=1, verbose_name='Código', db_column='cop_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='cop_descrip', null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+        }
+        return item
+
+    class Meta:
+        db_table = 'sirtbcop'
+        verbose_name = 'Categoría Operario'
+        verbose_name_plural = 'Categorías de Operarios'
+        ordering = ['codigo']

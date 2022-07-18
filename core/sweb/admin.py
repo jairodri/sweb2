@@ -96,6 +96,14 @@ class VehiculoAdmin(ImportExportModelAdmin):
     resource_class = VehiculoResource
 
 
+class TipoOrdenReparacionAdmin(ImportExportModelAdmin):
+    resource_class = TipoOrdenReparacionResource
+
+
+class CategoriaOperarioAdmin(ImportExportModelAdmin):
+    resource_class = CategoriaOperarioResource
+
+
 # Register your models here.
 # Para que se muestren en el panel administrador del servidor
 admin.site.register(Banco, BancoAdmin)
@@ -122,6 +130,8 @@ admin.site.register(Gama, GamaAdmin)
 admin.site.register(Modelo, ModeloAdmin)
 admin.site.register(Concesionario, ConcesionarioAdmin)
 admin.site.register(Vehiculo, VehiculoAdmin)
+admin.site.register(TipoOrdenReparacion, TipoOrdenReparacionAdmin)
+admin.site.register(CategoriaOperario, CategoriaOperarioAdmin)
 
 
 

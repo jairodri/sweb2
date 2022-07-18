@@ -713,3 +713,26 @@ class VehiculoResource(resources.ModelResource):
             'fechaNeumatico',
             'opPreventiva',
         )
+
+
+class TipoOrdenReparacionResource(resources.ModelResource):
+
+    class Meta:
+        model = TipoOrdenReparacion
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )
+
+
+class CategoriaOperarioResource(resources.ModelResource):
+
+    class Meta:
+        model = CategoriaOperario
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )
+
