@@ -25,6 +25,7 @@ from core.sweb.views.concesionarios.views import *
 from core.sweb.views.vehiculos.views import *
 from core.sweb.views.tiposor.views import *
 from core.sweb.views.catoper.views import *
+from core.sweb.views.opetaller.views import *
 
 app_name = 'sweb'
 
@@ -275,5 +276,12 @@ urlpatterns = [
     path(f'{CategoriaOperarioCreateView.folder}/add/', CategoriaOperarioCreateView.as_view(), name=f'{CategoriaOperarioCreateView.folder}_add'),
     path(f'{CategoriaOperarioUpdateView.folder}/edit/<int:pk>/', CategoriaOperarioUpdateView.as_view(), name=f'{CategoriaOperarioUpdateView.folder}_edit'),
     path(f'{CategoriaOperarioDeleteView.folder}/delete/<int:pk>/', CategoriaOperarioDeleteView.as_view(), name=f'{CategoriaOperarioDeleteView.folder}_delete'),
+
+    # Operarios Taller
+    path(f'{OperarioListView.folder}/list/', OperarioListView.as_view(), name=f'{OperarioListView.folder}_list'),
+    path(f'{OperarioCreateView.folder}/add/', OperarioCreateView.as_view(), name=f'{OperarioCreateView.folder}_add'),
+    path(f'{OperarioUpdateView.folder}/edit/<int:pk>/', OperarioUpdateView.as_view(), name=f'{OperarioUpdateView.folder}_edit'),
+    path(f'{OperarioDeleteView.folder}/delete/<int:pk>/', OperarioDeleteView.as_view(), name=f'{OperarioDeleteView.folder}_delete'),
+    path(f'{OperarioDetailView.folder}/detail/<int:pk>/', OperarioDetailView.as_view(), name=f'{OperarioDetailView.folder}_detail'),
 
 ]

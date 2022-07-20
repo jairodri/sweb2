@@ -736,3 +736,68 @@ class CategoriaOperarioResource(resources.ModelResource):
             'descripcion',
         )
 
+
+class OperarioResource(resources.ModelResource):
+
+    categoria = fields.Field(attribute='categoria', column_name='categoria', widget=ForeignKeyWidget(CategoriaOperario, field='codigo'))
+
+    class Meta:
+        model = Operario
+        fields = (
+            'id',
+            'codigo',
+            'nombre',
+            'categoria',
+            'actividad',
+            'costeHora',
+            'costeHoraExtra',
+            'potencialDia',
+            'potencialMes',
+            'potencialAno',
+            'efectivoMarca',
+            'absentismoDia',
+            'absentismoMes',
+            'absentismoAno',
+            'absentismoSocialDia',
+            'absentismoSocialMes',
+            'absentismoSocialAno',
+            'bonoDia',
+            'bonoMes',
+            'bonoAno',
+            'horasExtraDia',
+            'horasExtraMes',
+            'horasExtraAno',
+            'hExtCurInvertidoMes',
+            'hExtCurInvertidoAno',
+            'hExtFacInvertidoMes',
+            'hExtFacBaremoMes',
+            'hExtFacInvertidoDia',
+            'hExtFacBaremoDia',
+            'hExtFacInvertidoAno',
+            'hExtFacBaremoAno',
+            'hIntCurInvertidoMes',
+            'hIntCurInvertidoAno',
+            'hIntFacInvertidoMes',
+            'hIntFacBaremoMes',
+            'hIntFacInvertidoDia',
+            'hIntFacBaremoDia',
+            'hIntFacInvertidoAno',
+            'hGarCurInvertidoMes',
+            'hGarCurInvertidoAno',
+            'hGarFacInvertidoMes',
+            'hGarFacBaremoMes',
+            'hGarFacInvertidoDia',
+            'hGarFacBaremoDia',
+            'hGarFacInvertidoAno',
+            'hGarFacBaremoAno',
+            'hImpCurInvertidoMes',
+            'hImpFacInvertidoMes',
+            'hImpFacInvertidoAno',
+            'horaEntrada1',
+            'horaSalida1',
+            'horaEntrada2',
+            'horaSalida2',
+            'horaEntradaEspecial',
+            'horaSalidaEspecial',
+            'trabajoEnCurso'
+        )

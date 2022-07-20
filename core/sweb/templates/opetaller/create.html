@@ -1,0 +1,273 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <input type="hidden" name="tipo_" value="formbase">
+    <input type="hidden" name="action2" value="">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="{{ form.codigo.name }}">{{ form.codigo.label }}<span
+                            class="text-danger"> *</span></label>
+                {{ form.codigo | add_class:'form-control' }}
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div class="form-group">
+                <label for="{{ form.nombre.name }}">{{ form.nombre.label }}<span
+                            class="text-danger"> *</span></label>
+                {{ form.nombre | add_class:'form-control' }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="{{ form.categoria.name }}">{{ form.categoria.label }}<span
+                            class="text-danger"> *</span></label>
+                {{ form.categoria | add_class:'form-control' }}
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="{{ form.actividad.name }}">{{ form.actividad.label }}</label>
+                {{ form.actividad | add_class:'form-control' }}
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="{{ form.efectivoMarca.name }}">{{ form.efectivoMarca.label }}</label>
+                {{ form.efectivoMarca | add_class:'form-control' }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="{{ form.costeHora.name }}">{{ form.costeHora.label }}</label>
+                {{ form.costeHora | add_class:'form-control' }}
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="{{ form.costeHoraExtra.name }}">{{ form.costeHoraExtra.label }}</label>
+                {{ form.costeHoraExtra | add_class:'form-control' }}
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="{{ form.potencialMes.name }}">{{ form.potencialMes.label }}</label>
+                {{ form.potencialMes | add_class:'form-control' | attr:'readonly'}}
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="{{ form.potencialAno.name }}">{{ form.potencialAno.label }}</label>
+                {{ form.potencialAno | add_class:'form-control' | attr:'readonly'}}
+            </div>
+        </div>
+    </div>
+    <div class="card card-light">
+        <div class="card-header"></div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="{{ form.horaEntrada1.name }}">{{ form.horaEntrada1.label }}</label>
+                        <div class="input-group date" id="hent1" data-target-input="nearest">
+                            <div class="input-group-append" data-target="#hent1" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="far fa-clock"></i></div>
+                            </div>
+                            {{ form.horaEntrada1 | add_class:'form-control' | add_class:'datetimepicker-input' | attr:'data-target:#hent1' | attr:'data-inputmask-alias:datetime' | attr:'data-inputmask-inputformat:HH:MM' | attr:'data-mask' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="{{ form.horaSalida1.name }}">{{ form.horaSalida1.label }}</label>
+                        <div class="input-group date" id="hsal1" data-target-input="nearest">
+                            <div class="input-group-append" data-target="#hsal1" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="far fa-clock"></i></div>
+                            </div>
+                            {{ form.horaSalida1 | add_class:'form-control' | add_class:'datetimepicker-input' | attr:'data-target:#hsal1' | attr:'data-inputmask-alias:datetime' | attr:'data-inputmask-inputformat:HH:MM' | attr:'data-mask' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="{{ form.horaEntrada2.name }}">{{ form.horaEntrada2.label }}</label>
+                        <div class="input-group date" id="hent2" data-target-input="nearest">
+                            <div class="input-group-append" data-target="#hent2" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="far fa-clock"></i></div>
+                            </div>
+                            {{ form.horaEntrada2 | add_class:'form-control' | add_class:'datetimepicker-input' | attr:'data-target:#hent2' | attr:'data-inputmask-alias:datetime' | attr:'data-inputmask-inputformat:HH:MM' | attr:'data-mask' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="{{ form.horaSalida2.name }}">{{ form.horaSalida2.label }}</label>
+                        <div class="input-group date" id="hsal2" data-target-input="nearest">
+                            <div class="input-group-append" data-target="#hsal2" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="far fa-clock"></i></div>
+                            </div>
+                            {{ form.horaSalida2 | add_class:'form-control' | add_class:'datetimepicker-input' | attr:'data-target:#hsal2' | attr:'data-inputmask-alias:datetime' | attr:'data-inputmask-inputformat:HH:MM' | attr:'data-mask' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="{{ form.horaEntradaEspecial.name }}">{{ form.horaEntradaEspecial.label }}</label>
+                        <div class="input-group date" id="hente" data-target-input="nearest">
+                            <div class="input-group-append" data-target="#hente" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="far fa-clock"></i></div>
+                            </div>
+                            {{ form.horaEntradaEspecial | add_class:'form-control' | add_class:'datetimepicker-input' | attr:'data-target:#hente' | attr:'data-inputmask-alias:datetime' | attr:'data-inputmask-inputformat:HH:MM' | attr:'data-mask' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="{{ form.horaSalidaEspecial.name }}">{{ form.horaSalidaEspecial.label }}</label>
+                        <div class="input-group date" id="hsale" data-target-input="nearest">
+                            <div class="input-group-append" data-target="#hsale" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="far fa-clock"></i></div>
+                            </div>
+                            {{ form.horaSalidaEspecial | add_class:'form-control' | add_class:'datetimepicker-input' | attr:'data-target:#hsale' | attr:'data-inputmask-alias:datetime' | attr:'data-inputmask-inputformat:HH:MM' | attr:'data-mask' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+    <div class="card card-light">
+        <div class="card-header"></div>
+        <div class="card-body">
+            <table class="table table-sm no-border">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">En Curso Invertido</th>
+                    <th scope="col">Facturadas Invertido</th>
+                    <th scope="col">Facturadas Baremo</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">{{ form.hExtCurInvertidoMes.label }}</th>
+                    <td>{{ form.hExtCurInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hExtFacInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hExtFacBaremoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td class="text-lg-right"><label>{{ form.horasExtraMes.label }}</label></td>
+                    <td>{{ form.horasExtraMes | add_class:'form-control' | attr:'readonly' }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{ form.hExtCurInvertidoAno.label }}</th>
+                    <td>{{ form.hExtCurInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hExtFacInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hExtFacBaremoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td class="text-lg-right"><label>{{ form.horasExtraAno.label }}</label></td>
+                    <td>{{ form.horasExtraAno | add_class:'form-control' | attr:'readonly' }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{ form.hIntCurInvertidoMes.label }}</th>
+                    <td>{{ form.hIntCurInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hIntFacInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hIntFacBaremoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td class="text-lg-right"><label>{{ form.absentismoMes.label }}</label></td>
+                    <td>{{ form.absentismoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{ form.hIntCurInvertidoAno.label }}</th>
+                    <td>{{ form.hIntCurInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hIntFacInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hIntFacBaremoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td class="text-lg-right"><label>{{ form.absentismoAno.label }}</label></td>
+                    <td>{{ form.absentismoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{ form.hGarCurInvertidoMes.label }}</th>
+                    <td>{{ form.hGarCurInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hGarFacInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hGarFacBaremoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td class="text-lg-right"><label>{{ form.absentismoSocialMes.label }}</label></td>
+                    <td>{{ form.absentismoSocialMes | add_class:'form-control' | attr:'readonly' }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{ form.hGarCurInvertidoAno.label }}</th>
+                    <td>{{ form.hGarCurInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hGarFacInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hGarFacBaremoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td class="text-lg-right"><label>{{ form.absentismoSocialAno.label }}</label></td>
+                    <td>{{ form.absentismoSocialAno | add_class:'form-control' | attr:'readonly' }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{ form.hImpCurInvertidoMes.label }}</th>
+                    <td>{{ form.hImpCurInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hImpFacInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hImpFacBaremoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td><label></label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th scope="row">{{ form.hImpCurInvertidoAno.label }}</th>
+                    <td>{{ form.hImpCurInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hImpFacInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>{{ form.hImpFacBaremoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td><label></label></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+{% endblock %}
+
+{% block otrosbotones %}
+{% endblock %}
+
+{% block jscript2 %}
+    <script>
+    $(function () {
+        var table;
+        $('[data-mask]').inputmask('HH:MM', {'placeholder': 'HH:MM'});
+        $('#hent1').datetimepicker({
+            locale: 'es',
+            format: 'LT',
+            autoClose: true,
+        });
+        $('#hsal1').datetimepicker({
+            locale: 'es',
+            format: 'LT',
+            autoClose: true,
+        });
+        $('#hent2').datetimepicker({
+            locale: 'es',
+            format: 'LT',
+            autoClose: true,
+        });
+        $('#hsal2').datetimepicker({
+            locale: 'es',
+            format: 'LT',
+            autoClose: true,
+        });
+        $('#hente').datetimepicker({
+            locale: 'es',
+            format: 'LT',
+            autoClose: true,
+        });
+        $('#hsale').datetimepicker({
+            locale: 'es',
+            format: 'LT',
+            autoClose: true,
+        });
+    });
+</script>
+    <script type="application/javascript">
+        validar('{{ entity }}');
+    </script>
+{% endblock %}

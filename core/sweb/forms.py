@@ -1692,3 +1692,113 @@ class CategoriaOperarioForm(CodigoBaseForm, ModelForm):
             'codigo': TextInput(attrs={'minlength': 1, 'required': True}),
             'descripcion': TextInput(attrs={'required': True}),
         }
+
+
+class OperarioForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = Operario
+        fields = '__all__'
+        # excluimos los campos de auditoría
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código Operario',
+            'nombre': 'Nombre',
+            'categoria': 'Categoría',
+            'actividad': 'Actividad',
+            'efectivoMarca': 'Efectivo Marca',
+            'costeHora': 'Coste Hora',
+            'costeHoraExtra': 'Coste Hora Extra',
+            'potencialMes': 'Potencial Horas Mes',
+            'potencialAno': 'Potencial Horas Año',
+            'horaEntrada1': 'Entrada Mañana',
+            'horaSalida1': 'Salida Mañana',
+            'horaEntrada2': 'Entrada Tarde',
+            'horaSalida2': 'Salida Tarde',
+            'horaEntradaEspecial': 'Entrada Especial',
+            'horaSalidaEspecial': 'Salida Especial',
+            'hExtCurInvertidoMes': 'Horas Externas Mes',
+            'hExtFacInvertidoMes': 'Horas Externas Mes',
+            'hExtFacBaremoMes': 'Horas Externas Mes',
+            'horasExtraMes': 'Horas Extra Mes',
+            'hExtCurInvertidoAno': 'Horas Externas Año',
+            'hExtFacInvertidoAno': 'Horas Externas Año',
+            'hExtFacBaremoAno': 'Horas Externas Año',
+            'horasExtraAno': 'Horas Extra Año',
+            'hIntCurInvertidoMes': 'Horas Internas Mes',
+            'hIntFacInvertidoMes': 'Horas Internas Mes',
+            'hIntFacBaremoMes': 'Horas Internas Mes',
+            'absentismoMes': 'Horas Absentismo Mes',
+            'hIntCurInvertidoAno': 'Horas Internas Año',
+            'hIntFacInvertidoAno': 'Horas Internas Año',
+            'hIntFacBaremoAno': 'Horas Internas Año',
+            'absentismoAno': 'Horas Absentismo Año',
+            'hGarCurInvertidoMes': 'Horas Garantías Mes',
+            'hGarFacInvertidoMes': 'Horas Garantías Mes',
+            'hGarFacBaremoMes': 'Horas Garantías Mes',
+            'absentismoSocialMes': 'Horas Absentismo Social Mes',
+            'hGarCurInvertidoAno': 'Horas Garantías Año',
+            'hGarFacInvertidoAno': 'Horas Garantías Año',
+            'hGarFacBaremoAno': 'Horas Garantías Año',
+            'absentismoSocialAno': 'Horas Absentismo Social Año',
+            'hImpCurInvertidoMes': 'Horas Improductivas Mes',
+            'hImpFacInvertidoMes': 'Horas Improductivas Mes',
+            'hImpFacBaremoMes': 'Horas Improductivas Mes',
+            'hImpCurInvertidoAno': 'Horas Improductivas Año',
+            'hImpFacInvertidoAno': 'Horas Improductivas Año',
+            'hImpFacBaremoAno': 'Horas Improductivas Año',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'nombre': TextInput(attrs={'required': True}),
+        }
+
+    def clean_codigo(self):
+        operario = self.cleaned_data['codigo']
+        if not operario:
+            return operario
+
+        operario = operario.upper()
+
+        # en altas comprobamos si ya existe en la tabla otro código igual
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            pass
+        else:
+            operarios = Operario.objects.filter(codigo=operario)
+            if operarios:
+                raise ValidationError('Ya existe un Operario con este Código Operario: %(value)s', code='coddup', params={'value': operario})
+
+        return operario
+
+    def clean_efectivoMarca(self):
+        efectivoMarca = self.cleaned_data['efectivoMarca']
+        print(f'efectivoMarca: {efectivoMarca}')
+
+        if efectivoMarca is None:
+            efectivoMarca = 1
+        elif efectivoMarca > 1:
+            efectivoMarca = 1
+
+        return efectivoMarca
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        print(self.cleaned_data)
+
+        horaEntrada1 = cleaned_data['horaEntrada1']
+        horaSalida1 = cleaned_data['horaSalida1']
+        if (horaEntrada1 is not None) and (horaSalida1 is not None) and (horaEntrada1 > horaSalida1):
+            raise ValidationError('Hora Salida Mañana debe ser mayor que la de Entrada')
+
+        horaEntrada2 = cleaned_data['horaEntrada2']
+        horaSalida2 = cleaned_data['horaSalida2']
+        if (horaEntrada2 is not None) and (horaSalida2 is not None) and (horaEntrada2 > horaSalida2):
+            raise ValidationError('Hora Salida Tarde debe ser mayor que la de Entrada')
+
+        horaEntradaEspecial = cleaned_data['horaEntradaEspecial']
+        horaSalidaEspecial = cleaned_data['horaSalidaEspecial']
+        if (horaEntradaEspecial is not None) and (horaSalidaEspecial is not None) and (horaEntradaEspecial > horaSalidaEspecial):
+            raise ValidationError('Hora Salida Especial debe ser mayor que la de Entrada')
+
+        return cleaned_data

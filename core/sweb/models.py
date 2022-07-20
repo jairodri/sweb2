@@ -1223,3 +1223,95 @@ class CategoriaOperario(ModelMixin, BaseModel):
         verbose_name = 'Categoría Operario'
         verbose_name_plural = 'Categorías de Operarios'
         ordering = ['codigo']
+
+
+class Operario(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=4, verbose_name='Código Operario', db_column='opt_codigo', unique=True, null=False, blank=False)
+    nombre = models.CharField(max_length=100, verbose_name='Nombre', db_column='opt_nombre', null=False, blank=False)
+    categoria = models.ForeignKey(CategoriaOperario, on_delete=models.PROTECT, null=False, blank=False, db_column='opt_categ', verbose_name='Categoría')
+    actividad = models.CharField(max_length=1, verbose_name='Actividad', db_column='opt_activi', null=True, blank=True)
+    costeHora = models.DecimalField(verbose_name='coste hora', db_column='opt_costeh', max_digits=7, decimal_places=2, null=True, blank=True)
+    costeHoraExtra = models.DecimalField(verbose_name='coste hora extra', db_column='opt_costehx', max_digits=7, decimal_places=2, null=True, blank=True)
+    potencialDia = models.DecimalField(verbose_name='potencia horas día', db_column='opt_pothdia', max_digits=7, decimal_places=2, null=True, blank=True)
+    potencialMes = models.DecimalField(verbose_name='potencia horas mes', db_column='opt_pothmes', max_digits=7, decimal_places=2, null=True, blank=True)
+    potencialAno = models.DecimalField(verbose_name='potencia horas año', db_column='opt_pothano', max_digits=7, decimal_places=2, null=True, blank=True)
+    efectivoMarca = models.DecimalField(verbose_name='efectivo marca', db_column='opt_efectm', max_digits=7, decimal_places=2, null=True, blank=True)
+    absentismoDia = models.DecimalField(verbose_name='absentismo día', db_column='opt_absdia', max_digits=7, decimal_places=2, null=True, blank=True)
+    absentismoMes = models.DecimalField(verbose_name='absentismo mes', db_column='opt_absmes', max_digits=7, decimal_places=2, null=True, blank=True)
+    absentismoAno = models.DecimalField(verbose_name='absentismo año', db_column='opt_absano', max_digits=7, decimal_places=2, null=True, blank=True)
+    absentismoSocialDia = models.DecimalField(verbose_name='absentismo social día', db_column='opt_absocd', max_digits=7, decimal_places=2, null=True, blank=True)
+    absentismoSocialMes = models.DecimalField(verbose_name='absentismo social mes', db_column='opt_absocm', max_digits=7, decimal_places=2, null=True, blank=True)
+    absentismoSocialAno = models.DecimalField(verbose_name='absentismo social año', db_column='opt_absoca', max_digits=7, decimal_places=2, null=True, blank=True)
+    bonoDia = models.DecimalField(verbose_name='bono día', db_column='opt_bonod', max_digits=7, decimal_places=2, null=True, blank=True)
+    bonoMes = models.DecimalField(verbose_name='bono mes', db_column='opt_bonom', max_digits=7, decimal_places=2, null=True, blank=True)
+    bonoAno = models.DecimalField(verbose_name='bono año', db_column='opt_bonoa', max_digits=7, decimal_places=2, null=True, blank=True)
+    horasExtraDia = models.DecimalField(verbose_name='horas extra día', db_column='opt_hextd', max_digits=7, decimal_places=2, null=True, blank=True)
+    horasExtraMes = models.DecimalField(verbose_name='horas extra mes', db_column='opt_hextm', max_digits=7, decimal_places=2, null=True, blank=True)
+    horasExtraAno = models.DecimalField(verbose_name='horas extra año', db_column='opt_hexta', max_digits=7, decimal_places=2, null=True, blank=True)
+    hExtCurInvertidoMes = models.DecimalField(verbose_name='horas externas en curso invertido mes', db_column='opt_hexcim', max_digits=7, decimal_places=2, null=True, blank=True)
+    hExtFacInvertidoMes = models.DecimalField(verbose_name='horas externas facturadas invertido mes', db_column='opt_hexfim', max_digits=7, decimal_places=2, null=True, blank=True)
+    hExtFacBaremoMes = models.DecimalField(verbose_name='horas externas facturadas baremo mes', db_column='opt_hexfbm', max_digits=7, decimal_places=2, null=True, blank=True)
+    hExtCurInvertidoAno = models.DecimalField(verbose_name='horas externas en curso invertido año', db_column='opt_hexcia', max_digits=7, decimal_places=2, null=True, blank=True)
+    hExtFacInvertidoAno = models.DecimalField(verbose_name='horas externas facturadas invertido año', db_column='opt_hexfia', max_digits=7, decimal_places=2, null=True, blank=True)
+    hExtFacBaremoAno = models.DecimalField(verbose_name='horas externas facturadas baremo año', db_column='opt_hexfba', max_digits=7, decimal_places=2, null=True, blank=True)
+    hExtFacInvertidoDia = models.DecimalField(verbose_name='horas externas facturadas invertido día', db_column='opt_hexfid', max_digits=7, decimal_places=2, null=True, blank=True)
+    hExtFacBaremoDia = models.DecimalField(verbose_name='horas externas facturadas baremo día', db_column='opt_hexfbd', max_digits=7, decimal_places=2, null=True, blank=True)
+    hIntCurInvertidoMes = models.DecimalField(verbose_name='horas internas en curso invertido mes', db_column='opt_hincim', max_digits=7, decimal_places=2, null=True, blank=True)
+    hIntFacInvertidoMes = models.DecimalField(verbose_name='horas internas facturadas invertido mes', db_column='opt_hinfim', max_digits=7, decimal_places=2, null=True, blank=True)
+    hIntFacBaremoMes = models.DecimalField(verbose_name='horas internas facturadas baremo mes', db_column='opt_hinfbm', max_digits=7, decimal_places=2, null=True, blank=True)
+    hIntCurInvertidoAno = models.DecimalField(verbose_name='horas internas en curso invertido año', db_column='opt_hincia', max_digits=7, decimal_places=2, null=True, blank=True)
+    hIntFacInvertidoAno = models.DecimalField(verbose_name='horas internas facturadas invertido año', db_column='opt_hinfia', max_digits=7, decimal_places=2, null=True, blank=True)
+    hIntFacBaremoAno = models.DecimalField(verbose_name='horas internas facturadas baremo año', db_column='opt_hinfba', max_digits=7, decimal_places=2, null=True, blank=True)
+    hIntFacInvertidoDia = models.DecimalField(verbose_name='horas internas facturadas invertido día', db_column='opt_hinfid', max_digits=7, decimal_places=2, null=True, blank=True)
+    hIntFacBaremoDia = models.DecimalField(verbose_name='horas internas facturadas baremo día', db_column='opt_hinfbd', max_digits=7, decimal_places=2, null=True, blank=True)
+    hGarCurInvertidoMes = models.DecimalField(verbose_name='horas garantías en curso invertido mes', db_column='opt_hgacim', max_digits=7, decimal_places=2, null=True, blank=True)
+    hGarFacInvertidoMes = models.DecimalField(verbose_name='horas garantías facturadas invertido mes', db_column='opt_hgafim', max_digits=7, decimal_places=2, null=True, blank=True)
+    hGarFacBaremoMes = models.DecimalField(verbose_name='horas garantías facturadas baremo mes', db_column='opt_hgafbm', max_digits=7, decimal_places=2, null=True, blank=True)
+    hGarCurInvertidoAno = models.DecimalField(verbose_name='horas garantías en curso invertido año', db_column='opt_hgacia', max_digits=7, decimal_places=2, null=True, blank=True)
+    hGarFacInvertidoAno = models.DecimalField(verbose_name='horas garantías facturadas invertido año', db_column='opt_hgafia', max_digits=7, decimal_places=2, null=True, blank=True)
+    hGarFacBaremoAno = models.DecimalField(verbose_name='horas garantías facturadas baremo año', db_column='opt_hgafba', max_digits=7, decimal_places=2, null=True, blank=True)
+    hGarFacInvertidoDia = models.DecimalField(verbose_name='horas garantías facturadas invertido día', db_column='opt_hgafid', max_digits=7, decimal_places=2, null=True, blank=True)
+    hGarFacBaremoDia = models.DecimalField(verbose_name='horas garantías facturadas baremo día', db_column='opt_hgafbd', max_digits=7, decimal_places=2, null=True, blank=True)
+    hImpCurInvertidoMes = models.DecimalField(verbose_name='horas improductivas en curso invertido mes', db_column='opt_himcim', max_digits=7, decimal_places=2, null=True, blank=True)
+    hImpFacInvertidoMes = models.DecimalField(verbose_name='horas improductivas facturadas invertido mes', db_column='opt_himfim', max_digits=7, decimal_places=2, null=True, blank=True)
+    hImpFacBaremoMes = models.DecimalField(verbose_name='horas improductivas facturadas baremo mes', db_column='opt_himfbm', max_digits=7, decimal_places=2, null=True, blank=True)
+    hImpCurInvertidoAno = models.DecimalField(verbose_name='horas improductivas en curso invertido año', db_column='opt_himcia', max_digits=7, decimal_places=2, null=True, blank=True)
+    hImpFacInvertidoAno = models.DecimalField(verbose_name='horas improductivas facturadas invertido año', db_column='opt_himfia', max_digits=7, decimal_places=2, null=True, blank=True)
+    hImpFacBaremoAno = models.DecimalField(verbose_name='horas improductivas facturadas baremo año', db_column='opt_himfba', max_digits=7, decimal_places=2, null=True, blank=True)
+    hImpFacInvertidoDia = models.DecimalField(verbose_name='horas improductivas facturadas invertido día', db_column='opt_himfid', max_digits=7, decimal_places=2, null=True, blank=True)
+    hImpFacBaremoDia = models.DecimalField(verbose_name='horas improductivas facturadas baremo día', db_column='opt_himfbd', max_digits=7, decimal_places=2, null=True, blank=True)
+    horaEntrada1 = models.TimeField(verbose_name='Hora entrada 1', db_column='opt_hent1', null=True, blank=True)
+    horaSalida1 = models.TimeField(verbose_name='Hora salida 1', db_column='opt_hsal1', null=True, blank=True)
+    horaEntrada2 = models.TimeField(verbose_name='Hora entrada 2', db_column='opt_hent2', null=True, blank=True)
+    horaSalida2 = models.TimeField(verbose_name='Hora salida 2', db_column='opt_hsal2', null=True, blank=True)
+    horaEntradaEspecial = models.TimeField(verbose_name='Hora entrada especial', db_column='opt_hentes', null=True, blank=True)
+    horaSalidaEspecial = models.TimeField(verbose_name='Hora salida especial', db_column='opt_hsales', null=True, blank=True)
+    trabajoEnCurso = models.BooleanField(verbose_name='Trabajo en curso', db_column='opt_tracur', default=False, null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.nombre}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'nombre': self.nombre,
+            'categoria__descripcion': self.categoria.descripcion,
+            'costeHora': self.costeHora,
+            'potencialMes': self.potencialMes,
+            'potencialAno': self.potencialAno,
+        }
+        return item
+
+    # para la paginación por servidor utilizamos este método para los filtros
+    def to_search(self, value):
+        return self.objects.filter(Q(codigo__icontains=value) |
+                                   Q(nombre__icontains=value) |
+                                   Q(categoria__descripcion__icontains=value)
+                                   )
+
+    class Meta:
+        db_table = 'sirtbopt'
+        verbose_name = 'Operario'
+        verbose_name_plural = 'Operarios'
+        ordering = ['codigo']
