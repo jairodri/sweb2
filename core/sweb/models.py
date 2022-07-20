@@ -1315,3 +1315,27 @@ class Operario(ModelMixin, BaseModel):
         verbose_name = 'Operario'
         verbose_name_plural = 'Operarios'
         ordering = ['codigo']
+
+
+class SeccionInterna(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=2, verbose_name='Código', db_column='sci_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='sci_descrip', null=False, blank=False)
+    cuenta = models.CharField(max_length=12, verbose_name='Cuenta', db_column='sci_cuenta', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+            'cuenta': self.cuenta,
+        }
+        return item
+
+    class Meta:
+        db_table = 'sirtbsci'
+        verbose_name = 'Sección Interna'
+        verbose_name_plural = 'Secciones Internas'
+        ordering = ['codigo']

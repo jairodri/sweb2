@@ -1802,3 +1802,20 @@ class OperarioForm(CodigoBaseForm, ModelForm):
             raise ValidationError('Hora Salida Especial debe ser mayor que la de Entrada')
 
         return cleaned_data
+
+
+class SeccionInternaForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = SeccionInterna
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+            'cuenta': 'Cuenta'
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }

@@ -26,6 +26,7 @@ from core.sweb.views.vehiculos.views import *
 from core.sweb.views.tiposor.views import *
 from core.sweb.views.catoper.views import *
 from core.sweb.views.opetaller.views import *
+from core.sweb.views.seccionint.views import *
 
 app_name = 'sweb'
 
@@ -284,4 +285,9 @@ urlpatterns = [
     path(f'{OperarioDeleteView.folder}/delete/<int:pk>/', OperarioDeleteView.as_view(), name=f'{OperarioDeleteView.folder}_delete'),
     path(f'{OperarioDetailView.folder}/detail/<int:pk>/', OperarioDetailView.as_view(), name=f'{OperarioDetailView.folder}_detail'),
 
+    # Secciones Internas
+    path(f'{SeccionInternaListView.folder}/list/', SeccionInternaListView.as_view(), name=f'{SeccionInternaListView.folder}_list'),
+    path(f'{SeccionInternaCreateView.folder}/add/', SeccionInternaCreateView.as_view(), name=f'{SeccionInternaCreateView.folder}_add'),
+    path(f'{SeccionInternaUpdateView.folder}/edit/<int:pk>/', SeccionInternaUpdateView.as_view(), name=f'{SeccionInternaUpdateView.folder}_edit'),
+    path(f'{SeccionInternaDeleteView.folder}/delete/<int:pk>/', SeccionInternaDeleteView.as_view(), name=f'{SeccionInternaDeleteView.folder}_delete'),
 ]

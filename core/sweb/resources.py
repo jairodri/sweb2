@@ -801,3 +801,15 @@ class OperarioResource(resources.ModelResource):
             'horaSalidaEspecial',
             'trabajoEnCurso'
         )
+
+
+class SeccionInternaResource(resources.ModelResource):
+
+    class Meta:
+        model = SeccionInterna
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+            'cuenta',
+        )
