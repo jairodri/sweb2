@@ -813,3 +813,14 @@ class SeccionInternaResource(resources.ModelResource):
             'descripcion',
             'cuenta',
         )
+
+
+class CapacidadDepositoResource(resources.ModelResource):
+
+    class Meta:
+        model = CapacidadDeposito
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )

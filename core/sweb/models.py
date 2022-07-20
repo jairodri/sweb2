@@ -1339,3 +1339,25 @@ class SeccionInterna(ModelMixin, BaseModel):
         verbose_name = 'Sección Interna'
         verbose_name_plural = 'Secciones Internas'
         ordering = ['codigo']
+
+
+class CapacidadDeposito(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=1, verbose_name='Código', db_column='dep_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='dep_descrip', null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+        }
+        return item
+
+    class Meta:
+        db_table = 'sirtbdep'
+        verbose_name = 'Capacidad Depósito'
+        verbose_name_plural = 'Capacidades Depósitos'
+        ordering = ['codigo']

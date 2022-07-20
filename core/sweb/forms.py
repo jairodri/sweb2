@@ -1819,3 +1819,19 @@ class SeccionInternaForm(CodigoBaseForm, ModelForm):
             'codigo': TextInput(attrs={'required': True}),
             'descripcion': TextInput(attrs={'required': True}),
         }
+
+
+class CapacidadDepositoForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = CapacidadDeposito
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }

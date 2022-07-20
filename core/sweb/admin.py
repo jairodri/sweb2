@@ -112,6 +112,10 @@ class SeccionInternaAdmin(ImportExportModelAdmin):
     resource_class = SeccionInternaResource
 
 
+class CapacidadDepositoAdmin(ImportExportModelAdmin):
+    resource_class = CapacidadDepositoResource
+
+
 # Register your models here.
 # Para que se muestren en el panel administrador del servidor
 admin.site.register(Banco, BancoAdmin)
@@ -142,6 +146,7 @@ admin.site.register(TipoOrdenReparacion, TipoOrdenReparacionAdmin)
 admin.site.register(CategoriaOperario, CategoriaOperarioAdmin)
 admin.site.register(Operario, OperarioAdmin)
 admin.site.register(SeccionInterna, SeccionInternaAdmin)
+admin.site.register(CapacidadDeposito, CapacidadDepositoAdmin)
 
 
 

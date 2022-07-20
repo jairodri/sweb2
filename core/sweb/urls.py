@@ -27,6 +27,7 @@ from core.sweb.views.tiposor.views import *
 from core.sweb.views.catoper.views import *
 from core.sweb.views.opetaller.views import *
 from core.sweb.views.seccionint.views import *
+from core.sweb.views.depositos.views import *
 
 app_name = 'sweb'
 
@@ -290,4 +291,10 @@ urlpatterns = [
     path(f'{SeccionInternaCreateView.folder}/add/', SeccionInternaCreateView.as_view(), name=f'{SeccionInternaCreateView.folder}_add'),
     path(f'{SeccionInternaUpdateView.folder}/edit/<int:pk>/', SeccionInternaUpdateView.as_view(), name=f'{SeccionInternaUpdateView.folder}_edit'),
     path(f'{SeccionInternaDeleteView.folder}/delete/<int:pk>/', SeccionInternaDeleteView.as_view(), name=f'{SeccionInternaDeleteView.folder}_delete'),
+
+    # Capacidad Depósito
+    path(f'{CapacidadDepositoListView.folder}/list/', CapacidadDepositoListView.as_view(), name=f'{CapacidadDepositoListView.folder}_list'),
+    path(f'{CapacidadDepositoCreateView.folder}/add/', CapacidadDepositoCreateView.as_view(), name=f'{CapacidadDepositoCreateView.folder}_add'),
+    path(f'{CapacidadDepositoUpdateView.folder}/edit/<int:pk>/', CapacidadDepositoUpdateView.as_view(), name=f'{CapacidadDepositoUpdateView.folder}_edit'),
+    path(f'{CapacidadDepositoDeleteView.folder}/delete/<int:pk>/', CapacidadDepositoDeleteView.as_view(), name=f'{CapacidadDepositoDeleteView.folder}_delete'),
 ]
