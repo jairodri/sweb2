@@ -1,0 +1,19 @@
+{% extends 'form.html' %}
+
+{% block contentform %}
+    <div class="form-group ">
+        <label for="codigo">Código</label>
+        <input type="text" name="codigo" class="form-control" readonly value="{{ object.codigo }}">
+    </div>
+    <div class="form-group ">
+        <label for="descripcion">Descripción</label>
+        <input type="text" name="descripcion" class="form-control" readonly value="{{ object.descripcion }}">
+    </div>
+{% endblock %}
+
+{% block jscript2 %}
+    <script>
+        confirmdelete();
+    </script>
+{% endblock %}
+

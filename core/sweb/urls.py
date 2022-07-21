@@ -28,6 +28,8 @@ from core.sweb.views.catoper.views import *
 from core.sweb.views.opetaller.views import *
 from core.sweb.views.seccionint.views import *
 from core.sweb.views.depositos.views import *
+from core.sweb.views.ampaga.views import *
+from core.sweb.views.secciontra.views import *
 
 app_name = 'sweb'
 
@@ -297,4 +299,16 @@ urlpatterns = [
     path(f'{CapacidadDepositoCreateView.folder}/add/', CapacidadDepositoCreateView.as_view(), name=f'{CapacidadDepositoCreateView.folder}_add'),
     path(f'{CapacidadDepositoUpdateView.folder}/edit/<int:pk>/', CapacidadDepositoUpdateView.as_view(), name=f'{CapacidadDepositoUpdateView.folder}_edit'),
     path(f'{CapacidadDepositoDeleteView.folder}/delete/<int:pk>/', CapacidadDepositoDeleteView.as_view(), name=f'{CapacidadDepositoDeleteView.folder}_delete'),
+
+    # Ampliaciones de Garantía
+    path(f'{AmpliacionGarantiaListView.folder}/list/', AmpliacionGarantiaListView.as_view(), name=f'{AmpliacionGarantiaListView.folder}_list'),
+    path(f'{AmpliacionGarantiaCreateView.folder}/add/', AmpliacionGarantiaCreateView.as_view(), name=f'{AmpliacionGarantiaCreateView.folder}_add'),
+    path(f'{AmpliacionGarantiaUpdateView.folder}/edit/<int:pk>/', AmpliacionGarantiaUpdateView.as_view(), name=f'{AmpliacionGarantiaUpdateView.folder}_edit'),
+    path(f'{AmpliacionGarantiaDeleteView.folder}/delete/<int:pk>/', AmpliacionGarantiaDeleteView.as_view(), name=f'{AmpliacionGarantiaDeleteView.folder}_delete'),
+
+    # Secciones de Trabajo
+    path(f'{SeccionTrabajoListView.folder}/list/', SeccionTrabajoListView.as_view(), name=f'{SeccionTrabajoListView.folder}_list'),
+    path(f'{SeccionTrabajoCreateView.folder}/add/', SeccionTrabajoCreateView.as_view(), name=f'{SeccionTrabajoCreateView.folder}_add'),
+    path(f'{SeccionTrabajoUpdateView.folder}/edit/<int:pk>/', SeccionTrabajoUpdateView.as_view(), name=f'{SeccionTrabajoUpdateView.folder}_edit'),
+    path(f'{SeccionTrabajoDeleteView.folder}/delete/<int:pk>/', SeccionTrabajoDeleteView.as_view(), name=f'{SeccionTrabajoDeleteView.folder}_delete'),
 ]

@@ -1835,3 +1835,35 @@ class CapacidadDepositoForm(CodigoBaseForm, ModelForm):
             'codigo': TextInput(attrs={'required': True}),
             'descripcion': TextInput(attrs={'required': True}),
         }
+
+
+class AmpliacionGarantiaForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = AmpliacionGarantia
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }
+
+
+class SeccionTrabajoForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = SeccionTrabajo
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }

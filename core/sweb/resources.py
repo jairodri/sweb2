@@ -824,3 +824,27 @@ class CapacidadDepositoResource(resources.ModelResource):
             'codigo',
             'descripcion',
         )
+
+
+class AmpliacionGarantiaResource(resources.ModelResource):
+
+    class Meta:
+        model = AmpliacionGarantia
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )
+
+
+class SeccionTrabajoResource(resources.ModelResource):
+
+    class Meta:
+        model = SeccionTrabajo
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )
+
+
