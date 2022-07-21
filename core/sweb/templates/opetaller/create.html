@@ -144,7 +144,7 @@
     <div class="card card-light">
         <div class="card-header"></div>
         <div class="card-body">
-            <table class="table table-sm no-border">
+            <table id="dtoperario" class="display" style="width:100%">
                 <thead>
                 <tr>
                     <th scope="col"></th>
@@ -156,70 +156,140 @@
                 </tr>
                 </thead>
                 <tbody>
+                {% if action == 'add' %}
+
                 <tr>
-                    <th scope="row">{{ form.hExtCurInvertidoMes.label }}</th>
-                    <td>{{ form.hExtCurInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hExtFacInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hExtFacBaremoMes | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td class="text-lg-right"><label>{{ form.horasExtraMes.label }}</label></td>
-                    <td>{{ form.horasExtraMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>Horas Externas Mes</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>Horas Extra Mes</td>
+                    <td>0,00</td>
                 </tr>
                 <tr>
-                    <th scope="row">{{ form.hExtCurInvertidoAno.label }}</th>
-                    <td>{{ form.hExtCurInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hExtFacInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hExtFacBaremoAno | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td class="text-lg-right"><label>{{ form.horasExtraAno.label }}</label></td>
-                    <td>{{ form.horasExtraAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>Horas Externas Año</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>Horas Extra Año</td>
+                    <td>0,00</td>
                 </tr>
                 <tr>
-                    <th scope="row">{{ form.hIntCurInvertidoMes.label }}</th>
-                    <td>{{ form.hIntCurInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hIntFacInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hIntFacBaremoMes | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td class="text-lg-right"><label>{{ form.absentismoMes.label }}</label></td>
-                    <td>{{ form.absentismoMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>Horas Internas Mes</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>Absentismo Mes</td>
+                    <td>0,00</td>
                 </tr>
                 <tr>
-                    <th scope="row">{{ form.hIntCurInvertidoAno.label }}</th>
-                    <td>{{ form.hIntCurInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hIntFacInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hIntFacBaremoAno | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td class="text-lg-right"><label>{{ form.absentismoAno.label }}</label></td>
-                    <td>{{ form.absentismoAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>Horas Internas Año</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>Absentismo Año</td>
+                    <td>0,00</td>
                 </tr>
                 <tr>
-                    <th scope="row">{{ form.hGarCurInvertidoMes.label }}</th>
-                    <td>{{ form.hGarCurInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hGarFacInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hGarFacBaremoMes | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td class="text-lg-right"><label>{{ form.absentismoSocialMes.label }}</label></td>
-                    <td>{{ form.absentismoSocialMes | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>Horas Garantías Mes</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>Abs. Social Mes</td>
+                    <td>0,00</td>
                 </tr>
                 <tr>
-                    <th scope="row">{{ form.hGarCurInvertidoAno.label }}</th>
-                    <td>{{ form.hGarCurInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hGarFacInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hGarFacBaremoAno | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td class="text-lg-right"><label>{{ form.absentismoSocialAno.label }}</label></td>
-                    <td>{{ form.absentismoSocialAno | add_class:'form-control' | attr:'readonly' }}</td>
+                    <td>Horas Garantías Año</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>Abs. Social Año</td>
+                    <td>0,00</td>
                 </tr>
                 <tr>
-                    <th scope="row">{{ form.hImpCurInvertidoMes.label }}</th>
-                    <td>{{ form.hImpCurInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hImpFacInvertidoMes | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hImpFacBaremoMes | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td><label></label></td>
+                    <td>Improductivas Mes</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <th scope="row">{{ form.hImpCurInvertidoAno.label }}</th>
-                    <td>{{ form.hImpCurInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hImpFacInvertidoAno | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td>{{ form.hImpFacBaremoAno | add_class:'form-control' | attr:'readonly' }}</td>
-                    <td><label></label></td>
+                    <td>Improductivas Año</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td>0,00</td>
+                    <td></td>
                     <td></td>
                 </tr>
+
+                {% else %}
+
+                <tr>
+                    <td>Horas Externas Mes</td>
+                    <td>{{ object.hExtCurInvertidoMes | default_if_none:'' }}</td>
+                    <td>{{ object.hExtFacInvertidoMes | default_if_none:'' }}</td>
+                    <td>{{ object.hExtFacBaremoMes | default_if_none:'' }}</td>
+                    <td>Horas Extra Mes</td>
+                    <td>{{ object.horasExtraMes | default_if_none:'' }}</td>
+                </tr>
+                <tr>
+                    <td>Horas Externas Año</td>
+                    <td>{{ object.hExtCurInvertidoAno | default_if_none:'' }}</td>
+                    <td>{{ object.hExtFacInvertidoAno | default_if_none:'' }}</td>
+                    <td>{{ object.hExtFacBaremoAno | default_if_none:'' }}</td>
+                    <td>Horas Extra Año</td>
+                    <td>{{ object.horasExtraAno | default_if_none:'' }}</td>
+                </tr>
+                <tr>
+                    <td>Horas Internas Mes</td>
+                    <td>{{ object.hIntCurInvertidoMes | default_if_none:'' }}</td>
+                    <td>{{ object.hIntFacInvertidoMes | default_if_none:'' }}</td>
+                    <td>{{ object.hIntFacBaremoMes | default_if_none:'' }}</td>
+                    <td>Absentismo Mes</td>
+                    <td>{{ object.absentismoMes | default_if_none:'' }}</td>
+                </tr>
+                <tr>
+                    <td>Horas Internas Año</td>
+                    <td>{{ object.hIntCurInvertidoAno | default_if_none:'' }}</td>
+                    <td>{{ object.hIntFacInvertidoAno | default_if_none:'' }}</td>
+                    <td>{{ object.hIntFacBaremoAno | default_if_none:'' }}</td>
+                    <td>Absentismo Año</td>
+                    <td>{{ object.absentismoAno | default_if_none:'' }}</td>
+                </tr>
+                <tr>
+                    <td>Horas Garantías Mes</td>
+                    <td>{{ object.hGarCurInvertidoMes | default_if_none:'' }}</td>
+                    <td>{{ object.hGarFacInvertidoMes | default_if_none:'' }}</td>
+                    <td>{{ object.hGarFacBaremoMes | default_if_none:'' }}</td>
+                    <td>Abs. Social Mes</td>
+                    <td>{{ object.absentismoSocialMes | default_if_none:'' }}</td>
+                </tr>
+                <tr>
+                    <td>Horas Garantías Año</td>
+                    <td>{{ object.hGarCurInvertidoAno | default_if_none:'' }}</td>
+                    <td>{{ object.hGarFacInvertidoAno | default_if_none:'' }}</td>
+                    <td>{{ object.hGarFacBaremoAno | default_if_none:'' }}</td>
+                    <td>Abs. Social Año</td>
+                    <td>{{ object.absentismoSocialAno | default_if_none:'' }}</td>
+                </tr>
+                <tr>
+                    <td>Improductivas Mes</td>
+                    <td>{{ object.hImpCurInvertidoMes | default_if_none:'' }}</td>
+                    <td>{{ object.hImpFacInvertidoMes | default_if_none:'' }}</td>
+                    <td>{{ object.hImpFacBaremoMes | default_if_none:'' }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Improductivas Año</td>
+                    <td>{{ object.hImpCurInvertidoAno | default_if_none:'' }}</td>
+                    <td>{{ object.hImpFacInvertidoAno | default_if_none:'' }}</td>
+                    <td>{{ object.hImpFacBaremoAno | default_if_none:'' }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% endif %}
                 </tbody>
             </table>
         </div>
@@ -267,6 +337,9 @@
         });
     });
 </script>
+    <script>
+        initdtableoper();
+    </script>
     <script type="application/javascript">
         validar('{{ entity }}');
     </script>

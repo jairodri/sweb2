@@ -279,7 +279,7 @@ function confirmdelete() {
 }
 // inicializa datatable con paginación en servidor
 function initdtableserver(icolumns, ibuttons, iorder, extrabuttons, tipo_) {
-     console.log(extrabuttons)
+     // console.log(extrabuttons)
     var table = $('#dtable-buttons').DataTable({
         responsive: true,
         autoWidth: false,
@@ -318,6 +318,25 @@ function initdtableserver(icolumns, ibuttons, iorder, extrabuttons, tipo_) {
                 api.buttons().container().appendTo('#dt-buttons');
             }
         }
+    });
+    return table;
+
+}
+
+// inicializa datatable con paginación en servidor
+function initdtableoper() {
+    var table = $('#dtoperario').DataTable({
+        searching: false,     // Search Box will Be Disabled
+        ordering: false,      // Ordering (Sorting on Each Column)will Be Disabled
+        info: false,          // Not show "1 to n of n entries" Text at bottom
+        lengthChange: false,  // Will Disabled Record number per page
+        bPaginate: false,     // Paginate buttons disabled
+        responsive: true,
+        columnDefs: [{
+            targets: [0, 4],
+            className: 'bolded',
+        },
+        ]
     });
     return table;
 }

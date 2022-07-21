@@ -29,6 +29,9 @@
   vertical-align: auto;
 }
 
+.bolded {
+    font-weight: bold;
+}
 textarea:hover,
 input:hover,
 textarea:active,
