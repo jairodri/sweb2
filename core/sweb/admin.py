@@ -124,6 +124,18 @@ class SeccionTrabajoAdmin(ImportExportModelAdmin):
     resource_class = SeccionTrabajoResource
 
 
+class SituacionVehiculoAdmin(ImportExportModelAdmin):
+    resource_class = SituacionVehiculoResource
+
+
+class BaremoAdmin(ImportExportModelAdmin):
+    resource_class = BaremoResource
+
+
+class LineaBaremoAdmin(ImportExportModelAdmin):
+    resource_class = LineaBaremoResource
+
+
 # Register your models here.
 # Para que se muestren en el panel administrador del servidor
 admin.site.register(Banco, BancoAdmin)
@@ -157,6 +169,9 @@ admin.site.register(SeccionInterna, SeccionInternaAdmin)
 admin.site.register(CapacidadDeposito, CapacidadDepositoAdmin)
 admin.site.register(AmpliacionGarantia, AmpliacionGarantiaAdmin)
 admin.site.register(SeccionTrabajo, SeccionTrabajoAdmin)
+admin.site.register(SituacionVehiculo, SituacionVehiculoAdmin)
+admin.site.register(Baremo, BaremoAdmin)
+admin.site.register(LineaBaremo, LineaBaremoAdmin)
 
 
 

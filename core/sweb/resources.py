@@ -848,3 +848,40 @@ class SeccionTrabajoResource(resources.ModelResource):
         )
 
 
+class SituacionVehiculoResource(resources.ModelResource):
+
+    class Meta:
+        model = SituacionVehiculo
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+        )
+
+
+class BaremoResource(resources.ModelResource):
+
+    class Meta:
+        model = Baremo
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+            'tiempoEstimado',
+            'origen',
+        )
+
+
+class LineaBaremoResource(resources.ModelResource):
+    baremo = fields.Field(attribute='baremo', column_name='baremo', widget=ForeignKeyWidget(Baremo, field='codigo'))
+
+    class Meta:
+        model = LineaBaremo
+        fields = (
+            'id',
+            'baremo',
+            'modelo',
+            'modifica',
+            'tiempo',
+            'origen',
+        )

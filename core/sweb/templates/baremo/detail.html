@@ -1,0 +1,58 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <div class="form-group ">
+        <label for="codigo">Código</label>
+        <input type="text" name="codigo" class="form-control" readonly value="{{ object.codigo }}">
+    </div>
+    <div class="form-group ">
+        <label for="descripcion">Descripción</label>
+        <input type="text" name="descripcion" class="form-control" readonly value="{{ object.descripcion }}">
+    </div>
+    <div class="form-group ">
+        <label for="tiempoEstimado">Tiempo Estimado</label>
+        <input type="text" name="tiempoEstimado" class="form-control" readonly value="{{ object.tiempoEstimado }}">
+    </div>
+    <div class="card card-light">
+        <div class="card-header">
+            <h6 class="card-title">Tiempos Específicos</h6>
+        </div>
+        <div class="card-body">
+            <table id="dtable-buttons" class="table table-bordered table-hover display nowrap">
+                <thead>
+                <tr>
+                    <th>Modelo</th>
+                    <th>Modificación</th>
+                    <th>Tiempo</th>
+                </tr>
+                </thead>
+
+            </table>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+{% endblock %}
+
+{% block otrosbotones %}
+    {% if prev_pk %}
+    <a class="btn btn-secondary" href="/sweb/{{ folder }}/detail/{{ prev_pk }}/" role="button"><i class="fas fa-angle-left"></i> Anterior</a>
+    {% endif %}
+    {% if next_pk %}
+    <a class="btn btn-secondary" href="/sweb/{{ folder }}/detail/{{ next_pk }}/" role="button"><i class="fas fa-angle-right"></i> Siguiente</a>
+    {% endif %}
+{% endblock %}
+
+{% block jscript2 %}
+    <script type="text/javascript">
+        var icolumns = [
+            {"data": "modelo"},
+            {"data": "modifica"},
+            {"data": "tiempo"},
+        ]
+        var ibuttons = '';  // No necesitamos ningún botón adicional ya que toda la info es visible
+        var iorder = [[0, 'asc']];
+        var extrabuttons = true;
+        initdtableserver(icolumns, ibuttons, iorder, extrabuttons)
+    </script>
+{% endblock %}

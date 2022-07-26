@@ -1406,3 +1406,91 @@ class SeccionTrabajo(ModelMixin, BaseModel):
         verbose_name_plural = 'Secciones Trabajo'
         ordering = ['codigo']
 
+
+class SituacionVehiculo(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=1, verbose_name='Código', db_column='sct_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='sct_descrip', null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+        }
+        return item
+
+    class Meta:
+        db_table = 'sirtbsvt'
+        verbose_name = 'Situación Vehículo'
+        verbose_name_plural = 'Situaciones Vehículos Taller'
+        ordering = ['codigo']
+
+
+class Baremo(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=8, verbose_name='Código operación', db_column='bar_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='bar_descrip', null=False, blank=False)
+    tiempoEstimado = models.DecimalField(verbose_name='Tiempo Estimado', db_column='bar_testi', max_digits=7, decimal_places=2, null=True, blank=True)
+    origen = models.CharField(max_length=1, verbose_name='Origen', db_column='bar_origen', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+            'tiempoEstimado': self.tiempoEstimado,
+        }
+        return item
+
+    # para la paginación por servidor utilizamos este método para los filtros
+    def to_search(self, value):
+        return self.objects.filter(Q(codigo__icontains=value) |
+                                   Q(descripcion__icontains=value)
+                                   )
+
+    class Meta:
+        db_table = 'sirtbbar'
+        verbose_name = 'Operación Baremo'
+        verbose_name_plural = 'Baremo Operaciones'
+        ordering = ['codigo']
+
+
+class LineaBaremo(ModelMixin, BaseModel):
+    baremo = models.ForeignKey(Baremo, on_delete=models.CASCADE, null=False, blank=False, db_column='lba_opera', verbose_name='Operación')
+    modelo = models.CharField(max_length=4, verbose_name='Código modelo', db_column='lba_modelo', null=False, blank=False)
+    modifica = models.CharField(max_length=4, verbose_name='Modificación', db_column='lba_modif', null=False, blank=False, default='0000')
+    tiempo = models.DecimalField(verbose_name='Tiempo', db_column='lba_tiempo', max_digits=7, decimal_places=2, null=True, blank=True)
+    origen = models.CharField(max_length=1, verbose_name='Origen', db_column='lba_origen', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.baremo.codigo} - {self.modelo}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'modelo': self.modelo,
+            'modifica': self.modifica,
+            'tiempo': self.tiempo,
+        }
+        return item
+
+    # para la paginación por servidor utilizamos este método para los filtros
+    # key_value es el valor del id de la operación baremo de la que dependen las líneas
+    def to_search(self, value, key_value):
+        # print('LineaBaremo-to_search')
+        # print(f'key_value: {key_value} - value: {value}')
+        if value is None:
+            return self.objects.filter(Q(baremo_id=key_value))
+        else:
+            return self.objects.filter(Q(modelo__icontains=value) & Q(baremo_id=key_value))
+
+    class Meta:
+        db_table = 'sirtblba'
+        verbose_name = 'Tiempo Baremo'
+        verbose_name_plural = 'Líneas Tiempos Baremo Operaciones'
+        ordering = ['baremo', 'modelo', 'modifica']

@@ -8,23 +8,7 @@ from schwifty import IBAN
 from decouple import config
 from datetime import datetime
 from django.utils.timezone import get_current_timezone
-
-# LIST_TABLES = [
-#     ('01', 'Descuentos MO'),
-#     ('02', 'Tipos de Cliente'),
-#     ('03', 'Formas de Pago'),
-#     ('04', 'Bancos'),
-#     ('05', 'Clientes/Proveedores'),
-# ]
-#
-#
-# class ImportarForm(Form):
-#     lista_tablas = CharField(widget=Select(choices=LIST_TABLES))
-#     fichero_tabla = FileField()
-#
-#     def clean(self):
-#         cleaned_data = self.cleaned_data
-#         # print(cleaned_data)
+from django.db.models import Q
 
 
 class FormaDePagoForm(CodigoBaseForm, ModelForm):
@@ -1867,3 +1851,142 @@ class SeccionTrabajoForm(CodigoBaseForm, ModelForm):
             'codigo': TextInput(attrs={'required': True}),
             'descripcion': TextInput(attrs={'required': True}),
         }
+
+
+class SituacionVehiculoForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = SituacionVehiculo
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }
+
+
+class BaremoForm(CodigoBaseForm, ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.es_alta = False
+        else:
+            self.es_alta = True
+
+    class Meta:
+        model = Baremo
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código Operación',
+            'descripcion': 'Descripción',
+            'tiempoEstimado': 'Tiempo Estimado',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }
+
+    def clean_tiempoEstimado(self):
+        tiempoEstimado = self.cleaned_data['tiempoEstimado']
+
+        if tiempoEstimado is None:
+            tiempoEstimado = 0
+
+        return tiempoEstimado
+
+    def save(self, commit=True):
+        baremo = super().save(commit=False)
+
+        if self.es_alta:
+            # Inicializamos campos en altas
+            baremo.origen = 'X'
+
+        if commit:
+            baremo.save()
+
+        return baremo
+
+
+class LineaBaremoForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['baremo'].disabled = True
+
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.es_alta = False
+            # print(f'baremo: {self.instance.baremo.pk}')
+            self.fields['baremo'].queryset = Baremo.objects.all().filter(pk=self.instance.baremo.pk)
+            self.fields['modelo'].disabled = True
+        else:
+            self.es_alta = True
+            self.fields['baremo'].queryset = Baremo.objects.all().filter(pk=self.initial['baremo'].id)
+
+    class Meta:
+        model = LineaBaremo
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'baremo': 'Operación Baremo',
+            'modelo': 'Modelo',
+            'modifica': 'Modificación',
+            'tiempo': 'Tiempo'
+        }
+        widgets = {
+            'modelo': TextInput(attrs={'required': True}),
+        }
+
+    def clean_modelo(self):
+        modelo = self.cleaned_data['modelo']
+        if not modelo:
+            return modelo
+
+        modelo = modelo.upper()
+        return modelo
+
+    def clean_modifica(self):
+        modifica = self.cleaned_data['modifica']
+        if modifica is None:
+            modifica = '0000'
+        return modifica
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        print(self.cleaned_data)
+        baremo = cleaned_data['baremo']
+        modelo = cleaned_data['modelo']
+        modifica = cleaned_data['modifica']
+
+        # en altas comprobamos si ya existe en la tabla otro código igual
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            modelos = LineaBaremo.objects.filter(Q(baremo_id=baremo.id) & Q(modelo=modelo) & Q(modifica=modifica)).exclude(pk=instance.pk)
+        else:
+            modelos = LineaBaremo.objects.filter(Q(baremo_id=baremo.id) & Q(modelo=modelo) & Q(modifica=modifica))
+
+        if modelos:
+            raise ValidationError('Ya existe esa combinación de Modelo y Modificación: %(value1)s - %(value2)s', code='coddup', params={'value1': modelo, 'value2': modifica})
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        linbaremo = super().save(commit=False)
+
+        linbaremo.origen = 'X'
+
+        if commit:
+            linbaremo.save()
+
+        return linbaremo

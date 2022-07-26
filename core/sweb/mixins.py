@@ -66,7 +66,7 @@ class BasicView(View):
         return super().dispatch(request, *args, **kwargs)
 
     # Paginación en servidor
-    def datatables_server(self, model, request, modal=False):
+    def datatables_server(self, model, request, modal=False, level_nesting=1, key_value=None):
         # Recuperarmos los datos enviados por POST en la llamada ajax con el parámetro serverSide: true
         datatables = request.POST
         # print(model)
@@ -91,14 +91,20 @@ class BasicView(View):
             order_col_name = str('-' + order_col_name)
 
         # guardamos info en sesión para la vista de detalle, botones Anterior y Siguiente
-        request.session['search'] = search
-        request.session['order_col_name'] = order_col_name
+        # como podemos anidar paginaciones diferenciamos con level_nesting las variables en sesión
+        request.session['search'+'_'+str(level_nesting)] = search
+        request.session['order_col_name'+'_'+str(level_nesting)] = order_col_name
 
+        # key-value identifica la id cuando se usan paginaciones anidadas
         if search:
             if modal:
                 data_objects = model.to_search_modal(model, value=search)
+            elif key_value is not None:
+                data_objects = model.to_search(model, value=search, key_value=key_value)
             else:
                 data_objects = model.to_search(model, value=search)
+        elif key_value is not None:
+            data_objects = model.to_search(model, value=None, key_value=key_value)
         else:
             data_objects = model.objects.all()
         # print(f'data_objects: {data_objects}')
@@ -232,9 +238,14 @@ class BasicDeleteView(BasicView):
 
 class BasicDetailView(BasicView):
 
-    def get_queryset(self):
-        search = self.request.session.get('search')
-        order_col_name = self.request.session.get('order_col_name')
+    def get_queryset(self, level_nesting=1):
+        # print('BasicDetailView-get_queryset')
+        # print(f'model: {self.model}')
+        # print(f'level_nesting: {level_nesting}')
+        search = self.request.session.get('search'+'_'+str(level_nesting))
+        order_col_name = self.request.session.get('order_col_name'+'_'+str(level_nesting))
+        # print(f'search: {search}')
+        # print(f'order_col_name: {order_col_name}')
         if search is not None:
             data_objects = self.model.to_search(self.model, value=search)
         else:
@@ -245,6 +256,7 @@ class BasicDetailView(BasicView):
 
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):
+        # print('BasicDetailView-get_context_data')
         context = super().get_context_data(**kwargs)
         context['title'] = f'Detalle {self.model._meta.verbose_name}'
         context['entity'] = self.model._meta.verbose_name

@@ -30,6 +30,9 @@ from core.sweb.views.seccionint.views import *
 from core.sweb.views.depositos.views import *
 from core.sweb.views.ampaga.views import *
 from core.sweb.views.secciontra.views import *
+from core.sweb.views.situacionveh.views import *
+from core.sweb.views.baremo.views import *
+from core.sweb.views.linbaremo.views import *
 
 app_name = 'sweb'
 
@@ -311,4 +314,22 @@ urlpatterns = [
     path(f'{SeccionTrabajoCreateView.folder}/add/', SeccionTrabajoCreateView.as_view(), name=f'{SeccionTrabajoCreateView.folder}_add'),
     path(f'{SeccionTrabajoUpdateView.folder}/edit/<int:pk>/', SeccionTrabajoUpdateView.as_view(), name=f'{SeccionTrabajoUpdateView.folder}_edit'),
     path(f'{SeccionTrabajoDeleteView.folder}/delete/<int:pk>/', SeccionTrabajoDeleteView.as_view(), name=f'{SeccionTrabajoDeleteView.folder}_delete'),
+
+    # Situaciones Vehículo Taller
+    path(f'{SituacionVehiculoListView.folder}/list/', SituacionVehiculoListView.as_view(), name=f'{SituacionVehiculoListView.folder}_list'),
+    path(f'{SituacionVehiculoCreateView.folder}/add/', SituacionVehiculoCreateView.as_view(), name=f'{SituacionVehiculoCreateView.folder}_add'),
+    path(f'{SituacionVehiculoUpdateView.folder}/edit/<int:pk>/', SituacionVehiculoUpdateView.as_view(), name=f'{SituacionVehiculoUpdateView.folder}_edit'),
+    path(f'{SituacionVehiculoDeleteView.folder}/delete/<int:pk>/', SituacionVehiculoDeleteView.as_view(), name=f'{SituacionVehiculoDeleteView.folder}_delete'),
+
+    # Baremo
+    path(f'{BaremoListView.folder}/list/', BaremoListView.as_view(), name=f'{BaremoListView.folder}_list'),
+    path(f'{BaremoCreateView.folder}/add/', BaremoCreateView.as_view(), name=f'{BaremoCreateView.folder}_add'),
+    path(f'{BaremoUpdateView.folder}/edit/<int:pk>/', BaremoUpdateView.as_view(), name=f'{BaremoUpdateView.folder}_edit'),
+    path(f'{BaremoDeleteView.folder}/delete/<int:pk>/', BaremoDeleteView.as_view(), name=f'{BaremoDeleteView.folder}_delete'),
+    path(f'{BaremoDetailView.folder}/detail/<int:pk>/', BaremoDetailView.as_view(), name=f'{BaremoDetailView.folder}_detail'),
+
+    # Líneas Baremo
+    path(f'{BaremoUpdateView.folder}/edit/<int:pk>/{LineaBaremoCreateView.folder}/add/', LineaBaremoCreateView.as_view(), name=f'{LineaBaremoCreateView.folder}_add'),
+    path(f'{BaremoUpdateView.folder}/edit/<int:pk0>/{LineaBaremoUpdateView.folder}/edit/<int:pk>/', LineaBaremoUpdateView.as_view(), name=f'{LineaBaremoUpdateView.folder}_edit'),
+    path(f'{BaremoUpdateView.folder}/edit/<int:pk0>/{LineaBaremoDeleteView.folder}/delete/<int:pk>/', LineaBaremoDeleteView.as_view(), name=f'{LineaBaremoDeleteView.folder}_delete'),
 ]

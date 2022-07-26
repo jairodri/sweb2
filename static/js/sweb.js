@@ -279,7 +279,8 @@ function confirmdelete() {
 }
 // inicializa datatable con paginación en servidor
 function initdtableserver(icolumns, ibuttons, iorder, extrabuttons, tipo_) {
-     // console.log(extrabuttons)
+    // console.log(extrabuttons)
+    // console.log(tipo_)
     var table = $('#dtable-buttons').DataTable({
         responsive: true,
         autoWidth: false,

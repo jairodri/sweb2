@@ -19,6 +19,8 @@
 
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{{ list_url }}">{{ entity_plural }}</a></li>
+    {% block breadcrumb2 %}
+    {% endblock %}
 {% endblock %}
 
 {% block content %}

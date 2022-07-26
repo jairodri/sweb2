@@ -1,0 +1,27 @@
+{% extends 'form.html' %}
+
+{% block contentform %}
+    <div class="form-group ">
+        <label for="baremo">Operación Baremo</label>
+        <input type="text" name="baremo" class="form-control" readonly value="{{ object.baremo }}">
+    </div>
+    <div class="form-group ">
+        <label for="modelo">Modelo</label>
+        <input type="text" name="modelo" class="form-control" readonly value="{{ object.modelo }}">
+    </div>
+    <div class="form-group ">
+        <label for="modifica">Modificación</label>
+        <input type="text" name="modifica" class="form-control" readonly value="{{ object.modifica }}">
+    </div>
+    <div class="form-group ">
+        <label for="tiempo">Tiempo</label>
+        <input type="text" name="tiempo" class="form-control" readonly value="{{ object.tiempo }}">
+    </div>
+{% endblock %}
+
+{% block jscript2 %}
+    <script>
+        confirmdelete();
+    </script>
+{% endblock %}
+

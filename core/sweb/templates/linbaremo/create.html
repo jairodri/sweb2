@@ -1,0 +1,63 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <div class="form-group">
+        <label for="{{ form.baremo.name }}">{{ form.baremo.label }}</label>
+        {{ form.baremo | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.modelo.name }}">{{ form.modelo.label }}<span
+                class="text-danger"> *</span></label>
+        {{ form.modelo | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.modifica.name }}">{{ form.modifica.label }}</label>
+        {{ form.modifica | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.tiempo.name }}">{{ form.tiempo.label }}</label>
+        {{ form.tiempo | add_class:'form-control' }}
+    </div>
+{% endblock %}
+
+{% block jscript2 %}
+    <script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('#id_baremo').select2({
+            theme: 'bootstrap4',
+            language: 'es',
+            minimumInputLength: 1,
+            {#allowClear: true,#}
+            ajax: {
+                url: window.location.pathname,
+                dataType: 'json',
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                data: function (params) {
+                    var query = {
+                        'term': params.term,
+                        'action2': 'select2',
+                        'tipo_': 'formbase',
+                        'field': 'baremo',
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {id: item.id, text: item.text};
+                        })
+                    };
+                },
+             }
+        });
+    });
+</script>
+    <script type="application/javascript">
+        validar('{{ entity }}');
+    </script>
+{% endblock %}
