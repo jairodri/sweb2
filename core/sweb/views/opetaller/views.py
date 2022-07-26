@@ -88,8 +88,8 @@ class OperarioDetailView(BasicDetailView, DetailView):
         context = super().get_context_data(**kwargs)
 
         # Gestionamos los botones de Anterior y Siguiente teniendo en cuenta las distintas posibilidades de ordenación
-        # print(self.request.session.get('search'))
-        # print(self.request.session.get('order_col_name'))
+        print(self.request.session.get('search'))
+        print(self.request.session.get('order_col_name'))
         order_col_name = self.request.session.get('order_col_name')
         if order_col_name == 'codigo':
             if self.object.codigo is None:

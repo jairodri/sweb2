@@ -115,11 +115,11 @@ class BaremoDetailView(BasicDetailView, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Estamos en el primer nivel de anidamiento de paginaciones
-        level_nesting = 1
+        level_nesting = None
         # Gestionamos los botones de Anterior y Siguiente teniendo en cuenta las distintas posibilidades de ordenación
         # print(self.request.session.get('search'))
         # print(self.request.session.get('order_col_name'))
-        order_col_name = self.request.session.get('order_col_name'+'_'+str(level_nesting))
+        order_col_name = self.request.session.get('order_col_name')
         if order_col_name == 'codigo':
             if self.object.codigo is None:
                 filtro_prev = self.get_queryset().filter((Q(codigo__isnull=True) & Q(pk__lt=self.object.pk))).order_by('-codigo', '-id')

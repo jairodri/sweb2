@@ -66,7 +66,7 @@ class BasicView(View):
         return super().dispatch(request, *args, **kwargs)
 
     # Paginación en servidor
-    def datatables_server(self, model, request, modal=False, level_nesting=1, key_value=None):
+    def datatables_server(self, model, request, modal=False, level_nesting=None, key_value=None):
         # Recuperarmos los datos enviados por POST en la llamada ajax con el parámetro serverSide: true
         datatables = request.POST
         # print(model)
@@ -92,8 +92,12 @@ class BasicView(View):
 
         # guardamos info en sesión para la vista de detalle, botones Anterior y Siguiente
         # como podemos anidar paginaciones diferenciamos con level_nesting las variables en sesión
-        request.session['search'+'_'+str(level_nesting)] = search
-        request.session['order_col_name'+'_'+str(level_nesting)] = order_col_name
+        if level_nesting is None:
+            request.session['search'] = search
+            request.session['order_col_name'] = order_col_name
+        else:
+            request.session['search'+'_'+str(level_nesting)] = search
+            request.session['order_col_name'+'_'+str(level_nesting)] = order_col_name
 
         # key-value identifica la id cuando se usan paginaciones anidadas
         if search:
@@ -238,12 +242,16 @@ class BasicDeleteView(BasicView):
 
 class BasicDetailView(BasicView):
 
-    def get_queryset(self, level_nesting=1):
+    def get_queryset(self, level_nesting=None):
         # print('BasicDetailView-get_queryset')
         # print(f'model: {self.model}')
         # print(f'level_nesting: {level_nesting}')
-        search = self.request.session.get('search'+'_'+str(level_nesting))
-        order_col_name = self.request.session.get('order_col_name'+'_'+str(level_nesting))
+        if level_nesting is None:
+            search = self.request.session.get('search')
+            order_col_name = self.request.session.get('order_col_name')
+        else:
+            search = self.request.session.get('search'+'_'+str(level_nesting))
+            order_col_name = self.request.session.get('order_col_name'+'_'+str(level_nesting))
         # print(f'search: {search}')
         # print(f'order_col_name: {order_col_name}')
         if search is not None:
