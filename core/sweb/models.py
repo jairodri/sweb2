@@ -1494,3 +1494,28 @@ class LineaBaremo(ModelMixin, BaseModel):
         verbose_name = 'Tiempo Baremo'
         verbose_name_plural = 'Líneas Tiempos Baremo Operaciones'
         ordering = ['baremo', 'modelo', 'modifica']
+
+
+class OperarioRecambios(ModelMixin, BaseModel):
+    codigo = models.CharField(max_length=4, verbose_name='Código', db_column='ope_codigo', unique=True, null=False, blank=False)
+    descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='ope_descrip', null=False, blank=False)
+    efectMarca = models.DecimalField(verbose_name='Efectivo Marca', db_column='ope_efemarca', default=0.0, max_digits=5,
+                                    decimal_places=2, null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.codigo} - {self.descripcion}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'codigo': self.codigo,
+            'descripcion': self.descripcion,
+            'efectMarca': self.efectMarca,
+        }
+        return item
+
+    class Meta:
+        db_table = 'sirtbope'
+        verbose_name = 'Operario Recambios'
+        verbose_name_plural = 'Operarios Recambios'
+        ordering = ['codigo']

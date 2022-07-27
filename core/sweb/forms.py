@@ -1990,3 +1990,26 @@ class LineaBaremoForm(ModelForm):
             linbaremo.save()
 
         return linbaremo
+
+
+class OperarioRecambiosForm(CodigoBaseForm, ModelForm):
+
+    class Meta:
+        model = OperarioRecambios
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'codigo': 'Código',
+            'descripcion': 'Descripción',
+            'efectMarca': 'Efectivo Marca',
+        }
+        widgets = {
+            'codigo': TextInput(attrs={'required': True}),
+            'descripcion': TextInput(attrs={'required': True}),
+        }
+
+    def clean_efectMarca(self):
+        efectMarca = self.cleaned_data['efectMarca']
+        if efectMarca > 1:
+            efectMarca = 1
+        return efectMarca

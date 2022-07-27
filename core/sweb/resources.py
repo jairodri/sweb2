@@ -885,3 +885,15 @@ class LineaBaremoResource(resources.ModelResource):
             'tiempo',
             'origen',
         )
+
+
+class OperarioRecambiosResource(resources.ModelResource):
+
+    class Meta:
+        model = OperarioRecambios
+        fields = (
+            'id',
+            'codigo',
+            'descripcion',
+            'efectMarca',
+        )

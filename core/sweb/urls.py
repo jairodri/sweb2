@@ -33,6 +33,7 @@ from core.sweb.views.secciontra.views import *
 from core.sweb.views.situacionveh.views import *
 from core.sweb.views.baremo.views import *
 from core.sweb.views.linbaremo.views import *
+from core.sweb.views.operecam.views import *
 
 app_name = 'sweb'
 
@@ -332,4 +333,10 @@ urlpatterns = [
     path(f'{BaremoUpdateView.folder}/edit/<int:pk>/{LineaBaremoCreateView.folder}/add/', LineaBaremoCreateView.as_view(), name=f'{LineaBaremoCreateView.folder}_add'),
     path(f'{BaremoUpdateView.folder}/edit/<int:pk0>/{LineaBaremoUpdateView.folder}/edit/<int:pk>/', LineaBaremoUpdateView.as_view(), name=f'{LineaBaremoUpdateView.folder}_edit'),
     path(f'{BaremoUpdateView.folder}/edit/<int:pk0>/{LineaBaremoDeleteView.folder}/delete/<int:pk>/', LineaBaremoDeleteView.as_view(), name=f'{LineaBaremoDeleteView.folder}_delete'),
+
+    # Operarios Recambios
+    path(f'{OperarioRecambiosListView.folder}/list/', OperarioRecambiosListView.as_view(), name=f'{OperarioRecambiosListView.folder}_list'),
+    path(f'{OperarioRecambiosCreateView.folder}/add/', OperarioRecambiosCreateView.as_view(), name=f'{OperarioRecambiosCreateView.folder}_add'),
+    path(f'{OperarioRecambiosUpdateView.folder}/edit/<int:pk>/', OperarioRecambiosUpdateView.as_view(), name=f'{OperarioRecambiosUpdateView.folder}_edit'),
+    path(f'{OperarioRecambiosDeleteView.folder}/delete/<int:pk>/', OperarioRecambiosDeleteView.as_view(), name=f'{OperarioRecambiosDeleteView.folder}_delete'),
 ]
