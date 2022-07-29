@@ -140,6 +140,10 @@ class OperarioRecambiosAdmin(ImportExportModelAdmin):
     resource_class = OperarioRecambiosResource
 
 
+class EntradaAlmacenAdmin(ImportExportModelAdmin):
+    resource_class = EntradaAlmacenResource
+
+
 # Register your models here.
 # Para que se muestren en el panel administrador del servidor
 admin.site.register(Banco, BancoAdmin)
@@ -177,6 +181,7 @@ admin.site.register(SituacionVehiculo, SituacionVehiculoAdmin)
 admin.site.register(Baremo, BaremoAdmin)
 admin.site.register(LineaBaremo, LineaBaremoAdmin)
 admin.site.register(OperarioRecambios, OperarioRecambiosAdmin)
+admin.site.register(EntradaAlmacen, EntradaAlmacenAdmin)
 
 
 

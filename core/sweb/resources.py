@@ -897,3 +897,24 @@ class OperarioRecambiosResource(resources.ModelResource):
             'descripcion',
             'efectMarca',
         )
+
+
+class EntradaAlmacenResource(resources.ModelResource):
+    proveedor = fields.Field(attribute='proveedor', column_name='proveedor', widget=ForeignKeyWidget(Cliente, field='codigo'))
+    fechaMovimiento = fields.Field(attribute='fechaMovimiento', column_name='fechaMovimiento', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
+    fechaUltimaFactura = fields.Field(attribute='fechaUltimaFactura', column_name='fechaUltimaFactura', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
+
+    class Meta:
+        model = EntradaAlmacen
+        fields = (
+            'id',
+            'documento',
+            'fechaMovimiento',
+            'proveedor',
+            'almacen',
+            'importe',
+            'importePiCoste',
+            'impreso',
+            'docAnulacion',
+            'albaranProveedor',
+        )

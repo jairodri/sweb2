@@ -4,6 +4,11 @@ from core.models import BaseModel
 from core.sweb.mixins import ModelMixin
 from django.db.models import Q
 
+ALMACENES = [
+    ('1', 'Turismos'),
+    ('2', 'Vehículos Industriales'),
+]
+
 
 class Banco(ModelMixin, BaseModel):
     codigo = models.CharField(max_length=4, verbose_name='código banco', db_column='ban_codcsp', null=False,
@@ -582,8 +587,6 @@ class DescuentoRecambios(ModelMixin, BaseModel):
         return f'{self.codigo} - {self.codpieza} - {self.descuento}%'
 
     def to_list(self):
-        # item = {}
-        # if self.id is not None:
         item = {
             'id': self.id,
             'codigo': self.codigo,
@@ -909,21 +912,6 @@ class Articulo(ModelMixin, BaseModel):
         return self.objects.filter(Q(referencia__icontains=value) |
                                    Q(descripcion__icontains=value)
                                    )
-
-    # def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-    #     print(f'save en models.py')
-    #     # # Datos calculados
-    #     # self.precioCoste = self.tarifa - (self.tarifa * self.codigoApro.descuento / 100)
-    #     # if self.codigoPromo is None:
-    #     #     self.precioPromo = 0
-    #     # else:
-    #     #     self.precioPromo = self.tarifa - (self.tarifa * self.codigoPromo.descuento / 100)
-    #
-    #     # if not self.pk:
-    #     #     # Inicializamos campos en altas
-    #     #     self.precioCosteMedio = self.precioCoste
-    #
-    #     super().save(force_insert=False, force_update=False, using=None, update_fields=None)
 
     class Meta:
         db_table = 'sirtbref'
@@ -1500,7 +1488,7 @@ class OperarioRecambios(ModelMixin, BaseModel):
     codigo = models.CharField(max_length=4, verbose_name='Código', db_column='ope_codigo', unique=True, null=False, blank=False)
     descripcion = models.CharField(max_length=100, verbose_name='Descripción', db_column='ope_descrip', null=False, blank=False)
     efectMarca = models.DecimalField(verbose_name='Efectivo Marca', db_column='ope_efemarca', default=0.0, max_digits=5,
-                                    decimal_places=2, null=False, blank=False)
+                                     decimal_places=2, null=False, blank=False)
 
     def __str__(self):
         return f'{self.codigo} - {self.descripcion}'
@@ -1519,3 +1507,66 @@ class OperarioRecambios(ModelMixin, BaseModel):
         verbose_name = 'Operario Recambios'
         verbose_name_plural = 'Operarios Recambios'
         ordering = ['codigo']
+
+
+class OrdenReparacion(ModelMixin, BaseModel):
+    orden = models.CharField(max_length=7, verbose_name='Número Orden', db_column='orp_orden', unique=True, null=False, blank=False)
+    tipo = models.ForeignKey(TipoOrdenReparacion, on_delete=models.PROTECT, null=False, blank=False, db_column='orp_tipo', verbose_name='Tipo Orden')
+
+    def __str__(self):
+        return f'{self.orden} - {self.tipo}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'orden': self.orden,
+        }
+        return item
+
+    class Meta:
+        db_table = 'sirtborp'
+        verbose_name = 'Orden Reparación'
+        verbose_name_plural = 'Órdenes de Reparación'
+        ordering = ['orden']
+
+
+class EntradaAlmacen(ModelMixin, BaseModel):
+    documento = models.CharField(max_length=7, verbose_name='Documento', db_column='eal_docum', unique=True, null=False, blank=False)
+    fechaMovimiento = models.DateTimeField(verbose_name='Fecha movimiento', db_column='eal_femov', null=False, blank=False)
+    proveedor = models.ForeignKey(Cliente, on_delete=models.PROTECT, null=True, blank=True, db_column='eal_proved', verbose_name='Proveedor')
+    almacen = models.CharField(max_length=1, choices=ALMACENES, default='1', verbose_name='Almacén', db_column='eal_almacen', null=False, blank=False)
+    importe = models.DecimalField(verbose_name='importe', db_column='eal_importe', max_digits=9, decimal_places=2, null=True, blank=True)
+    importePiCoste = models.DecimalField(verbose_name='importe Pi Coste', db_column='eal_ipicos', max_digits=9, decimal_places=2, null=True, blank=True)
+    impreso = models.BooleanField(verbose_name='impreso', db_column='eal_impreso', default=False, null=True, blank=True)
+    docAnulacion = models.CharField(max_length=7, verbose_name='Documento anulación', db_column='eal_docanula', null=True, blank=True)
+    albaranProveedor = models.CharField(max_length=7, verbose_name='Albarán proveedor', db_column='eal_albprove', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.documento}'
+
+    def to_list(self):
+        if self.proveedor is None:
+            proveedor_list = ''
+        else:
+            proveedor_list = self.proveedor.codigo
+        item = {
+            'id': self.id,
+            'documento': self.documento,
+            'fechaMovimiento': self.fechaMovimiento.strftime('%d/%m/%Y'),
+            'proveedor__codigo': proveedor_list,
+            'albaranProveedor': self.albaranProveedor,
+            'importe': self.importePiCoste,
+        }
+        return item
+
+    # para la paginación por servidor utilizamos este método para los filtros
+    def to_search(self, value):
+        return self.objects.filter(Q(documento__icontains=value) |
+                                   Q(albaranProveedor__icontains=value) |
+                                   Q(proveedor__codigo__icontains=value)
+                                   )
+    class Meta:
+        db_table = 'sirtbeal'
+        verbose_name = 'Entrada Almacén'
+        verbose_name_plural = 'Entradas de Almacén'
+        ordering = ['documento']

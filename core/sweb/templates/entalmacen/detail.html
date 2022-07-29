@@ -1,0 +1,89 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <div class="row">
+        <div class="col-sm-6">
+             <div class="form-group ">
+                <label for="documento">Nº Documento</label>
+                <input type="text" name="documento" class="form-control" readonly value="{{ object.documento }}">
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="fechaMovimiento">Fecha</label>
+                <input type="text" name="fechaMovimiento" class="form-control" readonly
+                       value="{{ object.fechaMovimiento | date:"SHORT_DATE_FORMAT" | default_if_none:'' }}">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+             <div class="form-group ">
+                <label for="proveedor">Proveedor</label>
+                <input type="text" name="proveedor" class="form-control" readonly value="{{ object.proveedor | default_if_none:'' }}">
+            </div>
+        </div>
+        <div class="col-sm-6">
+             <div class="form-group ">
+                <label for="albaranProveedor">Albarán proveedor</label>
+                <input type="text" name="albaranProveedor" class="form-control" readonly value="{{ object.albaranProveedor | default_if_none:'' }}">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+             <div class="form-group ">
+                <label for="almacen">Almacén</label>
+                <input type="text" name="almacen" class="form-control" readonly value="{{ object.get_almacen_display | default_if_none:'' }}">
+            </div>
+        </div>
+        <div class="col-sm-6">
+             <div class="form-group ">
+                <label for="importePiCoste">Importe</label>
+                <input type="text" name="importePiCoste" class="form-control" readonly value="{{ object.importePiCoste | default_if_none:'' }}">
+            </div>
+        </div>
+    </div>
+{#    <div class="card card-light">#}
+{#        <div class="card-header">#}
+{#            <h6 class="card-title">Tiempos Específicos</h6>#}
+{#        </div>#}
+{#        <div class="card-body">#}
+{#            <table id="dtable-buttons" class="table table-bordered table-hover display nowrap">#}
+{#                <thead>#}
+{#                <tr>#}
+{#                    <th>Modelo</th>#}
+{#                    <th>Modificación</th>#}
+{#                    <th>Tiempo</th>#}
+{#                </tr>#}
+{#                </thead>#}
+{##}
+{#            </table>#}
+{#        </div>#}
+{#        <div class="card-footer"></div>#}
+{#    </div>#}
+{% endblock %}
+
+{% block otrosbotones %}
+    {% if prev_pk %}
+    <a class="btn btn-secondary" href="/sweb/{{ folder }}/detail/{{ prev_pk }}/" role="button"><i class="fas fa-angle-left"></i> Anterior</a>
+    {% endif %}
+    {% if next_pk %}
+    <a class="btn btn-secondary" href="/sweb/{{ folder }}/detail/{{ next_pk }}/" role="button"><i class="fas fa-angle-right"></i> Siguiente</a>
+    {% endif %}
+{% endblock %}
+
+{% block jscript2 %}
+{#    <script type="text/javascript">#}
+{#        var icolumns = [#}
+{#            {"data": "modelo"},#}
+{#            {"data": "modifica"},#}
+{#            {"data": "tiempo"},#}
+{#        ]#}
+{#        var ibuttons = '';  // No necesitamos ningún botón adicional ya que toda la info es visible#}
+{#        var iorder = [[0, 'asc']];#}
+{#        var extrabuttons = true;#}
+{#        initdtableserver(icolumns, ibuttons, iorder, extrabuttons)#}
+{#    </script>#}
+{% endblock %}

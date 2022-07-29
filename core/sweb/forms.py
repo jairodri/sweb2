@@ -1,5 +1,4 @@
 import zoneinfo
-
 from django.forms import *
 from core.sweb.mixins import CodigoBaseForm
 from core.sweb.models import *
@@ -1960,6 +1959,7 @@ class LineaBaremoForm(ModelForm):
         modifica = self.cleaned_data['modifica']
         if modifica is None:
             modifica = '0000'
+
         return modifica
 
     def clean(self):
@@ -2013,3 +2013,123 @@ class OperarioRecambiosForm(CodigoBaseForm, ModelForm):
         if efectMarca > 1:
             efectMarca = 1
         return efectMarca
+
+
+class EntradaAlmacenForm(ModelForm):
+
+    confirm_albaran = BooleanField(label='Confirmar Albarán', required=False, widget=HiddenInput(attrs={'id': 'confirm_albaran'}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.es_alta = False
+        else:
+            self.es_alta = True
+
+    class Meta:
+        model = EntradaAlmacen
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'documento': 'Nº Documento',
+            'fechaMovimiento': 'Fecha',
+            'proveedor': 'Proveedor',
+            'albaranProveedor': 'Albarán proveedor',
+            'almacen': 'Almacén',
+            'importePiCoste': 'Importe',
+        }
+        widgets = {
+        }
+
+    def clean_documento(self):
+        documento = self.cleaned_data['documento']
+
+        if not documento:
+            raise ValidationError('El Nº Documento es obligatorio')
+
+        documento = documento.upper()
+
+        # en altas comprobamos si ya existe en la tabla otro documento igual
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            pass
+        else:
+            entradasAlmacen = EntradaAlmacen.objects.filter(documento=documento)
+            if entradasAlmacen:
+                raise ValidationError('Ya existe una Entrada de Almacén  con este Documento: %(value)s', code='coddup', params={'value': documento})
+
+        return documento
+
+    def clean_fechaMovimiento(self):
+        fechaMovimiento = self.cleaned_data['fechaMovimiento']
+
+        if fechaMovimiento is None:
+            raise ValidationError('La Fecha es obligatoria')
+
+        return fechaMovimiento
+
+    def clean_albaranProveedor(self):
+        albaranProveedor = self.cleaned_data['albaranProveedor']
+
+        if not albaranProveedor:
+            return albaranProveedor
+
+        albaranProveedor = albaranProveedor.upper()
+
+        return albaranProveedor
+
+    def validar_albaran(self):
+        # Comprobamos primero si hay documento, puesto que hubo una validación anterior
+        try:
+            documento = self.cleaned_data['documento']
+            albaranProveedor = self.cleaned_data['albaranProveedor']
+            confirm_albaran = self.cleaned_data['confirm_albaran']
+        except KeyError:
+            # si no hay documento no continuamos con la validación
+            return
+
+        if not albaranProveedor:
+            return
+
+        entradasAlmacen = EntradaAlmacen.objects.filter(albaranProveedor=albaranProveedor).exclude(documento=documento)
+        if entradasAlmacen and not confirm_albaran:
+            self.fields['confirm_albaran'].widget = widgets.CheckboxInput(attrs={'id': 'confirm_albaran'})
+            self.fields['confirm_albaran'].required = False
+            raise ValidationError('Albarán Proveedor ya existente en Documento: %(value)s. Confirme para validar', code='albdup',
+                                  params={'value': entradasAlmacen[0].documento})
+        else:
+            self.fields['confirm_albaran'].widget = widgets.HiddenInput(attrs={'id': 'confirm_albaran'})
+            self.fields['confirm_albaran'].required = False
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        print(self.cleaned_data)
+
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            # en modificaciones comprobamos si el documento ya está impreso
+            entradaAlmacen = EntradaAlmacen.objects.get(pk=instance.pk)
+            if entradaAlmacen.impreso:
+                raise ValidationError('No se puede modificar, el Documento ya ha sido impreso')
+        else:
+            # en altas comprobamos si el albarán ya está en otro documento
+            self.validar_albaran()
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        entradaAlmacen = super().save(commit=False)
+
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            pass
+        else:
+            entradaAlmacen.importePiCoste = 0
+
+        if commit:
+            entradaAlmacen.save()
+
+        return entradaAlmacen

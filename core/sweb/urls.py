@@ -34,6 +34,7 @@ from core.sweb.views.situacionveh.views import *
 from core.sweb.views.baremo.views import *
 from core.sweb.views.linbaremo.views import *
 from core.sweb.views.operecam.views import *
+from core.sweb.views.entalmacen.views import *
 
 app_name = 'sweb'
 
@@ -339,4 +340,11 @@ urlpatterns = [
     path(f'{OperarioRecambiosCreateView.folder}/add/', OperarioRecambiosCreateView.as_view(), name=f'{OperarioRecambiosCreateView.folder}_add'),
     path(f'{OperarioRecambiosUpdateView.folder}/edit/<int:pk>/', OperarioRecambiosUpdateView.as_view(), name=f'{OperarioRecambiosUpdateView.folder}_edit'),
     path(f'{OperarioRecambiosDeleteView.folder}/delete/<int:pk>/', OperarioRecambiosDeleteView.as_view(), name=f'{OperarioRecambiosDeleteView.folder}_delete'),
+
+    # Baremo
+    path(f'{EntradaAlmacenListView.folder}/list/', EntradaAlmacenListView.as_view(), name=f'{EntradaAlmacenListView.folder}_list'),
+    path(f'{EntradaAlmacenCreateView.folder}/add/', EntradaAlmacenCreateView.as_view(), name=f'{EntradaAlmacenCreateView.folder}_add'),
+    path(f'{EntradaAlmacenUpdateView.folder}/edit/<int:pk>/', EntradaAlmacenUpdateView.as_view(), name=f'{EntradaAlmacenUpdateView.folder}_edit'),
+    path(f'{EntradaAlmacenDeleteView.folder}/delete/<int:pk>/', EntradaAlmacenDeleteView.as_view(), name=f'{EntradaAlmacenDeleteView.folder}_delete'),
+    path(f'{EntradaAlmacenDetailView.folder}/detail/<int:pk>/', EntradaAlmacenDetailView.as_view(), name=f'{EntradaAlmacenDetailView.folder}_detail'),
 ]

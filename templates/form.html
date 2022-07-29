@@ -120,7 +120,7 @@
         {% if messages %}
             var mensajes = ''
             {% for msg in messages %}
-                {% if msg.level == 40 %}
+                {% if msg.level == 40 %}  //level 40 = ERROR
                     mensajes += '- {{ msg }} <br>';
                 {% else %}
                     sendmessage('{{ msg }}');

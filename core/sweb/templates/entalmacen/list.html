@@ -1,0 +1,52 @@
+{% extends 'list.html' %}
+
+{% block columns %}
+    <tr>
+        <th>Acciones</th>
+        <th>Documento</th>
+        <th>Fecha</th>
+        <th>Proveedor</th>
+        <th>Albarán</th>
+        <th>Importe</th>
+    </tr>
+{% endblock %}
+
+{% block columnsfoot %}
+    <tr>
+        <th>Acciones</th>
+        <th>Documento</th>
+        <th>Fecha</th>
+        <th>Proveedor</th>
+        <th>Albarán</th>
+        <th>Importe</th>
+    </tr>
+{% endblock %}
+
+{% block botones %}
+    <a href="{{ add_url }}" class="btn btn-primary btn-flat">
+        <i class="fas fa-plus"></i> Añadir {{ entity }}
+    </a>
+    <a href="#" class="btn btn-primary btn-flat">
+        <i class="fas fa-trash"></i> Eliminar Documentos
+    </a>
+{% endblock %}
+
+{% block jscript2 %}
+<script>
+        var icolumns = [
+            {"data": "id"},
+            {"data": "documento"},
+            {"data": "fechaMovimiento"},
+            {"data": "proveedor__codigo"},
+            {"data": "albaranProveedor"},
+            {"data": "importe"},
+        ]
+        var ibuttons = '<a href="/sweb/{{ folder }}/edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
+        ibuttons += '<a href="/sweb/{{ folder }}/delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
+        ibuttons += '<a href="/sweb/{{ folder }}/detail/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="fas fa-eye" title="Detalle"></i></a>';
+        var iorder = [[1, 'asc']];
+        var extrabuttons = true;
+        initdtableserver(icolumns, ibuttons, iorder, extrabuttons)
+</script>
+{% endblock %}
+

@@ -1,4 +1,4 @@
-{#{% if form.errors or messages %}#}
+{#Separamos errores de mensajes#}
 {% if form.errors  %}
     <div class="callout callout-danger">
         <ul>
@@ -10,9 +10,17 @@
             {% for error in form.non_field_errors %}
                 <li>{{ error }}</li>
             {% endfor %}
-{#            {% for msg in messages %}#}
-{#                <li>{{ msg }}</li>#}
-{#            {% endfor %}#}
         </ul>
     </div>
+{% endif %}
+{% if messages %}
+    {% for msg in messages %}
+        {% if msg.level == 40 %}
+            <div class="callout callout-danger">
+                <ul>
+                    <li>{{ msg }}</li>
+                </ul>
+            </div>
+        {% endif %}
+    {% endfor %}
 {% endif %}

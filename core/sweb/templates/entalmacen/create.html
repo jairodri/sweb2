@@ -1,0 +1,153 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <input type="hidden" name="tipo_" value="formbase">
+    <input type="hidden" name="action2" value="">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="{{ form.documento.name }}">{{ form.documento.label }}<span class="text-danger"> *</span></label>
+                {{ form.documento | add_class:'form-control' }}
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="{{ form.fechaMovimiento.name }}">{{ form.fechaMovimiento.label }}<span class="text-danger"> *</span></label>
+                <div class="input-group date" id="fmovimiento" data-target-input="nearest">
+                    <div class="input-group-append" data-target="#fmovimiento" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                    </div>
+                    {{ form.fechaMovimiento | add_class:'form-control' | add_class:'datetimepicker-input' | attr:'data-target:#fmovimiento' | attr:'data-inputmask-alias:datetime' | attr:'data-inputmask-inputformat:dd/mm/yyyy' | attr:'data-mask' }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="{{ form.proveedor.name }}">{{ form.proveedor.label }}</label>
+                {{ form.proveedor | add_class:'form-control' | attr:'style="width: 100%;"' }}
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="{{ form.albaranProveedor.name }}">{{ form.albaranProveedor.label }}</label>
+                {{ form.albaranProveedor | add_class:'form-control' }}
+            </div>
+            <div class="form-group">
+                {% if form.confirm_albaran.field.widget.input_type == 'hidden' %}
+                    {{ form.confirm_albaran | add_class:'form-control' }}
+                {% else %}
+                    <div class="icheck-primary">
+                        {{ form.confirm_albaran | add_class:'form-control' }}
+                        <label for="{{ form.confirm_albaran.name }}">{{ form.confirm_albaran.label }}</label>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="{{ form.almacen.name }}">{{ form.almacen.label }}</label>
+                {{ form.almacen | add_class:'form-control' }}
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="{{ form.importePiCoste.name }}">{{ form.importePiCoste.label }}</label>
+                {{ form.importePiCoste | add_class:'form-control' | attr:'readonly'}}
+            </div>
+        </div>
+    </div>
+
+    {% if action != 'add' %}
+{#    <div class="card card-light">#}
+{#        <div class="card-header">#}
+{#            <h6 class="card-title">Tiempos Específicos</h6>#}
+{#        </div>#}
+{#        <div class="card-body">#}
+{#            <table id="dtable-buttons" class="table table-bordered table-hover display nowrap">#}
+{#                <thead>#}
+{#                <tr>#}
+{#                    <th>Acciones</th>#}
+{#                    <th>Modelo</th>#}
+{#                    <th>Modificación</th>#}
+{#                    <th>Tiempo</th>#}
+{#                </tr>#}
+{#                </thead>#}
+{##}
+{#            </table>#}
+{#        </div>#}
+{#        <div class="card-footer">#}
+{#            <a href="{{ add_url2 }}" class="btn btn-primary btn-flat">#}
+{#                <i class="fas fa-plus"></i> Añadir {{ entity2 }}#}
+{#            </a>#}
+{#        </div>#}
+{#    </div>#}
+    {% endif %}
+{% endblock %}
+
+{% block otrosbotones %}
+{% endblock %}
+
+{% block jscript2 %}
+    <script>
+        $(function () {
+            $('[data-mask]').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/aaaa'});
+            $('#fmovimiento').datetimepicker({
+                locale: 'es',
+                format: 'L',
+                autoClose: true
+            });
+            $('#id_proveedor').select2({
+                theme: 'bootstrap4',
+                language: 'es',
+                placeholder: 'Seleccione un proveedor',
+                minimumInputLength: 1,
+                allowClear: true,
+                ajax: {
+                    url: window.location.pathname,
+                    dataType: 'json',
+                    type: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    data: function (params) {
+                        var query = {
+                            'term': params.term,
+                            'action2': 'select2',
+                            'tipo_': 'formbase',
+                            'field': 'proveedor',
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {id: item.id, text: item.text};
+                            })
+                        };
+                    },
+                 }
+            });
+        });
+    </script>
+{#    <script type="text/javascript">#}
+{#        var icolumns = [#}
+{#            {"data": "id"},#}
+{#            {"data": "modelo"},#}
+{#            {"data": "modifica"},#}
+{#            {"data": "tiempo"},#}
+{#        ]#}
+{#        var ibuttons = '<a href="{{ edit_url2 }}edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';#}
+{#        ibuttons += '<a href="{{ delete_url2 }}delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';#}
+{#        var iorder = [[1, 'asc']];#}
+{#        var extrabuttons = true;#}
+{#        initdtableserver(icolumns, ibuttons, iorder, extrabuttons)#}
+{#    </script>#}
+    <script type="application/javascript">
+        validar('{{ entity }}');
+    </script>
+{% endblock %}
