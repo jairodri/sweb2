@@ -34,6 +34,24 @@ class EntradaAlmacenCreateView(BasicCreateView, CreateView):
         if not numautos or numautos[0].activo is False:
             return codigo
 
+        # si queremos que no haya espacios entre contadores debemos leerlos todos hasta encontrar el primero libre
+        serie = numautos[0].serie
+        entradas = EntradaAlmacen.objects.filter(documento__startswith=serie).order_by('documento').values('documento')
+        # print(f'entradas: {entradas}')
+        nextnumber = 1
+        for ent in entradas:
+            numdoc = int(ent['documento'][2:])
+            # print(f'doc: {numdoc}')
+            if nextnumber < numdoc:
+                codigo = str(nextnumber)
+                codigo = codigo.strip().zfill(5)
+                codigo = serie + codigo
+                NumeracionAutomatica.objects.filter(codigo=codigo_numaut).update(contador=nextnumber)
+                return codigo
+            else:
+                nextnumber += 1
+
+        # método basado en el contador almacenado en la tabla de numeración automática
         valido = False
         serie = numautos[0].serie
         nextnumber = numautos[0].contador

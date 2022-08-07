@@ -2295,7 +2295,7 @@ class LineaEntradaAlmacenForm(ModelForm):
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        print(self.cleaned_data)
+        # print(self.cleaned_data)
 
         precioCompra = decimal.Decimal(cleaned_data['precioCompra'])
         importeCoste = decimal.Decimal(cleaned_data['importeCoste'])
