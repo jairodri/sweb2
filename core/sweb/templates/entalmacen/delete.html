@@ -39,45 +39,50 @@
         </div>
         <div class="col-sm-6">
              <div class="form-group ">
-                <label for="importePiCoste">Importe</label>
-                <input type="text" name="importePiCoste" class="form-control" readonly value="{{ object.importePiCoste | default_if_none:'' }}">
+                <label for="importe">Importe</label>
+                <input type="text" name="importe" class="form-control" readonly value="{{ object.importe | default_if_none:'' }}">
             </div>
         </div>
     </div>
 
+    <div class="card card-light">
+        <div class="card-header">
+            <h6 class="card-title">Detalle Piezas</h6>
+        </div>
+        <div class="card-body">
+            <table id="dtable-buttons" class="table table-bordered table-hover display nowrap">
+                <thead>
+                <tr>
+                    <th>Referencia</th>
+                    <th>Cantidad</th>
+                    <th>Precio Compra</th>
+                    <th>Descuento</th>
+                    <th>Importe</th>
+                    <th>Albarán</th>
+                </tr>
+                </thead>
 
-{#    <div class="card card-light">#}
-{#        <div class="card-header">#}
-{#            <h6 class="card-title">Tiempos Específicos</h6>#}
-{#        </div>#}
-{#        <div class="card-body">#}
-{#            <table id="dtable-buttons" class="table table-bordered table-hover display nowrap">#}
-{#                <thead>#}
-{#                <tr>#}
-{#                    <th>Modelo</th>#}
-{#                    <th>Modificación</th>#}
-{#                    <th>Tiempo</th>#}
-{#                </tr>#}
-{#                </thead>#}
-{##}
-{#            </table>#}
-{#        </div>#}
-{#        <div class="card-footer"></div>#}
-{#    </div>#}
+            </table>
+        </div>
+        <div class="card-footer"></div>
+    </div>
 {% endblock %}
 
 {% block jscript2 %}
-{#    <script type="text/javascript">#}
-{#        var icolumns = [#}
-{#            {"data": "modelo"},#}
-{#            {"data": "modifica"},#}
-{#            {"data": "tiempo"},#}
-{#        ]#}
-{#        var ibuttons = '';  // No necesitamos ningún botón adicional ya que toda la info es visible#}
-{#        var iorder = [[0, 'asc']];#}
-{#        var extrabuttons = true;#}
-{#        initdtableserver(icolumns, ibuttons, iorder, extrabuttons)#}
-{#    </script>#}
+    <script type="text/javascript">
+        var icolumns = [
+            {"data": "referencia"},
+            {"data": "cantidad"},
+            {"data": "precioCompra"},
+            {"data": "descuento"},
+            {"data": "importeCoste"},
+            {"data": "albaran"},
+        ]
+        var ibuttons = '';  // No necesitamos ningún botón adicional ya que toda la info es visible
+        var iorder = [[0, 'asc']];
+        var extrabuttons = true;
+        initdtableserver(icolumns, ibuttons, iorder, extrabuttons)
+    </script>
     <script>
         confirmdelete();
     </script>

@@ -907,8 +907,21 @@ class Articulo(ModelMixin, BaseModel):
         }
         return item
 
+    def to_list_select(self):
+        item = {
+            'id': self.id,
+            'text': f'{self.referencia} - {self.descripcion}',
+        }
+        return item
+
     # para la paginación por servidor utilizamos este método para los filtros
     def to_search(self, value):
+        return self.objects.filter(Q(referencia__icontains=value) |
+                                   Q(descripcion__icontains=value)
+                                   )
+
+    # para la paginación por servidor utilizamos este método para los filtros
+    def to_search_select(self, value):
         return self.objects.filter(Q(referencia__icontains=value) |
                                    Q(descripcion__icontains=value)
                                    )
@@ -1536,7 +1549,6 @@ class EntradaAlmacen(ModelMixin, BaseModel):
     proveedor = models.ForeignKey(Cliente, on_delete=models.PROTECT, null=True, blank=True, db_column='eal_proved', verbose_name='Proveedor')
     almacen = models.CharField(max_length=1, choices=ALMACENES, default='1', verbose_name='Almacén', db_column='eal_almacen', null=False, blank=False)
     importe = models.DecimalField(verbose_name='importe', db_column='eal_importe', max_digits=9, decimal_places=2, null=True, blank=True)
-    importePiCoste = models.DecimalField(verbose_name='importe Pi Coste', db_column='eal_ipicos', max_digits=9, decimal_places=2, null=True, blank=True)
     impreso = models.BooleanField(verbose_name='impreso', db_column='eal_impreso', default=False, null=True, blank=True)
     docAnulacion = models.CharField(max_length=7, verbose_name='Documento anulación', db_column='eal_docanula', null=True, blank=True)
     albaranProveedor = models.CharField(max_length=7, verbose_name='Albarán proveedor', db_column='eal_albprove', null=True, blank=True)
@@ -1555,7 +1567,8 @@ class EntradaAlmacen(ModelMixin, BaseModel):
             'fechaMovimiento': self.fechaMovimiento.strftime('%d/%m/%Y'),
             'proveedor__codigo': proveedor_list,
             'albaranProveedor': self.albaranProveedor,
-            'importe': self.importePiCoste,
+            'importe': self.importe,
+            'impreso': self.impreso,
         }
         return item
 
@@ -1565,8 +1578,50 @@ class EntradaAlmacen(ModelMixin, BaseModel):
                                    Q(albaranProveedor__icontains=value) |
                                    Q(proveedor__codigo__icontains=value)
                                    )
+
     class Meta:
         db_table = 'sirtbeal'
         verbose_name = 'Entrada Almacén'
         verbose_name_plural = 'Entradas de Almacén'
         ordering = ['documento']
+
+
+class LineaEntradaAlmacen(ModelMixin, BaseModel):
+    entradaAlmacen = models.ForeignKey(EntradaAlmacen, on_delete=models.CASCADE, null=False, blank=False, db_column='lea_entalm', verbose_name='Entrada Almacén')
+    referencia = models.ForeignKey(Articulo, on_delete=models.PROTECT, null=False, blank=False, db_column='lea_refer', verbose_name='Referencia')
+    cantidad = models.IntegerField(verbose_name='Cantidad', db_column='lea_canti', null=True, blank=True)
+    precioCompra = models.DecimalField(verbose_name='Precio compra', db_column='lea_pcompra', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeCoste = models.DecimalField(verbose_name='Importe coste', db_column='lea_impocos', max_digits=9, decimal_places=2, null=True, blank=True)
+    descuento = models.DecimalField(verbose_name='Descuento', db_column='lea_descuento', max_digits=5, decimal_places=2, null=True, blank=True)
+    codImputacion = models.CharField(max_length=1, verbose_name='Código Imputación', db_column='lea_cimp', null=True, blank=True)
+    albaran = models.CharField(max_length=9, verbose_name='Albarán', db_column='lea_albaran', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.entradaAlmacen.documento} - {self.referencia.referencia}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'referencia': self.referencia.referencia,
+            'descripcion': self.referencia.descripcion,
+            'cantidad': self.cantidad,
+            'precioCompra': self.precioCompra,
+            'descuento': self.descuento,
+            'importeCoste': self.importeCoste,
+            'albaran': self.albaran,
+        }
+        return item
+
+    # para la paginación por servidor utilizamos este método para los filtros
+    # key_value es el valor del id de la entrada almacén de la que dependen las líneas
+    def to_search(self, value, key_value):
+        if value is None:
+            return self.objects.filter(Q(entradaAlmacen_id=key_value))
+        else:
+            return self.objects.filter(Q(referencia__referencia__icontains=value) & Q(entradaAlmacen_id=key_value))
+
+    class Meta:
+        db_table = 'sirtblea'
+        verbose_name = 'Línea Entrada Almacén'
+        verbose_name_plural = 'Líneas de Entradas de Almacén'
+        ordering = ['entradaAlmacen', 'referencia']

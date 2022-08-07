@@ -1,12 +1,14 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from core.sweb.forms import EntradaAlmacenForm
-from core.sweb.models import EntradaAlmacen, LineaBaremo, NumeracionAutomatica, Cliente
+from core.sweb.models import EntradaAlmacen, LineaEntradaAlmacen, NumeracionAutomatica, Cliente
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from core.sweb.mixins import BasicCreateView, BasicUpdateView, BasicDeleteView, BasicListView, BasicDetailView
 from django.db.models import Q
 from datetime import datetime
+from django.utils.timezone import get_current_timezone
 from decouple import config
+from django.contrib import messages
 
 
 class EntradaAlmacenListView(BasicListView, ListView):
@@ -20,7 +22,8 @@ class EntradaAlmacenCreateView(BasicCreateView, CreateView):
     model = EntradaAlmacen
     form_class = EntradaAlmacenForm
     template_name = f'{folder}/create.html'
-    success_url = reverse_lazy(f'sweb:{folder}_list')
+    # en el caso de las altas tenemos que redirigir al alta de líneas
+    # success_url = reverse_lazy(f'sweb:{folder}_list')
     end_message_success = 'añadida'
 
     def get_next_contador(self):
@@ -48,20 +51,20 @@ class EntradaAlmacenCreateView(BasicCreateView, CreateView):
 
     def get_initial(self):
         # valores por defecto
-        fechaMovimiento = datetime.now()
+        fechaMovimiento = datetime.now(tz=get_current_timezone())
         documento = self.get_next_contador()
 
         initial = {
             'documento': documento,
             'fechaMovimiento': fechaMovimiento,
             'almacen': config('DEFALMA'),
-            'importePiCoste': 0.00,
+            'importe': 0.00,
         }
         return initial
 
     # redefinimos el post para las operaciones con ajax
     def post(self, request, *args, **kwargs):
-        print(f'post: {request.POST}')
+        # print(f'post: {request.POST}')
         datos = {}
         try:
             tipo_ = request.POST['tipo_']
@@ -85,6 +88,10 @@ class EntradaAlmacenCreateView(BasicCreateView, CreateView):
                 'error': str(e)
             }
         return JsonResponse(datos, safe=False)
+
+    # Las altas de Entrada Almacén deben enlazar con las altas de líneas
+    def get_success_url(self):
+        return reverse_lazy(f'sweb:linentalm_add', kwargs={'pk': self.object.pk})
 
 
 class EntradaAlmacenUpdateView(BasicUpdateView, UpdateView):
@@ -97,7 +104,7 @@ class EntradaAlmacenUpdateView(BasicUpdateView, UpdateView):
 
     # redefinimos el post para las operaciones con ajax
     def post(self, request, *args, **kwargs):
-        print(f'post: {request.POST}')
+        # print(f'post: {request.POST}')
         datos = {}
         try:
             tipo_ = request.POST['tipo_']
@@ -113,6 +120,15 @@ class EntradaAlmacenUpdateView(BasicUpdateView, UpdateView):
                             datos.append(i.to_list_select())
                 else:
                     return super().post(request, *args, **kwargs)
+            elif tipo_ == 'search':
+                action = request.POST['action']
+                if action == 'searchdata_s':
+                    # Recuperamos las líneas que pertenzcan a la entrada almacén a través de su id
+                    # activamos un segundo nivel de anidamiento de paginaciones con level_nesting=2
+                    datos = self.datatables_server(LineaEntradaAlmacen, request, key_value=kwargs.get('pk'),
+                                                   level_nesting=2)
+                else:
+                    data = {'error': 'Ha ocurrido un error'}
             else:
                 return super().post(request, *args, **kwargs)
         except Exception as e:
@@ -121,36 +137,17 @@ class EntradaAlmacenUpdateView(BasicUpdateView, UpdateView):
                 'error': str(e)
             }
         return JsonResponse(datos, safe=False)
-#
-#     # redefinimos el post para cargar la datatable con ajax
-#     def post(self, request, *args, **kwargs):
-#         try:
-#             # print(f'Post: {request.POST}')
-#             action = request.POST['action']
-#             # diferenciamos si la paginación es en cliente o en servidor
-#             if action == 'searchdata_s':
-#                 # Recuperamos las líneas que pertenzcan a la operación baremo a través de su id
-#                 # activamos un segundo nivel de anidamiento de paginaciones con level_nesting=2
-#                 datos = self.datatables_server(LineaBaremo, request, key_value=kwargs.get('pk'), level_nesting=2)
-#             else:
-#                 return super().post(request, *args, **kwargs)
-#         except Exception as e:
-#             return super().post(request, *args, **kwargs)
-#
-#         return JsonResponse(datos, safe=False)
-#
-#     # sobreescribimos el método get_context_data para añadir info al contexto
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['entity2'] = LineaBaremo._meta.verbose_name
-#         context['add_url2'] = reverse_lazy(f'sweb:linbaremo_add', kwargs={'pk': self.object.pk})
-#         path_edit = reverse_lazy(f'sweb:linbaremo_edit', kwargs={'pk0': self.object.pk, 'pk': 0})
-#         path_delete = reverse_lazy(f'sweb:linbaremo_delete', kwargs={'pk0': self.object.pk, 'pk': 0})
-#         context['edit_url2'] = path_edit.split('edit/0')[0]
-#         context['delete_url2'] = path_delete.split('delete/0')[0]
-#         # print(f'context: {context}')
-#         # print(f'edit_url2: {context["edit_url2"]}')
-#         return context
+
+    # sobreescribimos el método get_context_data para añadir info al contexto
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['entity2'] = LineaEntradaAlmacen._meta.verbose_name
+        context['add_url2'] = reverse_lazy(f'sweb:linentalm_add', kwargs={'pk': self.object.pk})
+        path_edit = reverse_lazy(f'sweb:linentalm_edit', kwargs={'pk0': self.object.pk, 'pk': 0})
+        path_delete = reverse_lazy(f'sweb:linentalm_delete', kwargs={'pk0': self.object.pk, 'pk': 0})
+        context['edit_url2'] = path_edit.split('edit/0')[0]
+        context['delete_url2'] = path_delete.split('delete/0')[0]
+        return context
 
 
 class EntradaAlmacenDeleteView(BasicDeleteView, DeleteView):
@@ -161,47 +158,86 @@ class EntradaAlmacenDeleteView(BasicDeleteView, DeleteView):
     end_message_success = 'eliminada'
     start_message_error = 'No se puede borrar esta'
     end_message_error = 'porque está siendo utilizada en otra tabla'
-#
-#     # redefinimos el post para cargar la datatable con ajax
-#     def post(self, request, *args, **kwargs):
-#         try:
-#             # print(f'Post: {request.POST}')
-#             action = request.POST['action']
-#             # diferenciamos si la paginación es en cliente o en servidor
-#             if action == 'searchdata_s':
-#                 # Recuperamos las líneas que pertenzcan a la operación baremo a través de su id
-#                 # activamos un segundo nivel de anidamiento de paginaciones con level_nesting=2
-#                 datos = self.datatables_server(LineaBaremo, request, key_value=kwargs.get('pk'), level_nesting=2)
-#             else:
-#                 return super().post(request, *args, **kwargs)
-#         except Exception as e:
-#             return super().post(request, *args, **kwargs)
-#
-#         return JsonResponse(datos, safe=False)
+
+# redefinimos el post para cargar la datatable con ajax
+    def post(self, request, *args, **kwargs):
+        try:
+            # print(f'Post: {request.POST}')
+            action = request.POST['action']
+            # diferenciamos si la paginación es en cliente o en servidor
+            if action == 'searchdata_s':
+                # Recuperamos las líneas que pertenezcan a la entrada almacén a través de su id
+                # activamos un segundo nivel de anidamiento de paginaciones con level_nesting=2
+                datos = self.datatables_server(LineaEntradaAlmacen, request, key_value=kwargs.get('pk'), level_nesting=2)
+            else:
+                data = {'error': 'Ha ocurrido un error'}
+        except Exception as e:
+            return super().post(request, *args, **kwargs)
+        return JsonResponse(datos, safe=False)
+
+    def form_valid(self, form):
+        # print(f'EntradaAlmacenDeleteView - form_valid')
+        if self.object.impreso:
+            messages.error(self.request, 'No se puede borrar, el Documento ya ha sido impreso')
+            return self.render_to_response(context=self.get_context_data())
+
+        # Hay aplicar primero la lógica aplicada al borrado de líneas
+        lineas = LineaEntradaAlmacen.objects.filter(entradaAlmacen_id=self.object.id)
+        # Antes de ninguna modificación comprobamos si alguna referencia está pendiente de inventario
+        for linea in lineas:
+            # print(linea)
+            if linea.referencia.bloqueo:
+                messages.error(self.request, f'No se puede borrar, la Referencia {linea.referencia} está pendiente de inventario' )
+                return self.render_to_response(context=self.get_context_data())
+
+        for linea in lineas:
+            # Actualizamos la Referencia
+            linea.referencia.existencias -= linea.cantidad
+            if linea.referencia.existencias > 0:
+                linea.referencia.precioCosteMedio = round((linea.referencia.precioCosteMedio * linea.referencia.existencias - linea.importeCoste) / linea.referencia.existencias, 2)
+
+            linea.referencia.entradasMes -= linea.cantidad
+            linea.referencia.entradasAcumuladas -= linea.cantidad
+            linea.referencia.unidadesCompradasMes -= linea.cantidad
+            linea.referencia.unidadesCompradasAno -= linea.cantidad
+            linea.referencia.importeComprasMes -= linea.importeCoste
+            linea.referencia.importeComprasAno -= linea.importeCoste
+            linea.referencia.fechaUltMovimiento = datetime.now(tz=get_current_timezone())
+            linea.referencia.save()
+
+            # Actualizamos el proveedor
+            if self.object.proveedor is not None:
+                self.object.proveedor.comprasMes -= linea.importeCoste
+                self.object.proveedor.comprasAno -= linea.importeCoste
+                self.object.proveedor.save()
+
+        self.object.delete()
+        return HttpResponseRedirect(self.get_success_url())
+        # super().form_valid(form)
 
 
 class EntradaAlmacenDetailView(BasicDetailView, DetailView):
     folder = 'entalmacen'
     model = EntradaAlmacen
     template_name = f'{folder}/detail.html'
-#
-#     # redefinimos el post para cargar la datatable con ajax
-#     def post(self, request, *args, **kwargs):
-#         try:
-#             # print(f'Post: {request.POST}')
-#             action = request.POST['action']
-#             # diferenciamos si la paginación es en cliente o en servidor
-#             if action == 'searchdata_s':
-#                 # Recuperamos las líneas que pertenzcan a la operación baremo a través de su id
-#                 # activamos un segundo nivel de anidamiento de paginaciones con level_nesting=2
-#                 datos = self.datatables_server(LineaBaremo, request, key_value=kwargs.get('pk'), level_nesting=2)
-#             else:
-#                 data = {'error': 'Ha ocurrido un error'}
-#         except Exception as e:
-#             datos = {
-#                 'error': str(e)
-#             }
-#         return JsonResponse(datos, safe=False)
+
+    # redefinimos el post para cargar la datatable con ajax
+    def post(self, request, *args, **kwargs):
+        try:
+            # print(f'Post: {request.POST}')
+            action = request.POST['action']
+            # diferenciamos si la paginación es en cliente o en servidor
+            if action == 'searchdata_s':
+                # Recuperamos las líneas que pertenzcan a la entrada almacén a través de su id
+                # activamos un segundo nivel de anidamiento de paginaciones con level_nesting=2
+                datos = self.datatables_server(LineaEntradaAlmacen, request, key_value=kwargs.get('pk'), level_nesting=2)
+            else:
+                data = {'error': 'Ha ocurrido un error'}
+        except Exception as e:
+            datos = {
+                'error': str(e)
+            }
+        return JsonResponse(datos, safe=False)
 
     # sobreescribimos el método get_context_data para añadir info al contexto
     def get_context_data(self, **kwargs):
@@ -214,7 +250,7 @@ class EntradaAlmacenDetailView(BasicDetailView, DetailView):
         order_col_name = self.request.session.get('order_col_name')
 
         # algunos de los campos no son paginables en detail por su tipo, así que los ignoramos y salimos
-        not_paginable = ['fechaMovimiento', '-fechaMovimiento', 'importe', '-importe']
+        not_paginable = ['fechaMovimiento', '-fechaMovimiento', 'importe', '-importe', 'impreso', '-impreso']
         if order_col_name in not_paginable:
             return context
 

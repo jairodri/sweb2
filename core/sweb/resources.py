@@ -913,8 +913,26 @@ class EntradaAlmacenResource(resources.ModelResource):
             'proveedor',
             'almacen',
             'importe',
-            'importePiCoste',
             'impreso',
             'docAnulacion',
             'albaranProveedor',
+        )
+
+
+class LineaEntradaAlmacenResource(resources.ModelResource):
+    entradaAlmacen = fields.Field(attribute='entradaAlmacen', column_name='entradaAlmacen', widget=ForeignKeyWidget(EntradaAlmacen, field='documento'))
+    referencia = fields.Field(attribute='referencia', column_name='referencia', widget=ForeignKeyWidget(Articulo, field='referencia'))
+
+    class Meta:
+        model = LineaEntradaAlmacen
+        fields = (
+            'id',
+            'entradaAlmacen',
+            'referencia',
+            'cantidad',
+            'precioCompra',
+            'importeCoste',
+            'descuento',
+            'codImputacion',
+            'albaran',
         )

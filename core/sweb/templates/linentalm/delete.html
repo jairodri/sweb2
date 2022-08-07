@@ -1,0 +1,133 @@
+{% extends 'form.html' %}
+
+{% block contentform %}
+    <div class="form-group ">
+        <label for="entradaAlmacen">Nº Documento</label>
+        <input type="text" name="entradaAlmacen" class="form-control" readonly value="{{ object.entradaAlmacen }}">
+    </div>
+    <div class="card card-light">
+        <div class="card-header"></div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="referencia">Referencia</label>
+                        <input type="text" name="referencia" class="form-control" readonly value="{{ object.referencia }}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="existencias">Existencias</label>
+                        <input type="text" name="existencias" class="form-control" readonly value="{{ object.referencia.existencias | default_if_none:''}}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="ubicacion">Ubicación</label>
+                        <input type="text" name="ubicacion" class="form-control" readonly value="{{ object.referencia.ubicacion | default_if_none:''}}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="codigoApro">Descuento Aprov.</label>
+                        <input type="text" name="codigoApro" class="form-control" readonly value="{{ object.referencia.codigoApro | default_if_none:''}}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="codigoUrgte">Descuento Urgente</label>
+                        <input type="text" name="codigoUrgte" class="form-control" readonly value="{{ object.referencia.codigoUrgte | default_if_none:''}}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="codigoObsoleto">Frecuencia Venta</label>
+                        <input type="text" name="codigoObsoleto" class="form-control" readonly value="{{ object.referencia.codigoObsoleto | default_if_none:''}}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="tarifa">P.V.P.</label>
+                        <input type="text" name="tarifa" class="form-control" readonly value="{{ object.referencia.tarifa | default_if_none:''}}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="precioCoste">P.V.D.</label>
+                        <input type="text" name="precioCoste" class="form-control" readonly value="{{ object.referencia.precioCoste | default_if_none:''}}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="precioCosteMedio">Precio Coste Medio</label>
+                        <input type="text" name="precioCosteMedio" class="form-control" readonly value="{{ object.referencia.precioCosteMedio | default_if_none:''}}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="pedidosPendientes">Pedidos Pendientes</label>
+                        <input type="text" name="pedidosPendientes" class="form-control" readonly value="{{ object.referencia.pedidosPendientes | default_if_none:''}}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="reserva">Reserva</label>
+                        <input type="text" name="reserva" class="form-control" readonly value="{{ object.referencia.reserva | default_if_none:''}}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="familia">Familia</label>
+                        <input type="text" name="familia" class="form-control" readonly value="{{ object.referencia.familia | default_if_none:''}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group ">
+                <label for="cantidad">Cantidad</label>
+                <input type="text" name="cantidad" class="form-control" readonly value="{{ object.cantidad }}">
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group ">
+                <label for="precioCompra">Precio Compra</label>
+                <input type="text" name="precioCompra" class="form-control" readonly value="{{ object.precioCompra }}">
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="form-group ">
+                <label for="descuento">Descuento</label>
+                <input type="text" name="descuento" class="form-control" readonly value="{{ object.descuento }}">
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group ">
+                <label for="importeCoste">Importe</label>
+                <input type="text" name="importeCoste" class="form-control" readonly value="{{ object.importeCoste }}">
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="form-group ">
+                <label for="albaran">Albarán</label>
+                <input type="text" name="albaran" class="form-control" readonly value="{{ object.albaran | default_if_none:''}}">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block jscript2 %}
+    <script>
+        confirmdelete();
+    </script>
+{% endblock %}
+

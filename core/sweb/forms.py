@@ -1,3 +1,4 @@
+import decimal
 import zoneinfo
 from django.forms import *
 from core.sweb.mixins import CodigoBaseForm
@@ -2026,6 +2027,7 @@ class EntradaAlmacenForm(ModelForm):
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
             self.es_alta = False
+            self.fields['documento'].disabled = True
         else:
             self.es_alta = True
 
@@ -2039,9 +2041,10 @@ class EntradaAlmacenForm(ModelForm):
             'proveedor': 'Proveedor',
             'albaranProveedor': 'Albarán proveedor',
             'almacen': 'Almacén',
-            'importePiCoste': 'Importe',
+            'importe': 'Importe',
         }
         widgets = {
+            'impreso': HiddenInput(),
         }
 
     def clean_documento(self):
@@ -2081,6 +2084,13 @@ class EntradaAlmacenForm(ModelForm):
 
         return albaranProveedor
 
+    def clean_impreso(self):
+        impreso = self.cleaned_data['impreso']
+
+        if impreso:
+            raise ValidationError('No se puede modificar, el Documento ya ha sido impreso')
+        return impreso
+
     def validar_albaran(self):
         # Comprobamos primero si hay documento, puesto que hubo una validación anterior
         try:
@@ -2106,14 +2116,11 @@ class EntradaAlmacenForm(ModelForm):
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        print(self.cleaned_data)
+        # print(self.cleaned_data)
 
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
-            # en modificaciones comprobamos si el documento ya está impreso
-            entradaAlmacen = EntradaAlmacen.objects.get(pk=instance.pk)
-            if entradaAlmacen.impreso:
-                raise ValidationError('No se puede modificar, el Documento ya ha sido impreso')
+            pass
         else:
             # en altas comprobamos si el albarán ya está en otro documento
             self.validar_albaran()
@@ -2127,9 +2134,337 @@ class EntradaAlmacenForm(ModelForm):
         if instance and instance.pk:
             pass
         else:
-            entradaAlmacen.importePiCoste = 0
+            entradaAlmacen.importe = 0
 
         if commit:
             entradaAlmacen.save()
 
         return entradaAlmacen
+
+
+class LineaEntradaAlmacenForm(ModelForm):
+
+    ubicacion = CharField(label='Ubicación', required=False, disabled=True)
+    codigoObsoleto = CharField(label='Frecuencia Venta', required=False, disabled=True)
+    existencias = IntegerField(label='Existencias', required=False, disabled=True)
+    pedidosPendientes = IntegerField(label='Pedidos Pendientes', required=False, disabled=True)
+    reserva = IntegerField(label='Reserva', required=False, disabled=True)
+    tarifa = DecimalField(label='P.V.P.', required=False, disabled=True)
+    precioCosteMedio = DecimalField(label='Precio Coste Medio', required=False, disabled=True)
+    precioCoste = DecimalField(label='P.V.D.', required=False, disabled=True)
+    codigoApro = CharField(label='Descuento Aprov.', required=False, disabled=True)
+    codigoUrgte = CharField(label='Descuento Urgente', required=False, disabled=True)
+    familia = CharField(label='Familia', required=False, disabled=True)
+    cantidad_ant = None
+    importe_ant = None
+
+    def datos_articulo(self, articulo):
+        self.fields['existencias'].initial = articulo.existencias
+        self.fields['ubicacion'].initial = articulo.ubicacion
+        self.fields['codigoObsoleto'].initial = articulo.codigoObsoleto
+        self.fields['pedidosPendientes'].initial = articulo.pedidosPendientes
+        self.fields['reserva'].initial = articulo.reserva
+        self.fields['tarifa'].initial = articulo.tarifa
+        self.fields['precioCosteMedio'].initial = articulo.precioCosteMedio
+        self.fields['precioCoste'].initial = articulo.precioCoste
+        if articulo.codigoApro is None:
+            codigoApro = None
+        else:
+            codigoApro = f'{articulo.codigoApro.codigo} - {articulo.codigoApro.codpieza} - {articulo.codigoApro.descuento}%'
+        if articulo.codigoUrgte is None:
+            codigoUrgte = None
+        else:
+            codigoUrgte = f'{articulo.codigoUrgte.codigo} - {articulo.codigoUrgte.codpieza} - {articulo.codigoUrgte.descuento}%'
+        if articulo.familia is None:
+            familia = None
+        else:
+            familia = f'{articulo.familia.codigo} - {articulo.familia.descripcion}'
+        self.fields['codigoApro'].initial = codigoApro
+        self.fields['codigoUrgte'].initial = codigoUrgte
+        self.fields['familia'].initial = familia
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['entradaAlmacen'].disabled = True
+
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.es_alta = False
+            self.fields['entradaAlmacen'].queryset = EntradaAlmacen.objects.all().filter(pk=self.instance.entradaAlmacen.pk)
+            self.fields['referencia'].disabled = True
+        else:
+            self.es_alta = True
+            self.fields['entradaAlmacen'].queryset = EntradaAlmacen.objects.all().filter(pk=self.initial['entradaAlmacen'].id)
+
+        # Si hay referencia recargamos los datos asociados
+        # print(f'data: {self.data}')
+        if 'referencia' in self.data:
+            # print(self.data['referencia'])
+            articulo = Articulo.objects.get(pk=self.data['referencia'])
+            self.datos_articulo(articulo)
+        elif self.instance.pk:
+            # print(f'instance: {self.instance}')
+            articulo = Articulo.objects.get(pk=self.instance.referencia.pk)
+            self.datos_articulo(articulo)
+
+            self.cantidad_ant = self.get_initial_for_field(self.fields['cantidad'], 'cantidad')
+            self.importe_ant = self.get_initial_for_field(self.fields['importeCoste'], 'importeCoste')
+            # print(f'cantidad_ant: {self.cantidad_ant}')
+            # print(f'importe_ant: {self.importe_ant}')
+
+    class Meta:
+        model = LineaEntradaAlmacen
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'entradaAlmacen': 'Nº Documento',
+            'referencia': 'Referencia',
+            'cantidad': 'Cantidad',
+            'precioCompra': 'Precio Compra',
+            'importeCoste': 'Importe',
+            'descuento': 'Descuento',
+            'albaran': 'Albarán',
+        }
+        widgets = {
+            'cantidad': NumberInput(attrs={'required': True, 'number': True, 'step': 1}),
+            'precioCompra': NumberInput(attrs={'number': True}),
+        }
+
+    def clean_entradaAlmacen(self):
+        entradaAlmacen = self.cleaned_data['entradaAlmacen']
+
+        # print(f'entradaAlmacen: {entradaAlmacen.impreso}')
+        if entradaAlmacen.impreso:
+            raise ValidationError('No se puede modificar, el Documento ya ha sido impreso')
+
+        return entradaAlmacen
+
+    def clean_referencia(self):
+        referencia = self.cleaned_data['referencia']
+
+        if referencia is None:
+            raise ValidationError('El campo Referencia es obligatorio')
+        elif referencia.bloqueo:
+            raise ValidationError('La Referencia está pendiente de inventario')
+
+        return referencia
+
+    def clean_cantidad(self):
+        cantidad = self.cleaned_data['cantidad']
+
+        if cantidad is None:
+            raise ValidationError('El campo Cantidad es obligatorio')
+
+        return cantidad
+
+    def clean_precioCompra(self):
+        precioCompra = self.cleaned_data['precioCompra']
+
+        if precioCompra is None:
+            precioCompra = 0
+
+        return precioCompra
+
+    def clean_descuento(self):
+        descuento = self.cleaned_data['descuento']
+
+        if descuento is None:
+            descuento = 0
+
+        return descuento
+
+    def clean_importeCoste(self):
+        importeCoste = self.cleaned_data['importeCoste']
+
+        if importeCoste is None:
+            importeCoste = 0
+
+        return importeCoste
+
+    def clean_albaran(self):
+        albaran = self.cleaned_data['albaran']
+
+        if albaran is None:
+            return albaran
+
+        albaran = albaran.upper()
+
+        return albaran
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        print(self.cleaned_data)
+
+        precioCompra = decimal.Decimal(cleaned_data['precioCompra'])
+        importeCoste = decimal.Decimal(cleaned_data['importeCoste'])
+        cantidad = decimal.Decimal(cleaned_data['cantidad'])
+        descuento = decimal.Decimal(cleaned_data['descuento'])
+
+        if (precioCompra == 0) and (importeCoste == 0):
+            raise ValidationError('Precio Compra e Importe no pueden estar ambos vacíos o ser cero')
+
+        if (precioCompra != 0) and (importeCoste != 0):
+            importe = precioCompra * cantidad * ((100 - descuento) / 100)
+            importe = round(importe, 2)
+            if importe != importeCoste:
+                raise ValidationError('Precio Compra y/o Importe erróneos')
+
+        if self.es_alta:
+            try:
+                # # en altas comprobamos si la referencia ha sido sustituida
+                # referencia = cleaned_data['referencia']
+                # if (referencia.nuevaReferencia is not None) and (referencia.existencias - cantidad < 0):
+                #     refer1 = referencia.referencia
+                #     refer2 = referencia.nuevaReferencia
+                #     articulo2 = Articulo.objects.get(referencia=referencia.nuevaReferencia)
+                #     # print(referencia)
+                #     # print(articulo2)
+                #     self.data._mutable = True
+                #     self.data['referencia'] = articulo2
+                #     self.data['existencias'] = articulo2.existencias
+                #     self.data['ubicacion'] = articulo2.ubicacion
+                #     self.data['codigoObsoleto'] = articulo2.codigoObsoleto
+                #     self.data['pedidosPendientes'] = articulo2.pedidosPendientes
+                #     self.data['reserva'] = articulo2.reserva
+                #     self.data['tarifa'] = articulo2.tarifa
+                #     self.data['precioCosteMedio'] = articulo2.precioCosteMedio
+                #     self.data['precioCoste'] = articulo2.precioCoste
+                #     self.data._mutable = False
+                #     raise ValidationError(
+                #         'La Referencia %(value1)s ha sido susituida. Se usará la nueva Referencia %(value2)s ', code='refsus',
+                #         params={'value1': refer1, 'value2': refer2})
+                # else:
+                # en altas comprobamos si ya existe en la tabla otra referencia igual
+                entradaAlmacen = cleaned_data['entradaAlmacen']
+                referencia = cleaned_data['referencia']
+                lineas = LineaEntradaAlmacen.objects.filter(Q(entradaAlmacen_id=entradaAlmacen.id) & Q(referencia=referencia))
+                if lineas:
+                    raise ValidationError('La Referencia ya existe para este Documento')
+            except KeyError:
+                pass
+
+        # print(cleaned_data)
+        return cleaned_data
+
+    def actualizarArticulo(self, lineaEntradaAlmacen):
+        referencia = lineaEntradaAlmacen.referencia
+
+        if referencia.existencias is None:
+            referencia.existencias = 0
+        if referencia.precioCosteMedio is None:
+            referencia.precioCosteMedio = 0
+        if referencia.entradasMes is None:
+            referencia.entradasMes = 0
+        if referencia.entradasAcumuladas is None:
+            referencia.entradasAcumuladas = 0
+        if referencia.unidadesCompradasMes is None:
+            referencia.unidadesCompradasMes = 0
+        if referencia.unidadesCompradasAno is None:
+            referencia.unidadesCompradasAno = 0
+        if referencia.importeComprasMes is None:
+            referencia.importeComprasMes = 0
+        if referencia.importeComprasAno is None:
+            referencia.importeComprasAno = 0
+
+        if not self.es_alta:
+            # Hay que deshacer los valores de la línea anteriores
+            referencia.existencias -= self.cantidad_ant
+            if referencia.existencias > 0:
+                referencia.precioCosteMedio = round((referencia.precioCosteMedio * referencia.existencias - self.importe_ant) / referencia.existencias, 2)
+
+            referencia.entradasMes -= self.cantidad_ant
+            referencia.entradasAcumuladas -= self.cantidad_ant
+            referencia.unidadesCompradasMes -= self.cantidad_ant
+            referencia.unidadesCompradasAno -= self.cantidad_ant
+            referencia.importeComprasMes -= self.importe_ant
+            referencia.importeComprasAno -= self.importe_ant
+
+        if referencia.existencias < 0:
+            referencia.precioCosteMedio = round(lineaEntradaAlmacen.importeCoste / lineaEntradaAlmacen.cantidad, 2)
+        elif (referencia.existencias + lineaEntradaAlmacen.cantidad) != 0:
+            precioMedio = referencia.precioCosteMedio * referencia.existencias + lineaEntradaAlmacen.cantidad
+            precioMedio = precioMedio / (referencia.existencias + lineaEntradaAlmacen.cantidad)
+            referencia.precioCosteMedio = round(precioMedio, 2)
+        else:
+            referencia.precioCosteMedio = referencia.precioCoste
+
+        referencia.existencias += lineaEntradaAlmacen.cantidad
+        referencia.entradasMes += lineaEntradaAlmacen.cantidad
+        referencia.entradasAcumuladas += lineaEntradaAlmacen.cantidad
+        referencia.unidadesCompradasMes += lineaEntradaAlmacen.cantidad
+        referencia.unidadesCompradasAno += lineaEntradaAlmacen.cantidad
+        referencia.importeComprasMes += lineaEntradaAlmacen.importeCoste
+        referencia.importeComprasAno += lineaEntradaAlmacen.importeCoste
+        referencia.fechaUltimaCompra = lineaEntradaAlmacen.entradaAlmacen.fechaMovimiento
+
+        if self.es_alta:
+            referencia.fechaUltMovimiento = datetime.now(tz=get_current_timezone())
+
+        referencia.save()
+
+    def actualizarEntradaAlmacen(self, lineaEntradaAlmacen):
+        entradaAlmacen = lineaEntradaAlmacen.entradaAlmacen
+
+        if not self.es_alta:
+            # Hay que deshacer los valores de la línea anteriores
+            print(f'entradaAlmacen.importe: {entradaAlmacen.importe} - importe_ant: {self.importe_ant}')
+            entradaAlmacen.importe -= self.importe_ant
+
+        if entradaAlmacen.importe is None:
+            entradaAlmacen.importe = lineaEntradaAlmacen.importeCoste
+        else:
+            entradaAlmacen.importe += lineaEntradaAlmacen.importeCoste
+
+        entradaAlmacen.save()
+
+    def actualizarProveedor(self, lineaEntradaAlmacen):
+        proveedor = lineaEntradaAlmacen.entradaAlmacen.proveedor
+
+        if not self.es_alta:
+            # Hay que deshacer los valores de la línea anteriores
+            proveedor.comprasMes -= self.importe_ant
+            proveedor.comprasAno -= self.importe_ant
+
+        if proveedor.comprasMes is None:
+            proveedor.comprasMes = lineaEntradaAlmacen.importeCoste
+        else:
+            proveedor.comprasMes += lineaEntradaAlmacen.importeCoste
+        if proveedor.comprasAno is None:
+            proveedor.comprasAno = lineaEntradaAlmacen.importeCoste
+        else:
+            proveedor.comprasAno += lineaEntradaAlmacen.importeCoste
+
+        proveedor.save()
+
+    def save(self, commit=True):
+        lineaEntradaAlmacen = super().save(commit=False)
+
+        if (lineaEntradaAlmacen.precioCompra == 0) and (lineaEntradaAlmacen.importeCoste != 0):
+            precioCompra = lineaEntradaAlmacen.importeCoste / (lineaEntradaAlmacen.cantidad * ((100 - lineaEntradaAlmacen.descuento) / 100))
+            lineaEntradaAlmacen.precioCompra = round(precioCompra, 2)
+            # print(f'precioCompra: {precioCompra}')
+
+        if (lineaEntradaAlmacen.precioCompra != 0) and (lineaEntradaAlmacen.importeCoste == 0):
+            importeCoste = lineaEntradaAlmacen.precioCompra * lineaEntradaAlmacen.cantidad * ((100 - lineaEntradaAlmacen.descuento) / 100)
+            lineaEntradaAlmacen.importeCoste = round(importeCoste, 2)
+            # print(f'importeCoste: {importeCoste}')
+
+        # Actualizamos datos de la Entrada de Almacén
+        self.actualizarEntradaAlmacen(lineaEntradaAlmacen)
+
+        # Actualizamos datos de la Referencia
+        self.actualizarArticulo(lineaEntradaAlmacen)
+
+        # Actualizamos datos del Proveedor
+        if lineaEntradaAlmacen.entradaAlmacen.proveedor is not None:
+            self.actualizarProveedor(lineaEntradaAlmacen)
+
+        # Actualizamos datos de la línea
+        lineaEntradaAlmacen.codImputacion = '1'
+
+        if commit:
+            lineaEntradaAlmacen.save()
+
+        return lineaEntradaAlmacen

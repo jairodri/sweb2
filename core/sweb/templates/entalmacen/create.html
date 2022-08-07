@@ -4,6 +4,8 @@
 {% block contentform %}
     <input type="hidden" name="tipo_" value="formbase">
     <input type="hidden" name="action2" value="">
+{#    campo oculto con la información de si el documento está impreso#}
+    {{ form.impreso }}
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
@@ -56,36 +58,40 @@
         </div>
         <div class="col-sm-6">
             <div class="form-group">
-                <label for="{{ form.importePiCoste.name }}">{{ form.importePiCoste.label }}</label>
-                {{ form.importePiCoste | add_class:'form-control' | attr:'readonly'}}
+                <label for="{{ form.importe.name }}">{{ form.importe.label }}</label>
+                {{ form.importe | add_class:'form-control' | attr:'readonly'}}
             </div>
         </div>
     </div>
 
     {% if action != 'add' %}
-{#    <div class="card card-light">#}
-{#        <div class="card-header">#}
-{#            <h6 class="card-title">Tiempos Específicos</h6>#}
-{#        </div>#}
-{#        <div class="card-body">#}
-{#            <table id="dtable-buttons" class="table table-bordered table-hover display nowrap">#}
-{#                <thead>#}
-{#                <tr>#}
-{#                    <th>Acciones</th>#}
-{#                    <th>Modelo</th>#}
-{#                    <th>Modificación</th>#}
-{#                    <th>Tiempo</th>#}
-{#                </tr>#}
-{#                </thead>#}
-{##}
-{#            </table>#}
-{#        </div>#}
-{#        <div class="card-footer">#}
-{#            <a href="{{ add_url2 }}" class="btn btn-primary btn-flat">#}
-{#                <i class="fas fa-plus"></i> Añadir {{ entity2 }}#}
-{#            </a>#}
-{#        </div>#}
-{#    </div>#}
+    <div class="card card-light">
+        <div class="card-header">
+            <h6 class="card-title">Detalle Piezas</h6>
+        </div>
+        <div class="card-body">
+            <table id="dtable-buttons" class="table table-bordered table-hover display nowrap">
+                <thead>
+                <tr>
+                    <th>Acciones</th>
+                    <th>Referencia</th>
+                    <th>Descripción</th>
+                    <th>Ctdad.</th>
+                    <th>P. Compra</th>
+                    <th>Dto.</th>
+                    <th>Importe</th>
+                    <th>Albarán</th>
+                </tr>
+                </thead>
+
+            </table>
+        </div>
+        <div class="card-footer">
+            <a href="{{ add_url2 }}" class="btn btn-primary btn-flat">
+                <i class="fas fa-plus"></i> Añadir {{ entity2 }}
+            </a>
+        </div>
+    </div>
     {% endif %}
 {% endblock %}
 
@@ -134,19 +140,24 @@
             });
         });
     </script>
-{#    <script type="text/javascript">#}
-{#        var icolumns = [#}
-{#            {"data": "id"},#}
-{#            {"data": "modelo"},#}
-{#            {"data": "modifica"},#}
-{#            {"data": "tiempo"},#}
-{#        ]#}
-{#        var ibuttons = '<a href="{{ edit_url2 }}edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';#}
-{#        ibuttons += '<a href="{{ delete_url2 }}delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';#}
-{#        var iorder = [[1, 'asc']];#}
-{#        var extrabuttons = true;#}
-{#        initdtableserver(icolumns, ibuttons, iorder, extrabuttons)#}
-{#    </script>#}
+    <script type="text/javascript">
+        var icolumns = [
+            {"data": "id"},
+            {"data": "referencia"},
+            {"data": "descripcion"},
+            {"data": "cantidad"},
+            {"data": "precioCompra"},
+            {"data": "descuento"},
+            {"data": "importeCoste"},
+            {"data": "albaran"},
+        ]
+        var ibuttons = '<a href="{{ edit_url2 }}edit/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-edit" title="Editar"></i></a> ';
+        ibuttons += '<a href="{{ delete_url2 }}delete/' + 'rowid' + '/" class="btn btn-light btn-xs"><i class="far fa-trash-alt" title="Borrar"></i></a>';
+        var iorder = [[1, 'asc']];
+        var extrabuttons = true;
+        var tipo_ = 'search'  // usamos el tipo para diferenciar en el post la acción a realizar
+        initdtableserver(icolumns, ibuttons, iorder, extrabuttons, tipo_)
+    </script>
     <script type="application/javascript">
         validar('{{ entity }}');
     </script>

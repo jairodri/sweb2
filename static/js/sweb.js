@@ -191,6 +191,7 @@ function validar(entity) {
                 // telefono: {number: true},
                 // tlfmovil: {number: true},
             }
+            break
         case 'Artículo':
             rules = {
                 unidadCompra: {number: true, min: 0, step: 1},
@@ -199,6 +200,11 @@ function validar(entity) {
                 multiplo: {number: true, min: 0, step: 1},
                 consumoMedio: {number: true, min: 0, step: 1},
                 tarifa: {number: true, min: 0.01},
+            }
+            break
+        case 'Línea Entrada Almacén':
+            rules = {
+                cantidad: {number: true, step: 1},
             }
             break
         default:
