@@ -347,3 +347,147 @@ function initdtableoper() {
     });
     return table;
 }
+
+// acciones comunes asociadas a las líneas de movimiento
+function lineaMovimiento(movimiento, action, list_url) {
+    console.log(movimiento);
+    console.log(action);
+    console.log(list_url);
+    var id_movimiento = '#id_'.concat(movimiento);
+    $(id_movimiento).select2({
+        theme: 'bootstrap4',
+        language: 'es',
+        minimumInputLength: 1,
+        ajax: {
+            url: window.location.pathname,
+            dataType: 'json',
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            data: function (params) {
+                var query = {
+                    'term': params.term,
+                    'action2': 'select2',
+                    'tipo_': 'formbase',
+                    'field': movimiento,
+                }
+                return query;
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {id: item.id, text: item.text};
+                    })
+                };
+            },
+        }
+    });
+    $('#id_referencia').select2({
+        theme: 'bootstrap4',
+        language: 'es',
+        placeholder: 'Seleccione una referencia',
+        minimumInputLength: 1,
+        allowClear: true,
+        ajax: {
+            url: window.location.pathname,
+            dataType: 'json',
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            data: function (params) {
+                var query = {
+                    'term': params.term,
+                    'action2': 'select2',
+                    'tipo_': 'formbase',
+                    'field': 'referencia',
+                }
+                return query;
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {id: item.id, text: item.text};
+                    })
+                };
+            },
+        }
+    });
+    $('#id_referencia').on('select2:select', function (e) {
+        var data = e.params.data;
+        var refid = data.id
+        $.ajax({
+            url: window.location.pathname,
+            type: 'POST',
+            data: {
+                'action2': 'referdata',
+                'tipo_': 'formbase',
+                'refid': refid,
+            },
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            dataType: 'json',
+        }).done(function (data) {
+            if (data.hasOwnProperty('error')) {
+                senderror(data.error)
+            } else {
+                // Recuperamos el % descuento del literal con formato 'cod - cod - dto%'
+                var arrdto = data.codigoApro.split('-');
+                var dto = arrdto[2].substring(1, arrdto[2].length - 1)
+                $('input[name="existencias"]').val(data.existencias).change();
+                $('input[name="ubicacion"]').val(data.ubicacion).change();
+                $('input[name="codigoApro"]').val(data.codigoApro).change();
+                $('input[name="codigoUrgte"]').val(data.codigoUrgte).change();
+                $('input[name="codigoObsoleto"]').val(data.codigoObsoleto).change();
+                $('input[name="tarifa"]').val(data.tarifa).change();
+                $('input[name="precioCoste"]').val(data.precioCoste).change();
+                $('input[name="precioCosteMedio"]').val(data.precioCosteMedio).change();
+                $('input[name="pedidosPendientes"]').val(data.pedidosPendientes).change();
+                $('input[name="reserva"]').val(data.reserva).change();
+                $('input[name="familia"]').val(data.familia).change();
+                $('input[name="precioCompra"]').val(data.tarifa).change();
+                $('input[name="descuento"]').val(dto).change();
+
+                if (data.sustituida) {
+                    $('select[name="referencia"]').val(data.referencia.id).change();
+                    sendmessage('Referencia sustituida')
+                }
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert(textStatus + ': ' + errorThrown);
+        }).always(function (data) {
+        });
+    });
+    $('#btn_cancelar').on('click', function (e) {
+        // cancelar en un alta puede provocar que se borre el movimiento si no hay más líneas
+        e.preventDefault()
+        if (action === 'add') {
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                data: {
+                    'action2': 'canceladd',
+                    'tipo_': 'formbase',
+                },
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                dataType: 'json',
+            }).done(function (data) {
+                if (data.hasOwnProperty('error')) {
+                    senderror(data.error)
+                } else {
+                    window.location.href = data.url
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert(textStatus + ': ' + errorThrown);
+            }).always(function (data) {
+            });
+        } else {
+            // si no es un alta seguimos con el Cancelar
+            window.location.href = list_url
+        }
+    });
+}

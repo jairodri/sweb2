@@ -3,6 +3,8 @@ from core.sweb.utils import digitos_control, validar_porcentaje
 from core.models import BaseModel
 from core.sweb.mixins import ModelMixin
 from django.db.models import Q
+from datetime import datetime
+from django.utils.timezone import get_current_timezone
 
 ALMACENES = [
     ('1', 'Turismos'),
@@ -1564,7 +1566,7 @@ class EntradaAlmacen(ModelMixin, BaseModel):
         item = {
             'id': self.id,
             'documento': self.documento,
-            'fechaMovimiento': self.fechaMovimiento.strftime('%d/%m/%Y'),
+            'fechaMovimiento': self.fechaMovimiento.astimezone(tz=get_current_timezone()).strftime('%d/%m/%Y'),
             'proveedor__codigo': proveedor_list,
             'albaranProveedor': self.albaranProveedor,
             'importe': self.importe,
@@ -1625,3 +1627,71 @@ class LineaEntradaAlmacen(ModelMixin, BaseModel):
         verbose_name = 'Línea Entrada Almacén'
         verbose_name_plural = 'Líneas de Entradas de Almacén'
         ordering = ['entradaAlmacen', 'referencia']
+
+
+class CorreccionStock(ModelMixin, BaseModel):
+    documento = models.CharField(max_length=7, verbose_name='Documento', db_column='cor_docum', unique=True, null=False, blank=False)
+    fechaMovimiento = models.DateTimeField(verbose_name='Fecha movimiento', db_column='cor_femov', null=False, blank=False)
+    almacen = models.CharField(max_length=1, choices=ALMACENES, default='1', verbose_name='Almacén', db_column='cor_almacen', null=False, blank=False)
+    importe = models.DecimalField(verbose_name='importe', db_column='cor_importe', max_digits=9, decimal_places=2, null=True, blank=True)
+    impreso = models.BooleanField(verbose_name='impreso', db_column='cor_impreso', default=False, null=True, blank=True)
+    observaciones = models.TextField(verbose_name='Observaciones', db_column='cor_obser', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.documento}'
+
+    def to_list(self):
+        # print(self.fechaMovimiento.astimezone(tz=get_current_timezone()))
+        item = {
+            'id': self.id,
+            'documento': self.documento,
+            'fechaMovimiento': self.fechaMovimiento.astimezone(tz=get_current_timezone()).strftime('%d/%m/%Y'),
+            'impreso': self.impreso,
+        }
+        return item
+
+    # para la paginación por servidor utilizamos este método para los filtros
+    def to_search(self, value):
+        return self.objects.filter(Q(documento__icontains=value))
+
+    class Meta:
+        db_table = 'sirtbcor'
+        verbose_name = 'Corrección Stock'
+        verbose_name_plural = 'Correcciones de Stock'
+        ordering = ['documento']
+
+
+class LineaCorreccionStock(ModelMixin, BaseModel):
+    correccionStock = models.ForeignKey(CorreccionStock, on_delete=models.CASCADE, null=False, blank=False, db_column='lcs_corstk', verbose_name='Corrección Stock')
+    referencia = models.ForeignKey(Articulo, on_delete=models.PROTECT, null=False, blank=False, db_column='lcs_refer', verbose_name='Referencia')
+    cantidad = models.IntegerField(verbose_name='Cantidad', db_column='lcs_canti', null=True, blank=True)
+    precioCompra = models.DecimalField(verbose_name='Precio compra', db_column='lcs_pcompra', max_digits=9, decimal_places=2, null=True, blank=True)
+    precioVenta = models.DecimalField(verbose_name='Precio venta', db_column='lcs_pventa', max_digits=9, decimal_places=2, null=True, blank=True)
+    importeCoste = models.DecimalField(verbose_name='Importe coste', db_column='lcs_impocos', max_digits=9, decimal_places=2, null=True, blank=True)
+    codImputacion = models.CharField(max_length=1, verbose_name='Código Imputación', db_column='lcs_cimp', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.correccionStock.documento} - {self.referencia.referencia}'
+
+    def to_list(self):
+        item = {
+            'id': self.id,
+            'referencia': self.referencia.referencia,
+            'descripcion': self.referencia.descripcion,
+            'cantidad': self.cantidad,
+        }
+        return item
+
+    # para la paginación por servidor utilizamos este método para los filtros
+    # key_value es el valor del id de la corrección de stock de la que dependen las líneas
+    def to_search(self, value, key_value):
+        if value is None:
+            return self.objects.filter(Q(correccionStock_id=key_value))
+        else:
+            return self.objects.filter(Q(referencia__referencia__icontains=value) & Q(correccionStock_id=key_value))
+
+    class Meta:
+        db_table = 'sirtblcs'
+        verbose_name = 'Línea Corrección Stock'
+        verbose_name_plural = 'Líneas de Correcciones de Stock'
+        ordering = ['correccionStock', 'referencia']

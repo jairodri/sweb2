@@ -1,0 +1,71 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <input type="hidden" name="tipo_" value="formbase">
+    <input type="hidden" name="action2" value="">
+{#    campo oculto con la información de si el documento está impreso#}
+    {{ form.impreso }}
+    <div class="form-group">
+        <label for="{{ form.documento.name }}">{{ form.documento.label }}<span class="text-danger"> *</span></label>
+        {{ form.documento | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.fechaMovimiento.name }}">{{ form.fechaMovimiento.label }}</label>
+        {{ form.fechaMovimiento | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.almacen.name }}">{{ form.almacen.label }}</label>
+        {{ form.almacen | add_class:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.observaciones.name }}">{{ form.observaciones.label }}</label>
+        {{ form.observaciones | add_class:'form-control' }}
+    </div>
+
+    {% if action != 'add' %}
+    <div class="card card-light">
+        <div class="card-header">
+            <h6 class="card-title">Detalle Piezas</h6>
+        </div>
+        <div class="card-body">
+            <table id="dtable-buttons" class="table table-bordered table-hover display nowrap">
+                <thead>
+                <tr>
+                    <th>Referencia</th>
+                    <th>Denominación</th>
+                    <th>Stock</th>
+                </tr>
+                </thead>
+
+            </table>
+        </div>
+        <div class="card-footer">
+            <a href="{{ add_url2 }}" class="btn btn-primary btn-flat">
+                <i class="fas fa-plus"></i> Añadir {{ entity2 }}
+            </a>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block otrosbotones %}
+{% endblock %}
+
+{% block jscript2 %}
+    <script type="text/javascript">
+        var icolumns = [
+            {"data": "referencia"},
+            {"data": "descripcion"},
+            {"data": "cantidad"},
+        ]
+        var ibuttons = '';
+        var iorder = [[0, 'asc']];
+        var extrabuttons = true;
+        var tipo_ = 'search'  // usamos el tipo para diferenciar en el post la acción a realizar
+        initdtableserver(icolumns, ibuttons, iorder, extrabuttons, tipo_)
+    </script>
+    <script type="application/javascript">
+        validar('{{ entity }}');
+    </script>
+{% endblock %}

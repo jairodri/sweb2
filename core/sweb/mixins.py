@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import ProtectedError
-from django.forms import ModelForm
+from django.forms import *
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -369,3 +369,175 @@ class DescuentoRecambiosDeleteView(BasicView):
             messages.error(self.request,
                            f'{self.start_message_error} {self.model_verbose_name} {self.end_message_error}')
             return self.render_to_response(context=self.get_context_data())
+
+
+class LineaMovimientoForm(ModelForm):
+    # Campos comunes a las líneas de movimiento, están asociados a la referencia
+    ubicacion = CharField(label='Ubicación', required=False, disabled=True)
+    codigoObsoleto = CharField(label='Frecuencia Venta', required=False, disabled=True)
+    existencias = IntegerField(label='Existencias', required=False, disabled=True)
+    pedidosPendientes = IntegerField(label='Pedidos Pendientes', required=False, disabled=True)
+    reserva = IntegerField(label='Reserva', required=False, disabled=True)
+    tarifa = DecimalField(label='P.V.P.', required=False, disabled=True)
+    precioCosteMedio = DecimalField(label='Precio Coste Medio', required=False, disabled=True)
+    precioCoste = DecimalField(label='P.V.D.', required=False, disabled=True)
+    codigoApro = CharField(label='Descuento Aprov.', required=False, disabled=True)
+    codigoUrgte = CharField(label='Descuento Urgente', required=False, disabled=True)
+    familia = CharField(label='Familia', required=False, disabled=True)
+
+    def datos_articulo(self, articulo):
+        self.fields['existencias'].initial = articulo.existencias
+        self.fields['ubicacion'].initial = articulo.ubicacion
+        self.fields['codigoObsoleto'].initial = articulo.codigoObsoleto
+        self.fields['pedidosPendientes'].initial = articulo.pedidosPendientes
+        self.fields['reserva'].initial = articulo.reserva
+        self.fields['tarifa'].initial = articulo.tarifa
+        self.fields['precioCosteMedio'].initial = articulo.precioCosteMedio
+        self.fields['precioCoste'].initial = articulo.precioCoste
+        if articulo.codigoApro is None:
+            codigoApro = None
+        else:
+            codigoApro = f'{articulo.codigoApro.codigo} - {articulo.codigoApro.codpieza} - {articulo.codigoApro.descuento}%'
+        if articulo.codigoUrgte is None:
+            codigoUrgte = None
+        else:
+            codigoUrgte = f'{articulo.codigoUrgte.codigo} - {articulo.codigoUrgte.codpieza} - {articulo.codigoUrgte.descuento}%'
+        if articulo.familia is None:
+            familia = None
+        else:
+            familia = f'{articulo.familia.codigo} - {articulo.familia.descripcion}'
+        self.fields['codigoApro'].initial = codigoApro
+        self.fields['codigoUrgte'].initial = codigoUrgte
+        self.fields['familia'].initial = familia
+
+
+class LineaMovimientoCreateView(BasicView):
+
+    def get_initial(self):
+        # Recuperamos la clave del registro de cabecera
+        pk_movto = self.request.get_full_path().split('/')[4]
+        movimiento_obj = self.movimiento.objects.get(pk=pk_movto)
+        initial = {
+            self.movimiento_field: movimiento_obj,
+        }
+        return initial
+
+    # utilizamos un decorador para añadir la funcionalidad de control de autenticación
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    # redefinimos el post para las operaciones con ajax
+    def post(self, request, *args, **kwargs):
+        # print(f'post: {request.POST}')
+        # print(f'kwargs: {kwargs}')
+        datos = {}
+        try:
+            tipo_ = request.POST['tipo_']
+            if tipo_ == 'formbase':
+                action2 = request.POST['action2']
+                if action2 == 'select2':
+                    term = request.POST['term']
+                    field = request.POST['field']
+                    datos = []
+                    if field == 'referencia':
+                        referencias = self.artiulo_model.to_search_select(self.artiulo_model, term)
+                        for i in referencias:
+                            datos.append(i.to_list_select())
+                elif action2 == 'referdata':
+                    refid = request.POST['refid']
+                    articulo = self.artiulo_model.objects.get(pk=refid)
+                    if articulo is not None:
+                        # Comprobamos si la referencia ha sido sustituida y no tiene existencias
+                        if articulo.nuevaReferencia is not None and articulo.existencias <= 0:
+                            nuevaReferencia = articulo.nuevaReferencia
+                            articulo = self.artiulo_model.objects.get(referencia=nuevaReferencia)
+                            sustituida = True
+                            if articulo is None:
+                                datos = {
+                                    'error': 'Referencia no encontrada'
+                                }
+                        else:
+                            sustituida = False
+
+                        if articulo.codigoApro is None:
+                            codigoApro = None
+                        else:
+                            codigoApro = f'{articulo.codigoApro.codigo} - {articulo.codigoApro.codpieza} - {articulo.codigoApro.descuento}%'
+                        if articulo.codigoUrgte is None:
+                            codigoUrgte = None
+                        else:
+                            codigoUrgte = f'{articulo.codigoUrgte.codigo} - {articulo.codigoUrgte.codpieza} - {articulo.codigoUrgte.descuento}%'
+                        if articulo.familia is None:
+                            familia = None
+                        else:
+                            familia = f'{articulo.familia.codigo} - {articulo.familia.descripcion}'
+                        datos = {
+                            'existencias': articulo.existencias,
+                            'ubicacion': articulo.ubicacion,
+                            'codigoObsoleto': articulo.codigoObsoleto,
+                            'pedidosPendientes': articulo.pedidosPendientes,
+                            'reserva': articulo.reserva,
+                            'tarifa': articulo.tarifa,
+                            'codigoApro': codigoApro,
+                            'codigoUrgte': codigoUrgte,
+                            'precioCosteMedio': articulo.precioCosteMedio,
+                            'precioCoste': articulo.precioCoste,
+                            'familia': familia,
+                            'sustituida': sustituida,
+                            'referencia': articulo.to_list_select()
+                        }
+                        # print(f'datos: {datos}')
+                    else:
+                        datos = {
+                            'error': 'Referencia no encontrada'
+                        }
+                elif action2 == 'canceladd':
+                    movto_id = kwargs['pk']
+                    movto_id_field = self.movimiento_field + '_id'
+                    # print(f'movto_id_field: {movto_id_field}')
+                    lineas = self.model.objects.filter(**{movto_id_field: movto_id}).count()
+                    # print(f'lineas: {lineas}')
+                    if lineas == 0:
+                        # print(f'Borramos cabecera')
+                        movimiento_cab = self.movimiento.objects.get(pk=movto_id)
+                        movimiento_cab.delete()
+                        datos = {
+                            'url': reverse_lazy(f'sweb:{self.list_view.folder}_list')
+                        }
+                        # print(datos)
+                    else:
+                        datos = {
+                            'url': self.request.get_full_path().split(self.folder)[0]
+                        }
+                        # print(datos)
+                else:
+                    return super().post(request, *args, **kwargs)
+            else:
+                return super().post(request, *args, **kwargs)
+        except Exception as e:
+            # return super().post(request, *args, **kwargs)
+            datos = {
+                'error': str(e)
+            }
+        return JsonResponse(datos, safe=False)
+
+    # sobreescribimos el método get_context_data para añadir info al contexto
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        path_to_return = self.request.get_full_path().split(self.folder)[0]
+        context['title'] = f'Añadir {self.model._meta.verbose_name}'
+        context['entity'] = self.model._meta.verbose_name
+        context['entity_plural'] = self.model._meta.verbose_name_plural
+        context['action'] = 'add'
+        context['list_url'] = path_to_return
+        context['folder'] = self.folder
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, f'{self.model._meta.verbose_name} {self.end_message_success}')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.request.get_full_path().split(self.folder)[0]

@@ -1,0 +1,29 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+
+{% block contentform %}
+    <input type="hidden" name="tipo_" value="formbase">
+    <input type="hidden" name="action2" value="">
+    <div class="form-group">
+        <label for="{{ form.correccionStock.name }}">{{ form.correccionStock.label }}</label>
+        {{ form.correccionStock | add_class:'form-control' }}
+    </div>
+    {% include 'lineasmov/reflinform.html' %}
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="{{ form.cantidad.name }}">{{ form.cantidad.label }}</label>
+                {{ form.cantidad | add_class:'form-control' }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block jscript2 %}
+    <script type="application/javascript">
+        lineaMovimiento('correccionStock', '{{ action }}', '{{ list_url }}');
+    </script>
+    <script type="application/javascript">
+        validar('{{ entity }}');
+    </script>
+{% endblock %}

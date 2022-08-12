@@ -902,7 +902,6 @@ class OperarioRecambiosResource(resources.ModelResource):
 class EntradaAlmacenResource(resources.ModelResource):
     proveedor = fields.Field(attribute='proveedor', column_name='proveedor', widget=ForeignKeyWidget(Cliente, field='codigo'))
     fechaMovimiento = fields.Field(attribute='fechaMovimiento', column_name='fechaMovimiento', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
-    fechaUltimaFactura = fields.Field(attribute='fechaUltimaFactura', column_name='fechaUltimaFactura', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
 
     class Meta:
         model = EntradaAlmacen
@@ -935,4 +934,38 @@ class LineaEntradaAlmacenResource(resources.ModelResource):
             'descuento',
             'codImputacion',
             'albaran',
+        )
+
+
+class CorreccionStockResource(resources.ModelResource):
+    fechaMovimiento = fields.Field(attribute='fechaMovimiento', column_name='fechaMovimiento', widget=DateTimeWidget(format='%Y-%m-%dT%H:%M:%SZ'))
+
+    class Meta:
+        model = CorreccionStock
+        fields = (
+            'id',
+            'documento',
+            'fechaMovimiento',
+            'almacen',
+            'importe',
+            'impreso',
+            'observaciones',
+        )
+
+
+class LineaCorreccionStockResource(resources.ModelResource):
+    correccionStock = fields.Field(attribute='correccionStock', column_name='correccionStock', widget=ForeignKeyWidget(CorreccionStock, field='documento'))
+    referencia = fields.Field(attribute='referencia', column_name='referencia', widget=ForeignKeyWidget(Articulo, field='referencia'))
+
+    class Meta:
+        model = LineaCorreccionStock
+        fields = (
+            'id',
+            'correccionStock',
+            'referencia',
+            'cantidad',
+            'precioCompra',
+            'precioVenta',
+            'importeCoste',
+            'codImputacion',
         )

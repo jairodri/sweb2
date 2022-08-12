@@ -36,6 +36,8 @@ from core.sweb.views.linbaremo.views import *
 from core.sweb.views.operecam.views import *
 from core.sweb.views.entalmacen.views import *
 from core.sweb.views.linentalm.views import *
+from core.sweb.views.corstock.views import *
+from core.sweb.views.lincorstk.views import *
 
 app_name = 'sweb'
 
@@ -353,4 +355,14 @@ urlpatterns = [
     path(f'{EntradaAlmacenUpdateView.folder}/edit/<int:pk>/{LineaEntradaAlmacenCreateView.folder}/add/', LineaEntradaAlmacenCreateView.as_view(), name=f'{LineaEntradaAlmacenCreateView.folder}_add'),
     path(f'{EntradaAlmacenUpdateView.folder}/edit/<int:pk0>/{LineaEntradaAlmacenUpdateView.folder}/edit/<int:pk>/', LineaEntradaAlmacenUpdateView.as_view(), name=f'{LineaEntradaAlmacenUpdateView.folder}_edit'),
     path(f'{EntradaAlmacenUpdateView.folder}/edit/<int:pk0>/{LineaEntradaAlmacenDeleteView.folder}/delete/<int:pk>/', LineaEntradaAlmacenDeleteView.as_view(), name=f'{LineaEntradaAlmacenDeleteView.folder}_delete'),
+
+    # Correcciones de Stock
+    path(f'{CorreccionStockListView.folder}/list/', CorreccionStockListView.as_view(), name=f'{CorreccionStockListView.folder}_list'),
+    path(f'{CorreccionStockCreateView.folder}/add/', CorreccionStockCreateView.as_view(), name=f'{CorreccionStockCreateView.folder}_add'),
+    path(f'{CorreccionStockUpdateView.folder}/edit/<int:pk>/', CorreccionStockUpdateView.as_view(), name=f'{CorreccionStockUpdateView.folder}_edit'),
+    path(f'{CorreccionStockDetailView.folder}/detail/<int:pk>/', CorreccionStockDetailView.as_view(), name=f'{CorreccionStockDetailView.folder}_detail'),
+
+    # Líneas Correcciones de Stock
+    path(f'{CorreccionStockUpdateView.folder}/edit/<int:pk>/{LineaCorreccionStockCreateView.folder}/add/', LineaCorreccionStockCreateView.as_view(), name=f'{LineaCorreccionStockCreateView.folder}_add'),
+
 ]

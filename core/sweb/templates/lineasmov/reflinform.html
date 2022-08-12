@@ -1,0 +1,87 @@
+{% load widget_tweaks %}
+    <div class="card card-light">
+        <div class="card-header"></div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.referencia.name }}">{{ form.referencia.label }}</label>
+                        {{ form.referencia | add_class:'form-control' | attr:'style="width: 100%;"' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.existencias.name }}">{{ form.existencias.label }}</label>
+                        {{ form.existencias | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.ubicacion.name }}">{{ form.ubicacion.label }}</label>
+                        {{ form.ubicacion | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.codigoApro.name }}">{{ form.codigoApro.label }}</label>
+                        {{ form.codigoApro | add_class:'form-control'}}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.codigoUrgte.name }}">{{ form.codigoUrgte.label }}</label>
+                        {{ form.codigoUrgte | add_class:'form-control'}}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.codigoObsoleto.name }}">{{ form.codigoObsoleto.label }}</label>
+                        {{ form.codigoObsoleto | add_class:'form-control' }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.tarifa.name }}">{{ form.tarifa.label }}</label>
+                        {{ form.tarifa | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.precioCoste.name }}">{{ form.precioCoste.label }}</label>
+                        {{ form.precioCoste | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.precioCosteMedio.name }}">{{ form.precioCosteMedio.label }}</label>
+                        {{ form.precioCosteMedio | add_class:'form-control'}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.pedidosPendientes.name }}">{{ form.pedidosPendientes.label }}</label>
+                        {{ form.pedidosPendientes | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.reserva.name }}">{{ form.reserva.label }}</label>
+                        {{ form.reserva | add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.familia.name }}">{{ form.familia.label }}</label>
+                        {{ form.familia | add_class:'form-control'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>

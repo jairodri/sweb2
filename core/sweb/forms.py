@@ -1,7 +1,9 @@
 import decimal
 import zoneinfo
+
+from django.db import transaction
 from django.forms import *
-from core.sweb.mixins import CodigoBaseForm
+from core.sweb.mixins import CodigoBaseForm, LineaMovimientoForm
 from core.sweb.models import *
 from core.sweb.utils import digitos_control
 from schwifty import IBAN
@@ -245,7 +247,7 @@ class ClienteForm(CodigoBaseForm, ModelForm):
             'listarnetodto': 'Listar Neto y Dto.',
             'exentoMail': 'Exento Mail',
             'bloquearCredito': 'Bloquear Crédito',
-            'fechaUltimaFactura': 'Fecha ültima Factura',
+            'fechaUltimaFactura': 'Fecha última Factura',
             'dtopieza': 'Código Descuento Piezas',
             'dtomo': 'Código Descuento M.O.',
             'dtoEpecial': 'Descuento Especial',
@@ -2142,46 +2144,10 @@ class EntradaAlmacenForm(ModelForm):
         return entradaAlmacen
 
 
-class LineaEntradaAlmacenForm(ModelForm):
+class LineaEntradaAlmacenForm(LineaMovimientoForm, ModelForm):
 
-    ubicacion = CharField(label='Ubicación', required=False, disabled=True)
-    codigoObsoleto = CharField(label='Frecuencia Venta', required=False, disabled=True)
-    existencias = IntegerField(label='Existencias', required=False, disabled=True)
-    pedidosPendientes = IntegerField(label='Pedidos Pendientes', required=False, disabled=True)
-    reserva = IntegerField(label='Reserva', required=False, disabled=True)
-    tarifa = DecimalField(label='P.V.P.', required=False, disabled=True)
-    precioCosteMedio = DecimalField(label='Precio Coste Medio', required=False, disabled=True)
-    precioCoste = DecimalField(label='P.V.D.', required=False, disabled=True)
-    codigoApro = CharField(label='Descuento Aprov.', required=False, disabled=True)
-    codigoUrgte = CharField(label='Descuento Urgente', required=False, disabled=True)
-    familia = CharField(label='Familia', required=False, disabled=True)
     cantidad_ant = None
     importe_ant = None
-
-    def datos_articulo(self, articulo):
-        self.fields['existencias'].initial = articulo.existencias
-        self.fields['ubicacion'].initial = articulo.ubicacion
-        self.fields['codigoObsoleto'].initial = articulo.codigoObsoleto
-        self.fields['pedidosPendientes'].initial = articulo.pedidosPendientes
-        self.fields['reserva'].initial = articulo.reserva
-        self.fields['tarifa'].initial = articulo.tarifa
-        self.fields['precioCosteMedio'].initial = articulo.precioCosteMedio
-        self.fields['precioCoste'].initial = articulo.precioCoste
-        if articulo.codigoApro is None:
-            codigoApro = None
-        else:
-            codigoApro = f'{articulo.codigoApro.codigo} - {articulo.codigoApro.codpieza} - {articulo.codigoApro.descuento}%'
-        if articulo.codigoUrgte is None:
-            codigoUrgte = None
-        else:
-            codigoUrgte = f'{articulo.codigoUrgte.codigo} - {articulo.codigoUrgte.codpieza} - {articulo.codigoUrgte.descuento}%'
-        if articulo.familia is None:
-            familia = None
-        else:
-            familia = f'{articulo.familia.codigo} - {articulo.familia.descripcion}'
-        self.fields['codigoApro'].initial = codigoApro
-        self.fields['codigoUrgte'].initial = codigoUrgte
-        self.fields['familia'].initial = familia
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -2384,7 +2350,7 @@ class LineaEntradaAlmacenForm(ModelForm):
         if referencia.existencias < 0:
             referencia.precioCosteMedio = round(lineaEntradaAlmacen.importeCoste / lineaEntradaAlmacen.cantidad, 2)
         elif (referencia.existencias + lineaEntradaAlmacen.cantidad) != 0:
-            precioMedio = referencia.precioCosteMedio * referencia.existencias + lineaEntradaAlmacen.cantidad
+            precioMedio = referencia.precioCosteMedio * referencia.existencias + lineaEntradaAlmacen.importeCoste
             precioMedio = precioMedio / (referencia.existencias + lineaEntradaAlmacen.cantidad)
             referencia.precioCosteMedio = round(precioMedio, 2)
         else:
@@ -2409,7 +2375,7 @@ class LineaEntradaAlmacenForm(ModelForm):
 
         if not self.es_alta:
             # Hay que deshacer los valores de la línea anteriores
-            print(f'entradaAlmacen.importe: {entradaAlmacen.importe} - importe_ant: {self.importe_ant}')
+            # print(f'entradaAlmacen.importe: {entradaAlmacen.importe} - importe_ant: {self.importe_ant}')
             entradaAlmacen.importe -= self.importe_ant
 
         if entradaAlmacen.importe is None:
@@ -2438,6 +2404,7 @@ class LineaEntradaAlmacenForm(ModelForm):
 
         proveedor.save()
 
+    @transaction.atomic
     def save(self, commit=True):
         lineaEntradaAlmacen = super().save(commit=False)
 
@@ -2468,3 +2435,251 @@ class LineaEntradaAlmacenForm(ModelForm):
             lineaEntradaAlmacen.save()
 
         return lineaEntradaAlmacen
+
+
+class CorreccionStockForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['fechaMovimiento'].disabled = True
+
+        # diferenciamos add/edit
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.es_alta = False
+            self.fields['documento'].disabled = True
+        else:
+            self.es_alta = True
+            documento = self.get_initial_for_field(self.fields['documento'], 'documento')
+            if not documento:
+                self.fields['documento'].widget.attrs['autofocus'] = True
+            else:
+                self.fields['documento'].disabled = True
+
+    class Meta:
+        model = CorreccionStock
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'documento': 'Nº Documento',
+            'fechaMovimiento': 'Fecha',
+            'almacen': 'Almacén',
+            'observaciones': 'Observaciones',
+        }
+        widgets = {
+            'impreso': HiddenInput(),
+            'observaciones': Textarea(attrs={'rows': 4}),
+        }
+
+    def clean_documento(self):
+        documento = self.cleaned_data['documento']
+
+        if not documento:
+            raise ValidationError('El Nº Documento es obligatorio')
+
+        documento = documento.upper()
+
+        # en altas comprobamos si ya existe en la tabla otro documento igual
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            pass
+        else:
+            correccionStock = CorreccionStock.objects.filter(documento=documento)
+            if correccionStock:
+                raise ValidationError('Ya existe una Corrección de Stock con este Documento: %(value)s', code='coddup', params={'value': documento})
+
+        return documento
+
+    def clean_fechaMovimiento(self):
+        fechaMovimiento = self.cleaned_data['fechaMovimiento']
+
+        if fechaMovimiento is None:
+            raise ValidationError('La Fecha es obligatoria')
+
+        fechaMovimiento = datetime.now(tz=get_current_timezone())
+
+        return fechaMovimiento
+
+    def clean_impreso(self):
+        impreso = self.cleaned_data['impreso']
+
+        if impreso:
+            raise ValidationError('No se puede modificar, el Documento ya ha sido impreso')
+        return impreso
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        # print(self.cleaned_data)
+        return cleaned_data
+
+    def save(self, commit=True):
+        correccionStock = super().save(commit=False)
+
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            pass
+        else:
+            correccionStock.importe = 0
+
+        if commit:
+            correccionStock.save()
+
+        return correccionStock
+
+
+class LineaCorreccionStockForm(LineaMovimientoForm, ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['correccionStock'].disabled = True
+
+        # solo hay add
+        self.es_alta = True
+        self.fields['correccionStock'].queryset = CorreccionStock.objects.all().filter(pk=self.initial['correccionStock'].id)
+
+        # Si hay referencia recargamos los datos asociados
+        # print(f'data: {self.data}')
+        if 'referencia' in self.data:
+            # print(self.data['referencia'])
+            articulo = Articulo.objects.get(pk=self.data['referencia'])
+            self.datos_articulo(articulo)
+
+    class Meta:
+        model = LineaCorreccionStock
+        fields = '__all__'
+        exclude = ['user_creation', 'user_updated']
+        labels = {
+            'correccionStock': 'Nº Documento',
+            'referencia': 'Referencia',
+            'cantidad': 'Stock',
+        }
+        widgets = {
+            'cantidad': NumberInput(attrs={'required': True, 'number': True, 'step': 1}),
+        }
+
+    def clean_correccionStock(self):
+        correccionStock = self.cleaned_data['correccionStock']
+
+        if correccionStock.impreso:
+            raise ValidationError('No se puede modificar, el Documento ya ha sido impreso')
+
+        return correccionStock
+
+    def clean_referencia(self):
+        referencia = self.cleaned_data['referencia']
+
+        if referencia is None:
+            raise ValidationError('El campo Referencia es obligatorio')
+        elif referencia.bloqueo:
+            raise ValidationError('La Referencia está pendiente de inventario')
+
+        return referencia
+
+    def clean_cantidad(self):
+        cantidad = self.cleaned_data['cantidad']
+
+        if cantidad is None:
+            raise ValidationError('El campo Cantidad es obligatorio')
+
+        return cantidad
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        # print(self.cleaned_data)
+
+        if self.es_alta:
+            try:
+                # en altas comprobamos si ya existe en la tabla otra referencia igual
+                correccionStock = cleaned_data['correccionStock']
+                referencia = cleaned_data['referencia']
+                lineas = LineaCorreccionStock.objects.filter(Q(correccionStock_id=correccionStock.id) & Q(referencia=referencia))
+                if lineas:
+                    raise ValidationError('La Referencia ya existe para este Documento')
+            except KeyError:
+                pass
+
+        # print(cleaned_data)
+        return cleaned_data
+
+    @transaction.atomic
+    def save(self, commit=True):
+        lineaCorreccionStock = super().save(commit=False)
+
+        referencia = lineaCorreccionStock.referencia
+
+        if referencia.existencias is None:
+            referencia.existencias = 0
+        if referencia.precioCosteMedio is None:
+            referencia.precioCosteMedio = 0
+
+        if referencia.entradasMes is None:
+            referencia.entradasMes = 0
+        if referencia.entradasAcumuladas is None:
+            referencia.entradasAcumuladas = 0
+        if referencia.otrasEntradasMes is None:
+            referencia.otrasEntradasMes = 0
+        if referencia.otrasEntradasAno is None:
+            referencia.otrasEntradasAno = 0
+        if referencia.importeOtrasEntmes is None:
+            referencia.importeOtrasEntmes = 0
+        if referencia.importeOtrasEntano is None:
+            referencia.importeOtrasEntano = 0
+
+        if referencia.salidasMes is None:
+            referencia.salidasMes = 0
+        if referencia.salidasAcumuladas is None:
+            referencia.salidasAcumuladas = 0
+        if referencia.otrasSalidasMes is None:
+            referencia.otrasSalidasMes = 0
+        if referencia.otrasSalidasAno is None:
+            referencia.otrasSalidasAno = 0
+        if referencia.importeOtrasSalmes is None:
+            referencia.importeOtrasSalmes = 0
+        if referencia.importeOtrasSalano is None:
+            referencia.importeOtrasSalano = 0
+
+        precioCompra = referencia.precioCosteMedio
+        precioVenta = referencia.tarifa
+        cantidad = lineaCorreccionStock.cantidad - referencia.existencias
+        importeCoste = round(precioCompra * cantidad, 2)
+
+        # Actualizamos datos del movimiento Corrección Stock
+        correccionStock = lineaCorreccionStock.correccionStock
+        correccionStock.importe += importeCoste
+        correccionStock.save()
+
+        # Actualizamos datos de la Referencia
+        referencia.fechaUltMovimiento = correccionStock.fechaMovimiento
+        referencia.existencias += cantidad
+        if cantidad > 0:
+            referencia.entradasMes += cantidad
+            referencia.entradasAcumuladas += cantidad
+            referencia.otrasEntradasMes += cantidad
+            referencia.otrasEntradasAno += cantidad
+            referencia.importeOtrasEntmes += round(cantidad * referencia.precioCosteMedio, 2)
+            referencia.importeOtrasEntano += round(cantidad * referencia.precioCosteMedio, 2)
+        else:
+            cantpos = cantidad * -1
+            referencia.salidasMes += cantpos
+            referencia.salidasAcumuladas += cantpos
+            referencia.otrasSalidasMes += cantpos
+            referencia.otrasSalidasAno += cantpos
+            referencia.importeOtrasSalmes += round(cantpos * referencia.precioCosteMedio, 2)
+            referencia.importeOtrasSalano += round(cantpos * referencia.precioCosteMedio, 2)
+
+        referencia.save()
+
+        # Actualizamos datos de la línea
+        # referencia = lineaCorreccionStock.referencia
+        lineaCorreccionStock.codImputacion = '1'
+        lineaCorreccionStock.precioCompra = precioCompra
+        lineaCorreccionStock.precioVenta = precioVenta
+        lineaCorreccionStock.cantidad = cantidad
+        lineaCorreccionStock.importeCoste = importeCoste
+
+        if commit:
+            lineaCorreccionStock.save()
+
+        return lineaCorreccionStock

@@ -51,21 +51,28 @@ class EntradaAlmacenCreateView(BasicCreateView, CreateView):
             else:
                 nextnumber += 1
 
-        # método basado en el contador almacenado en la tabla de numeración automática
-        valido = False
-        serie = numautos[0].serie
-        nextnumber = numautos[0].contador
-        while not valido:
-            nextnumber = nextnumber + 1
-            codigo = str(nextnumber)
-            codigo = codigo.strip().zfill(5)
-            codigo = serie + codigo
-            entradaAlmacen = EntradaAlmacen.objects.filter(documento=codigo)
-            if not entradaAlmacen:
-                NumeracionAutomatica.objects.filter(codigo=codigo_numaut).update(contador=nextnumber)
-                valido = True
-
+        # no había huecos de modo que utilizamos el último número generado
+        codigo = str(nextnumber)
+        codigo = codigo.strip().zfill(5)
+        codigo = serie + codigo
+        NumeracionAutomatica.objects.filter(codigo=codigo_numaut).update(contador=nextnumber)
         return codigo
+
+        # # método basado en el contador almacenado en la tabla de numeración automática
+        # valido = False
+        # serie = numautos[0].serie
+        # nextnumber = numautos[0].contador
+        # while not valido:
+        #     nextnumber = nextnumber + 1
+        #     codigo = str(nextnumber)
+        #     codigo = codigo.strip().zfill(5)
+        #     codigo = serie + codigo
+        #     entradaAlmacen = EntradaAlmacen.objects.filter(documento=codigo)
+        #     if not entradaAlmacen:
+        #         NumeracionAutomatica.objects.filter(codigo=codigo_numaut).update(contador=nextnumber)
+        #         valido = True
+        #
+        # return codigo
 
     def get_initial(self):
         # valores por defecto
